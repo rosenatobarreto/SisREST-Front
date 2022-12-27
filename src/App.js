@@ -1,6 +1,10 @@
 import React from 'react';
+import 'primeicons/primeicons.css';
+import 'toastr/build/toastr.min.js';
+import 'toastr/build/toastr.css';
 import AppRoutes from './main/AppRoutes';
 import Footer from './components/Footer';
+// import SessionProvider from './main/SessionProvider';
 import LoginButton from "./components/Login";
 import LogoutButton from "./components/Logout";
 import { useEffect } from 'react';
@@ -29,10 +33,12 @@ function App() {
   
   return (
     <div className="App">
+      {/* <SessionProvider> */}
       <AppRoutes />
       {/* <LoginButton />
       <LogoutButton /> */}
       <Footer />
+      {/* </SessionProvider> */}
     </div>
   );
 

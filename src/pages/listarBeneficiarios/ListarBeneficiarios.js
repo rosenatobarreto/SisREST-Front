@@ -310,9 +310,9 @@ class ListarBeneficiarios extends React.Component {
                         </div>
                         <br />
                         <div className='row'>
-                            <div className='col-span-6' >
+                            <div className='' >
                                 <div className=''>
-                                    <UsersTable beneficiaries={this.state.beneficiarios}
+                                    <UsersTable beneficiarios={this.state.beneficiarios}
                                         delete={this.delete}
                                         edit={this.edit} id="idEdit"/>
                                 </div>

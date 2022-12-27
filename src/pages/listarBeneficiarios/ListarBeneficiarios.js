@@ -6,100 +6,130 @@ import SideBar from "../../components/SideBar";
 import { withRouter } from "react-router-dom";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import BeneficiarioApiService from "../../services/BeneficiarioApiService";
+import UsersTable from '../../components/UsersTable';
 
 
-class CadastrarBeneficiario extends React.Component {
+class ListarBeneficiarios extends React.Component {
 
-  state = {
-    nome: '',
-    matricula: '',
-    email: '',
-    senha: '',
-    admin: false
-  };
-  constructor() {
-    super();
-    this.service = new BeneficiarioApiService();
-  }
-
-  componentWillUnmount() {
-    this.clear();
-  }
-
-  validate = () => {
-    const errors = [];
-
-    if (!this.state.nome) {
-      errors.push("Campo Nome é obrigatório!");
-    } else if (!this.state.nome.match(/[A-z ]{2,50}$/)) {
-      errors.push("O Nome deve ter no mínimo 2 e no máximo 50 caracteres!");
+    state = {
+        nome: '',
+        id: 0,
+        email: '',
+        tipo: '',
+        matricula: 0,
+        admin: '',
+        beneficiarios: []
+    }
+    constructor() {
+        super();
+        this.service = new BeneficiarioApiService();
+    }
+    componentDidMount() {
+        this.findAll();
     }
 
-    if (!this.state.email) {
-      errors.push("Campo E-mail é obrigatório! ");
-    } else if (!this.state.email.match(/[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-      errors.push("Informe um E-mail válido!");
+    // componentWillUnmount() {
+    //     this.clear();
+    // }
+
+    delete = (userId) => {
+        
+        this.service.delete(userId)
+            .then(response => {
+                this.find();
+            }
+            ).catch(error => {
+                console.log(error.response);
+            }
+            );
     }
 
-    if (!this.state.matricula) {
-      errors.push("Campo Matrícula é obrigatório!");
-      errors.push("A Matrícula deve conter apenas números!");
+    edit = (userId) => {
+        this.props.history.push(`/atualizarBeneficiario/${userId}`);
     }
 
-    if (!this.state.senha) {
-      errors.push("Campo Senha é obrigatório!");
-    } else if (
-      !this.state.senha.match(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,30}$/
-      )
-    ) {
-      errors.push("A Senha deve ter no mínimo 8 e no máximo 30 caracteres.");
-      errors.push("A Senha deve conter ao menos um número.");
-      errors.push("A Senha deve conter ao menos uma letra minúscula.");
-      errors.push("A Senha deve conter ao menos uma letra maiúscula.");
-      errors.push("A Senha deve conter ao menos um caractere especial.");
+    createBeneficiario = () => {
+        this.props.history.push(`/cadastrarBeneficiario`);
     }
 
-    return errors;
-  };
+    find = (id) => {
+        this.service.find.id(id)
+        var params = '?';
 
-  create = () => {
-    
-    const errors = this.validate();
-    //this.service.create(this.state)
-    if (errors.length > 0) {
-      errors.forEach((message, index) => {
-        showErrorMessage(message);
-      });
-      return false;
+        if (this.state.id !== 0) {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}id=${this.state.id}`;
+        }
+
+        if (this.state.nome !== '') {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}nome=${this.state.nome}`;
+        }
+
+        if (this.state.email !== '') {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}email=${this.state.email}`;
+        }
+
+        if (this.state.matricula !== 0) {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}matricula=${this.state.matricula}`;
+        }
+
+        if (this.state.tipo !== '') {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}tipo=${this.state.tipo}`;
+        }
+
+        if (this.state.admin !== false) {
+            if (params !== '?') {
+                params = `${params}&`;
+            }
+
+            params = `${params}admin=${this.state.admin}`;
+        }
+
+        this.service.get(this.state.id)
+            .then(response => {
+                const beneficiarios = response.data;
+                this.setState({ beneficiarios });
+                console.log(beneficiarios);
+            }
+            ).catch(error => {
+                console.log(error.response);
+            }
+            );
     }
 
-    this.service
-      .create({
-        nome: this.state.nome,
-        matricula: this.state.matricula,
-        email: this.state.email,
-        senha: this.state.senha,
-        admin: this.state.admin
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(this.state);
-        showSuccessMessage("Beneficiário criado com sucesso!");
-        // this.props.history.push("/login");
-      })
-      .catch((error) => {
-        console.log(error.response);
-        console.log(this.state);
-        showErrorMessage('O beneficiário não pode ser salvo!');
-      });
+    findAll = () => {
 
-    console.log("request finished");
-  };
+        this.service.get('/buscarTodos')
+            .then(response => {
+                const beneficiarios = response.data;
+                this.setState({ beneficiarios });
+                console.log(beneficiarios);
+            }
+            ).catch(error => {
+                console.log(error.response);
+            }
+            );
+    }
 
-  cancel = () => {
-    this.props.history.push("/");
-  };
 
   render() {
     return (
@@ -141,7 +171,7 @@ class CadastrarBeneficiario extends React.Component {
                 </a>
               </li>
               <li className="py-2 hover:bg-gray-300">
-                <a className="" href="/listarBeneficiarios">
+                <a className="" href="#">
                   {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/chart-bar.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
                   <span className="hidden sm:inline text-sm">
                     Gerenciar Usuários
@@ -174,9 +204,10 @@ class CadastrarBeneficiario extends React.Component {
                   <p className="text-lg font-semibold">Administrador</p>
                 </div>
                 <div className="flex flex-row pl-6">
-                  <p className="text-xl font-semibold">Cadastrar Beneficiário</p>
+                  <p className="text-xl font-semibold">Gerenciar Beneficiários</p>
                 </div>
             </div>
+ 
         
             {/* Content two */}
             <div className="pt-4 pl-8 pr-8 mb-4">
@@ -195,34 +226,31 @@ class CadastrarBeneficiario extends React.Component {
                         <div className="bg-white px-4 py-5 sm:p-6">
                           <div className="grid grid-cols-6 gap-6">
 
-                            <div className="col-span-6 sm:col-span-3">
+                            {/* <div className="col-span-6 sm:col-span-3">
                               <label for="edital" className="block text-sm font-medium text-gray-700">Edital</label>
-                              <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
+                              <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-white py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
                                 <option>Edital 2022</option>
                                 <option>Edital 2021</option>
                                 <option>Edital 2020</option>
                               </select>
-                            </div>
+                            </div> */}
 
-                            <div className="col-span-6 sm:col-span-3">
-                              <label for="name" className="block text-sm font-medium text-black">Nome</label>
-                              <input type="text" name="name" id="name" autocomplete="given-name" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
+                        
 
-                            <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                            {/* <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                               <label for="matricula" className="block text-sm font-medium text-gray-700">Matrícula</label>
-                              <input type="text" name="matricula" id="matricula"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="text" name="matricula" id="matricula"  className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                               <label for="cpf" className="block text-sm font-medium text-gray-700">CPF</label>
-                              <input type="text" name="cpf" id="cpf" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="text" name="cpf" id="cpf" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                               <label for="email" className="block text-sm font-medium text-gray-700">E-mail</label>
-                              <input type="email" name="email" id="email" autocomplete="email" className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
+                              <input type="email" name="email" id="email" autocomplete="email" className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                            </div> */}
 
                             {/* <div className="col-span-6 sm:col-span-3">
                               <label for="last-name" className="block text-sm font-medium text-black">Last name</label>
@@ -233,57 +261,76 @@ class CadastrarBeneficiario extends React.Component {
                               <label for="email-address" className="block text-sm font-medium text-black">Email address</label>
                               <input type="text" name="email-address" id="email-address" autocomplete="email" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div> */}
-
-                            <div className="col-span-6 sm:col-span-3">
-                              <label for="campus" className="block text-sm font-medium text-gray-700">Campus</label>
-                              <select id="campus" name="campus" autocomplete="campus" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
-                                <option>Monteiro</option>
-                                {/* <option>Cabedelo</option>
-                                <option>Campina Grande</option> */}
-                              </select>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3">
-                              <label for="curso" className="block text-sm font-medium text-gray-700">Curso</label>
-                              <input type="text" name="curso" id="curso" autocomplete="curso" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
-
                             
-                      </div>
-                  </div>
+              </div>
+          </div>
 
-                  <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      <div className="col ml-2">
-                          <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
+          <div className="row flex flex-row-reverse align-middle px-4 mt-1">
+                                {/* <div className="col ml-2">
+                                    <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
-                      </div>
-                      <div className="col mr-2">
-                          <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
+                                </div> */}
+                                <div className="col mr-2">
+                                    <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
-                      </div>
-                      <br />
-                      </div>
+                                </div>
+                            </div>
 
-                    <div className="">
+          <div className="">
 
-                    </div>
-                    <br />
-                  {/* </div> */}
-                {/* End Card */}
-              </form>
-            </div>
+          {/* <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
+            <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
+            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
+            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
           </div>
-        </div>
-      </div>
+          <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
+            <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
+            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
+            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
+          </div> */}
+
+          </div>
+        {/* </div> */}
+        {/* End Card */}
+      </form>
+
+          <div className="row">
+                            <div className="col-span-6">
+                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
+                                    {/* <i className="pi pi-plus"></i>  */}
+                                    CADASTRAR USUÁRIO
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                        <div className='row'>
+                            <div className='col-span-6' >
+                                <div className=''>
+                                    <UsersTable beneficiaries={this.state.beneficiarios}
+                                        delete={this.delete}
+                                        edit={this.edit} id="idEdit"/>
+                                </div>
+                            </div>
+                        </div>
+
+
     </div>
   </div>
-  );
+</div>
+            </div>
+        
+        </div>
+    
+    </div>
+    );
   }
 }
 
-export default withRouter(CadastrarBeneficiario);
+export default withRouter(ListarBeneficiarios);
 

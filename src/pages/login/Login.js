@@ -8,19 +8,27 @@ import LogoutButton from "../../components/Logout";
 import { useEffect } from 'react';
 import { gapi } from 'gapi-script';
 
-const clientId = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
-
+const CLIENT_ID = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
+const SCOPES = "https://www.googleapis.com/auth/drive";
 function Login() {
 
     useEffect(() => {
         function start() {
             gapi.client.init({
-            clientId: clientId,
+            clientId: CLIENT_ID,
             scope: ""
         })
      };
         gapi.load('client:auth2', start);
     });
+
+    // GoogleLogin.accounts.oauth2.initTokenClient({
+    //     client_id: CLIENT_ID,
+    //     scope: SCOPES,
+    //     callback: (tokenResponse) => {
+    //         console.log(tokenResponse);
+    //     }
+    // })
 
     // state = {
     //     username: '',
@@ -77,7 +85,7 @@ function Login() {
                             </form>
                             <div className="row flex justify-center align-middle px-4 mt-4">
                                 <div className="col m-2">
-                                <p className="text-sm">Acesso pelo Google:</p>
+                                <p className="text-sm">Acesse com sua conta Google:</p>
                                 </div>
                                 
                             </div>

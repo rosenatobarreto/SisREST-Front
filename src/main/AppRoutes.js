@@ -2,13 +2,16 @@ import React from "react";
 import {Route, BrowserRouter} from 'react-router-dom';
 
 import Login from "../pages/login/Login";
-import CreateBeneficiario from "../pages/cadastrarBeneficiario/CadastrarBeneficiario";
+import CadastrarBeneficiario from "../pages/cadastrarBeneficiario/CadastrarBeneficiario";
+import ListarBeneficiarios from "../pages/listarBeneficiarios/ListarBeneficiarios";
 
 function AppRoutes() {
     return (
         <BrowserRouter>
             <Route component = { Login } path = "/" exact />
-            <Route component ={ CreateBeneficiario } path = "/cadastrarBeneficiario" />
+            <Route component ={ CadastrarBeneficiario } path = "/cadastrarBeneficiario" />
+            <Route component ={ ListarBeneficiarios } path = "/listarBeneficiarios" />
+
             
         </BrowserRouter>
     );

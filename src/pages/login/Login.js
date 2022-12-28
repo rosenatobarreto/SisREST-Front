@@ -5,22 +5,25 @@ import SideBarLogin from '../../components/SideBarLogin';
 import GoogleLogin from 'react-google-login';
 import LoginButton from "../../components/Login";
 import LogoutButton from "../../components/Logout";
+import GoogleLoginComponent from '../../components/GoogleLoginComponent';
 import { useEffect } from 'react';
 import { gapi } from 'gapi-script';
+import { showSuccessMessage, showErrorMessage } from '../../components/Toastr';
+import { withRouter } from 'react-router-dom';
 
-const CLIENT_ID = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
-const SCOPES = "https://www.googleapis.com/auth/drive";
-function Login() {
+// const CLIENT_ID = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
+// const SCOPES = "https://www.googleapis.com/auth/drive";
+// function Login() {
 
-    useEffect(() => {
-        function start() {
-            gapi.client.init({
-            clientId: CLIENT_ID,
-            scope: ""
-        })
-     };
-        gapi.load('client:auth2', start);
-    });
+    // useEffect(() => {
+    //     function start() {
+    //         gapi.client.init({
+    //         clientId: CLIENT_ID,
+    //         scope: ""
+    //     })
+    //  };
+    //     gapi.load('client:auth2', start);
+    // });
 
     // GoogleLogin.accounts.oauth2.initTokenClient({
     //     client_id: CLIENT_ID,
@@ -31,11 +34,55 @@ function Login() {
     // })
 
     // state = {
-    //     username: '',
-    //     password: ''
+    //     matricula: '',
+    //     senha: ''
     // };
 
-    // render(){
+
+    // login = () => {
+    //     this.context.login(
+    //         this.state.matricula,
+    //         this.state.senha
+        
+    //     ).then(user => 
+    //         {
+    //             if (user) {
+
+    //                 console.log("if",user.CLIENT_ID);
+    //                 showSuccessMessage(`${user.name}, você está logado!`);
+    //                 this.props.history.push('/viewUsers');
+        
+    //             } else {
+    //                 console.log("else");
+    //                 showErrorMessage("Dados incorretos! Login inválido");
+    //             }
+
+    //         }
+    //     ).catch(error => 
+    //         {
+    //             console.log("catch");
+    //             console.log(error);
+    //             showErrorMessage('Erro! processando autenticação:', error);
+    //         }
+    //     );
+    // }
+
+    // create = () => {
+    //     this.props.history.push('/createUser');
+    // }
+
+    class Login extends React.Component {
+
+        state = {
+            matricula: "",
+            senha: "",
+          };
+        
+          
+
+
+     render(){
+        
         return(
 
             <div className="min-h-screen h-full bg-white flex">
@@ -66,18 +113,20 @@ function Login() {
                                         <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-bold text-slate-700 mr-2">Matrícula</span>
                                     </label>
                                     <input type="text" placeholder="Matrícula" className="apperance-none block w-[286px] py-1 px-1 leading-tight text-gray-700
-                                    bg-gray-50 focus:bg-white border border-gray-200 focus:border-gray-500 rounded focus:outline-none"></input>
+                                    bg-gray-50 focus:bg-white border border-gray-200 focus:border-gray-500 rounded focus:outline-none"
+                                    value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}></input>
                                 
                                 </div>
                                 <div className="mb-4 flex">
                                     <label class="block">
-                                        <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-bold text-slate-700 mr-2">Senha</span>
+                                        <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block text-sm font-bold text-slate-700 mr-2"
+                                        value={this.state.senha} onChange={(e) => { this.setState({ senha: e.target.value }) }}>Senha</span>
                                     </label>
                                     <input type="password" placeholder="Senha" className="apperance-none block w-[308px] py-1 px-1 leading-tight text-gray-700
                                     bg-gray-50 focus:bg-white border border-gray-200 focus:border-gray-500 rounded focus:outline-none"></input>
                                 </div>
                                 <div className="mb-4 flex flex-row">
-                                    <button className="inline-block w-[85px] items-center rounded-md border border-gray-300 bg-[#38761d] px-1 py-1 text-sm font-bold text-white shadow-sm hover:bg-gray-10 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">ENTRAR</button>
+                                    <button onClick={this.login} className="inline-block w-[85px] items-center rounded-md border border-gray-300 bg-[#38761d] px-1 py-1 text-sm font-bold text-white shadow-sm hover:bg-gray-10 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">ENTRAR</button>
                                     <p className="ml-4 text-sm text-blue-800 py-2 hover:text-cyan-500"><a href="/">Esqueceu sua senha?</a></p>
                                 </div>
                             <div cassName="mt-8">
@@ -105,7 +154,7 @@ function Login() {
 
 
         );
-    // }
+     }
 }
 
-export default Login;
+export default withRouter (Login);

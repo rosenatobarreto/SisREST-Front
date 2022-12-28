@@ -4,25 +4,25 @@ import 'toastr/build/toastr.min.js';
 import 'toastr/build/toastr.css';
 import AppRoutes from './main/AppRoutes';
 import Footer from './components/Footer';
-// import SessionProvider from './main/SessionProvider';
+import SessionProvider from './main/SessionProvider';
 import LoginButton from "./components/Login";
 import LogoutButton from "./components/Logout";
 import { useEffect } from 'react';
 import { gapi } from 'gapi-script';
 
-const clientId = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
+// const clientId = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
 
 function App() {
 
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: ""
-      })
-    };
-    gapi.load('client:auth2', start);
-  });
+  // useEffect(() => {
+  //   function start() {
+  //     gapi.client.init({
+  //       clientId: clientId,
+  //       scope: ""
+  //     })
+  //   };
+  //   gapi.load('client:auth2', start);
+  // });
 
   
   // const printToken = () => {

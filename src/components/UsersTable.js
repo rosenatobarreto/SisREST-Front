@@ -7,11 +7,11 @@ export default props => {
         return (
             <tr key={user.id}>
                 
-                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{user.nome}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{user.email}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{user.matricula}</td>
-                <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{user.tipo}</td>
-                <td  className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap col-span-2">
+                <td className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap">{user.nome}</td>
+                <td className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap">{user.email}</td>
+                <td className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap">{user.matricula}</td>
+                <td className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap">{user.tipo}</td>
+                <td  className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap col-span-2">
                     <button type="button" title="Editar"
                         className="btn-edit"
                         onClick={e => props.edit(user.id)}>

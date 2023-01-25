@@ -1,18 +1,20 @@
 import React from "react";
-import {Route, BrowserRouter} from 'react-router-dom';
+import {Route, BrowserRouter, Switch} from 'react-router-dom';
 
 import Login from "../pages/login/Login";
 import CadastrarBeneficiario from "../pages/cadastrarBeneficiario/CadastrarBeneficiario";
 import ListarBeneficiarios from "../pages/listarBeneficiarios/ListarBeneficiarios";
+import ImportarBeneficiarios from "../pages/importarBeneficiarios/ImportarBeneficiarios";
 
 function AppRoutes() {
     return (
         <BrowserRouter>
-            <Route component = { Login } path = "/" exact />
-            <Route component ={ CadastrarBeneficiario } path = "/cadastrarBeneficiario" />
-            <Route component ={ ListarBeneficiarios } path = "/listarBeneficiarios" />
-
-            
+            <Switch>
+                <Route component = { Login } path = "/" exact />
+                <Route component ={ CadastrarBeneficiario } path = "/cadastrarBeneficiario" />
+                <Route component ={ ListarBeneficiarios } path = "/listarBeneficiarios" />
+                <Route component ={ ImportarBeneficiarios } path = "/importarBeneficiarios" />
+            </Switch>
         </BrowserRouter>
     );
 }
@@ -25,7 +27,7 @@ export default AppRoutes;
 //     </AuthConsumer>
 // )
 
-////////////////
+//////////////
 
 // function AppRoutes(props) {
 //     return (

@@ -7,7 +7,7 @@ class Footer extends Component {
         return (
             <div>
                 <footer className="footer">
-                    <span>
+                    <span className="">
                         © SisRest 2022
                     </span>
                 </footer>

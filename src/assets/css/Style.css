@@ -2,14 +2,12 @@
 @tailwind components;
 @tailwind utilities; */
 
-
 .header {
     position: relative;
     left: 0;
     bottom: 0;
     padding-top: 10px;
     padding-right: 40px;
-    width: 100%;
     height: 130px;
     background-color: #eeeeee;
     font-family: Arial, Helvetica, sans-serif;
@@ -19,10 +17,9 @@
   }
 
 .footer {
-    position: relative;
+    position: absolute;
     left: 0;
     bottom: 0;
-    border-top: 2px solid #263B21;
     padding-top: 10px;
     padding-right: 40px;
     width: 100%;
@@ -34,18 +31,50 @@
     text-align: right;
   }
 
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 0 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  height: 45px;
+  line-height: 45px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all .3s cubic-bezier(.645,.045,.355,1);
+  transition: all .3s cubic-bezier(.645,.045,.355,1);
+  position: relative;
+  color: rgba(0,0,0,.65);
+  background-color: transparent;
+  border-color: #e8e8e8;
+  outline: none;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
 
   .btn-cancel{
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 0;
+    margin-right: 0;
     background-color: #93c47d;
     font-size-adjust: inherit;
     font-weight: bold;
 }
 
 .btn-save{
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 0;
+    margin-right: 0;
     background-color: #38761d;
     color: #fff;
     font-size-adjust: inherit;
@@ -119,4 +148,58 @@
     border-bottom: 1px #666666 solid;
 }
 
+.social-btn {
+    margin-bottom: 15px;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.social-btn img {
+    height: 32px;
+    float: left;
+    margin-top: 10px;
+}
+
+.social-btn.google {
+    margin-top: 7px;
+}
+
+.social-btn.facebook img {
+    height: 24px;
+    margin-left: 3px;
+}
+
+.social-btn.github img {
+    height: 24px;
+    margin-left: 3px;
+}
+
+.login-content {
+    background: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    border-radius: 2px;
+    width: 500px;
+    display: inline-block;
+    margin-top: 30px;
+    vertical-align: middle;
+    position: relative;    
+    padding: 35px;
+}
+
+@media screen and (max-width: 600px) {
+    .footer {
+        position:fixed;
+        left: 0;
+        bottom: 0;
+        padding-top: 10px;
+        padding-right: 40px;
+        width: 100%;
+        height: 4%;
+        background-color: #282c34;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: grey;
+        text-align: right;
+      }
+}
 

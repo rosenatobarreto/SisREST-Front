@@ -1,16 +1,23 @@
-import React from "react";
-import LogoIntern from "../../assets/imgs/SisRestLogoIntern.png";
-import SideBar from "../../components/SideBar";
+import React, { Component } from "react";
+// import LogoIntern from "../../assets/imgs/SisRestLogoIntern.png";
+// import SideBar from "../../components/SideBar";
 // import Header from "../../components/Header";
 
-import { withRouter } from "react-router-dom";
+// import { withRouter } from "react-router-dom";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import BeneficiarioApiService from "../../services/BeneficiarioApiService";
 import SelectEdital from "../../components/SelectEdital";
-import Footer from "../../components/Footer";
+// import Footer from "../../components/Footer";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class CadastrarBeneficiario extends React.Component {
+class CadastrarBeneficiario extends Component {
+
+  constructor(props) {
+    super(props);
+    console.log(props);
+    this.service = new BeneficiarioApiService();
+  }
+
   state = {
     nome: "",
     matricula: "",
@@ -19,51 +26,48 @@ class CadastrarBeneficiario extends React.Component {
     admin: false,
     editalId: "",
   };
-  constructor() {
-    super();
-    this.service = new BeneficiarioApiService();
-  }
 
-  componentWillUnmount() {
-    this.clear();
-  }
 
-  // validate = () => {
-  //   const errors = [];
+  // componentWillUnmount() {
+  //   this.clear();
+  // }
 
-  //   if (!this.state.nome) {
-  //     errors.push("Campo Nome é obrigatório!");
-  //   } else if (!this.state.nome.match(/[A-z ]{2,50}$/)) {
-  //     errors.push("O Nome deve ter no mínimo 2 e no máximo 50 caracteres!");
-  //   }
+  validate = () => {
+    const errors = [];
 
-  //   if (!this.state.email) {
-  //     errors.push("Campo E-mail é obrigatório! ");
-  //   } else if (!this.state.email.match(/[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-  //     errors.push("Informe um E-mail válido!");
-  //   }
+    if (!this.state.nome) {
+      errors.push("Campo Nome é obrigatório!");
+    } else if (!this.state.nome.match(/[A-z ]{2,50}$/)) {
+      errors.push("O Nome deve ter no mínimo 2 e no máximo 50 caracteres!");
+    }
 
-  //   if (!this.state.matricula) {
-  //     errors.push("Campo Matrícula é obrigatório!");
-  //     errors.push("A Matrícula deve conter apenas números!");
-  //   }
+    if (!this.state.email) {
+      errors.push("Campo E-mail é obrigatório! ");
+    } else if (!this.state.email.match(/[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
+      errors.push("Informe um E-mail válido!");
+    }
 
-  //   if (!this.state.senha) {
-  //     errors.push("Campo Senha é obrigatório!");
-  //   } else if (
-  //     !this.state.senha.match(
-  //       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,30}$/
-  //     )
-  //   ) {
-  //     errors.push("A Senha deve ter no mínimo 8 e no máximo 30 caracteres.");
-  //     errors.push("A Senha deve conter ao menos um número.");
-  //     errors.push("A Senha deve conter ao menos uma letra minúscula.");
-  //     errors.push("A Senha deve conter ao menos uma letra maiúscula.");
-  //     errors.push("A Senha deve conter ao menos um caractere especial.");
-  //   }
+    if (!this.state.matricula) {
+      errors.push("Campo Matrícula é obrigatório!");
+      errors.push("A Matrícula deve conter apenas números!");
+    }
 
-  //   return errors;
-  // };
+    if (!this.state.senha) {
+      errors.push("Campo Senha é obrigatório!");
+    } else if (
+      !this.state.senha.match(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,30}$/
+      )
+    ) {
+      errors.push("A Senha deve ter no mínimo 8 e no máximo 30 caracteres.");
+      errors.push("A Senha deve conter ao menos um número.");
+      errors.push("A Senha deve conter ao menos uma letra minúscula.");
+      errors.push("A Senha deve conter ao menos uma letra maiúscula.");
+      errors.push("A Senha deve conter ao menos um caractere especial.");
+    }
+
+    return errors;
+  };
 
   create = () => {
     const errors = this.validate();
@@ -120,7 +124,10 @@ class CadastrarBeneficiario extends React.Component {
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
             <div className="flex flex-row-reverse pr-6">
-              <p className="text-lg font-semibold">Administrador</p>
+                <p className="text-xs">{this.props.currentUser.email}</p>
+            </div>
+            <div className="flex flex-row-reverse pr-6">
+                <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
               <p className="text-xl font-semibold">Cadastrar Beneficiário</p>
@@ -139,7 +146,7 @@ class CadastrarBeneficiario extends React.Component {
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
                   <form action="" method="POST">
-                    {/* Begin Card */}
+                    
                     {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
@@ -222,16 +229,6 @@ class CadastrarBeneficiario extends React.Component {
                           />
                         </div>
 
-                        {/* <div className="col-span-6 sm:col-span-3">
-                              <label for="last-name" className="block text-sm font-medium text-black">Last name</label>
-                              <input type="text" name="last-name" id="last-name" autocomplete="family-name" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div> */}
-
-                        {/* <div className="col-span-6 sm:col-span-4">
-                              <label for="email-address" className="block text-sm font-medium text-black">Email address</label>
-                              <input type="text" name="email-address" id="email-address" autocomplete="email" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div> */}
-
                         <div className="col-span-6 sm:col-span-3">
                           <label
                             for="campus"
@@ -246,8 +243,7 @@ class CadastrarBeneficiario extends React.Component {
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
                           >
                             <option>Monteiro</option>
-                            {/* <option>Cabedelo</option>
-                                <option>Campina Grande</option> */}
+                            
                           </select>
                         </div>
 
@@ -300,7 +296,7 @@ class CadastrarBeneficiario extends React.Component {
                     <div className=""></div>
                     <br />
                     {/* </div> */}
-                    {/* End Card */}
+                    
                   </form>
                 </div>
               </div>
@@ -312,4 +308,4 @@ class CadastrarBeneficiario extends React.Component {
   }
 }
 
-export default withRouter(CadastrarBeneficiario);
+export default CadastrarBeneficiario;

@@ -29,6 +29,8 @@ import Home from "./home/Home";
 import CadastrarBeneficiario from "./pages/cadastrarBeneficiario/CadastrarBeneficiario";
 import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios";
 import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
+import BoasVindas from "./pages/boasVindas/BoasVindas";
+import Header from "./components/Header";
 
 class App extends Component {
   constructor(props) {
@@ -65,7 +67,7 @@ class App extends Component {
       authenticated: false,
       currentUser: null,
     });
-    showSuccessMessage("You're safely logged out!");
+    showSuccessMessage("Você está desconectado com segurança!");
   }
 
   componentDidMount() {
@@ -78,13 +80,19 @@ class App extends Component {
     }
 
     return (
-      <div className="">
-        <div className="">
+      <div>
+        <div>
           {/* <AppHeader authenticated={this.state.authenticated} onLogout={this.handleLogout} /> */}
         </div>
         <div className="">
           <Switch>
             <Route exact path="/" component={Login}></Route>
+            <PrivateRoute
+              path="/header"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={Header}
+            ></PrivateRoute>
             <PrivateRoute
               path="/profile"
               authenticated={this.state.authenticated}
@@ -103,16 +111,25 @@ class App extends Component {
               path="/oauth2/redirect"
               component={OAuth2RedirectHandler}
             ></Route>
-            {/* <Route path="/login" component={Login}></Route> */}
-            <Route
+            <PrivateRoute
               path="/cadastrarBeneficiario"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
               component={CadastrarBeneficiario}
-            ></Route>
-            <Route
+            ></PrivateRoute>
+            <PrivateRoute
               path="/listarBeneficiarios"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
               component={ListarBeneficiarios}
-            ></Route>
-            {/* <Route path="/login" component={Login}></Route>     */}
+            ></PrivateRoute>
+            {/* <Route path="/boasVindas" component={BoasVindas}></Route> */}
+            <PrivateRoute
+              path="/boasVindas"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={BoasVindas}
+            ></PrivateRoute>    
             <Route component={NotFound}></Route>
           </Switch>
         </div>

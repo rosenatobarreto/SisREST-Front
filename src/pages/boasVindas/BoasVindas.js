@@ -91,7 +91,6 @@ class BoasVindas extends Component {
                   </div>
                   <div className="mt-5 md:col-span-2 md:mt-0">
                     <p></p>
-                    <p></p>
                     <p className="text-center">Bem-vindo(a) ao SisRest!</p>
                     <br />
                     <p className="text-center">

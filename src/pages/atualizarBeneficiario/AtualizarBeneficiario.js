@@ -10,7 +10,7 @@ import SelectEdital from "../../components/SelectEdital";
 // import Footer from "../../components/Footer";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class CadastrarBeneficiario extends Component {
+class AtualizarBeneficiario extends Component {
 
   constructor(props) {
     super(props);
@@ -69,37 +69,37 @@ class CadastrarBeneficiario extends Component {
     return errors;
   };
 
-  create = () => {
-    const errors = this.validate();
-    //this.service.create(this.state)
-    if (errors.length > 0) {
-      errors.forEach((message, index) => {
-        showErrorMessage(message);
-      });
-      return false;
-    }
+//   create = () => {
+//     const errors = this.validate();
+//     //this.service.create(this.state)
+//     if (errors.length > 0) {
+//       errors.forEach((message, index) => {
+//         showErrorMessage(message);
+//       });
+//       return false;
+//     }
 
-    this.service
-      .create({
-        nome: this.state.nome,
-        matricula: this.state.matricula,
-        email: this.state.email,
-        senha: this.state.senha,
-        admin: this.state.admin,
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(this.state);
-        showSuccessMessage("Beneficiário criado com sucesso!");
-      })
-      .catch((error) => {
-        console.log(error.response);
-        console.log(this.state);
-        showErrorMessage("O beneficiário não pode ser salvo!");
-      });
+//     this.service
+//       .create({
+//         nome: this.state.nome,
+//         matricula: this.state.matricula,
+//         email: this.state.email,
+//         senha: this.state.senha,
+//         admin: this.state.admin,
+//       })
+//       .then((response) => {
+//         console.log(response);
+//         console.log(this.state);
+//         showSuccessMessage("Beneficiário criado com sucesso!");
+//       })
+//       .catch((error) => {
+//         console.log(error.response);
+//         console.log(this.state);
+//         showErrorMessage("O beneficiário não pode ser salvo!");
+//       });
 
-    console.log("request finished");
-  };
+//     console.log("request finished");
+//   };
 
   cancel = () => {
     this.props.history.push("/");
@@ -110,6 +110,64 @@ class CadastrarBeneficiario extends Component {
       console.log("Id do Edital: ", this.state.editalId);
     });
   };
+
+  update = () => {
+
+        const errors = this.validate();
+
+        if (errors.length > 0) {
+            errors.forEach((message, index) => {
+                showErrorMessage(message);
+            });
+            return false
+        }
+
+        this.service.update(this.state.id,
+            {
+                nome: this.state.nome,
+                matricula: this.state.matricula,
+                email: this.state.email,
+                senha: this.state.senha,
+                admin: this.state.admin,
+                
+            }
+        ).then(response => {
+            console.log(response);
+            showSuccessMessage('Beneficiário atualizado com sucesso!');
+            this.props.history.push("/listarBeneficiarios");
+        }
+        ).catch(error => {
+            console.log(error.response);
+            showErrorMessage('O beneficiário não pode ser atualizado!');
+        }
+        );
+
+        console.log('request finished');
+    }
+
+
+   findById = (id) => {
+        this.service.find(id)
+            .then(response => {
+                console.log(response);
+                const beneficiario = response.data;
+                const id = beneficiario.id;
+                const nome = beneficiario.nome;
+                const email = beneficiario.email;
+                const senha = beneficiario.senha;
+                const admin = beneficiario.admin;
+                
+                this.setState({ id:id, nome:nome, email:email, senha:senha, admin:admin });
+
+            }
+
+            ).catch(error => {
+                console.log(error.response);
+                console.log(error.message);
+            }
+            );
+    }
+
 
   render() {
     return (
@@ -274,14 +332,14 @@ class CadastrarBeneficiario extends Component {
                       </div>
                       <div className="col mr-2">
                         <button
-                          onClick={this.create}
+                          onClick={this.update}
                           type="submit"
                           className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >
-                          CADASTRAR
+                          ATUALIZAR
                         </button>
                       </div>
                       <br />
@@ -302,4 +360,4 @@ class CadastrarBeneficiario extends Component {
   }
 }
 
-export default CadastrarBeneficiario;
+export default AtualizarBeneficiario;

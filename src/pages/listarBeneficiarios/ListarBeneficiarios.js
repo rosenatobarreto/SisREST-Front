@@ -1,13 +1,13 @@
-import React from "react";
+import React, { Component} from "react";
 // import Header from "../../components/Header";
 
-import { withRouter } from "react-router-dom";
-import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
+// import { withRouter } from "react-router-dom";
+// import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import BeneficiarioApiService from "../../services/BeneficiarioApiService";
 import UsersTable from "../../components/UsersTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class ListarBeneficiarios extends React.Component {
+class ListarBeneficiarios extends Component {
   state = {
     nome: "",
     id: 0,
@@ -17,9 +17,11 @@ class ListarBeneficiarios extends React.Component {
     admin: "",
     beneficiarios: [],
   };
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.service = new BeneficiarioApiService();
+    console.log(props);
+    
   }
   componentDidMount() {
     this.findAll();
@@ -137,6 +139,9 @@ class ListarBeneficiarios extends React.Component {
         <div className="w-full">
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
+            <div className="flex flex-row-reverse pr-6">
+                <p className="text-xs">{this.props.currentUser.email}</p>
+            </div>
             <div className="flex flex-row-reverse pr-6">
               <p className="text-lg font-semibold">Administrador</p>
             </div>
@@ -267,4 +272,4 @@ class ListarBeneficiarios extends React.Component {
   }
 }
 
-export default withRouter(ListarBeneficiarios);
+export default ListarBeneficiarios;

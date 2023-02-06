@@ -25,10 +25,11 @@ import AppHeader from "./components/common/AppHeader";
 // import Alert from 'react-s-alert';
 // import 'react-s-alert/dist/s-alert-default.css';
 // import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-import Home from "./home/Home";
+// import Home from "./home/Home";
 import CadastrarBeneficiario from "./pages/cadastrarBeneficiario/CadastrarBeneficiario";
 import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios";
 import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
+import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
 
@@ -122,6 +123,18 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarBeneficiarios}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/importarBeneficiarios"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ImportarBeneficiarios}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/atualizarBeneficiario"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarBeneficiario}
             ></PrivateRoute>
             {/* <Route path="/boasVindas" component={BoasVindas}></Route> */}
             <PrivateRoute

@@ -18,8 +18,8 @@ class ImportarBeneficiarios extends React.Component {
     admin: false,
     editalId: "",
   };
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.service = new BeneficiarioApiService();
   }
 
@@ -121,6 +121,9 @@ class ImportarBeneficiarios extends React.Component {
         <div className="w-screen">
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
+            <div className="flex flex-row-reverse pr-6">
+                <p className="text-xs">{this.props.currentUser.email}</p>
+            </div>
             <div className="flex flex-row-reverse pr-6">
               <p className="text-lg font-semibold">Administrador</p>
             </div>

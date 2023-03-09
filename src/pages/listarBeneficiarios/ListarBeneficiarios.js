@@ -252,12 +252,12 @@ class ListarBeneficiarios extends Component {
                   <div className="row">
                     <div className="">
                       <div className="">
-                        <UsersTable
+                        {/* <UsersTable
                           beneficiarios={this.state.beneficiarios}
                           delete={this.delete}
                           edit={this.edit}
                           id="idEdit"
-                        />
+                        /> */}
                       </div>
                     </div>
                   </div>

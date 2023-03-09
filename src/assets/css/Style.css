@@ -1,6 +1,11 @@
+
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
+/* .col-left {
+    @apply container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow;
+} */
 
 .header {
     position: relative;
@@ -206,6 +211,7 @@
     font-size: 20px;
     margin-bottom: 20px;
 }
+
 
 @media screen and (max-width: 600px) {
     .footer {

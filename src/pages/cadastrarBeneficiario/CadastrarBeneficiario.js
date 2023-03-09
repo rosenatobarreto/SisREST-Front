@@ -105,6 +105,7 @@ class CadastrarBeneficiario extends Component {
     this.props.history.push("/");
   };
 
+
   inputSelectEdital = (e) => {
     this.setState({ editalId: e.target.value }, () => {
       console.log("Id do Edital: ", this.state.editalId);

@@ -127,6 +127,11 @@ class ListarBeneficiarios extends Component {
       });
   };
 
+  importarDadosEdital = () => {
+    this.props.history.push("/importarBeneficiarios");
+  };
+
+
   render() {
     return (
       <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -203,12 +208,12 @@ class ListarBeneficiarios extends Component {
                     </div>
 
                     <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      {/* <div className="col ml-2">
-                                    <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
+                      <div className="col ml-2">
+                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
-                                </div> */}
+                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
+                                </div> 
                       <div className="col mr-2">
                         <button
                           onClick={this.createBeneficiario}

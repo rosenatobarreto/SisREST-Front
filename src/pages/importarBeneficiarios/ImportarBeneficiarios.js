@@ -5,7 +5,7 @@ import React from "react";
 
 import { withRouter } from "react-router-dom";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import BeneficiarioApiService from "../../services/BeneficiarioApiService";
+import AlunoApiService from "../../services/AlunoApiServices";
 import SelectEdital from "../../components/SelectEdital";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
@@ -14,13 +14,24 @@ class ImportarBeneficiarios extends React.Component {
     nome: "",
     matricula: "",
     email: "",
-    senha: "",
-    admin: false,
-    editalId: "",
+    CPF: "", 
+    curso: "",
+    programa: "",
+    modalidade: "",
+    situacao: "",
+    classificacao: "",
+    pontuacao: "",
+    renda: "",
+    quantidade: "",
+    percapta: "",
+    cota: "",
+    Nascimento: "",
+    valor: "",
+    editalId: 0
   };
   constructor(props) {
     super(props);
-    this.service = new BeneficiarioApiService();
+    this.service = new AlunoApiService();
   }
 
   componentWillUnmount() {
@@ -79,18 +90,30 @@ class ImportarBeneficiarios extends React.Component {
         nome: this.state.nome,
         matricula: this.state.matricula,
         email: this.state.email,
-        senha: this.state.senha,
-        admin: this.state.admin,
+        CPF: this.state.CPF, 
+        curso: this.state.curso,
+        programa: this.state.programa,
+        modalidade: this.state.modalidade,
+        situacao: this.state.situacao,
+        classificacao: this.state.classificacao,
+        pontuacao: this.state.pontuacao,
+        renda: this.state.renda,
+        quantidade: this.state.quantidade,
+        percapta: this.state.percapta,
+        cota: this.state.cota,
+        Nascimento: this.state.Nascimento,
+        valor: this.state.valor,
+        editalId: this.state.editalId
       })
       .then((response) => {
         console.log(response);
         console.log(this.state);
-        showSuccessMessage("Beneficiário criado com sucesso!");
+        showSuccessMessage("Dados inseridos com sucesso!");
       })
       .catch((error) => {
         console.log(error.response);
         console.log(this.state);
-        showErrorMessage("O beneficiário não pode ser salvo!");
+        showErrorMessage("Os dados não podem ser salvos!");
       });
 
     console.log("request finished");

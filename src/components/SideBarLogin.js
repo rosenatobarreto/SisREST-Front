@@ -7,11 +7,11 @@ export default class SideBar extends React.Component {
     render() {
         return (
 //"hidden sm:block relative w-[200px] flex-1 bg-[#93c47d]"
-            <div className="w-[50%] bg-[#93c47d]">
+            <div className="w-[40%] bg-[#93c47d]">
                     <div className="flex flex-col h-screen justify-center items-center">
                         <img className="mt-0 mb-0" alt='logo' src={Logo} width='341px' heidth='341px'/>
-                        <span><strong>Sistema de Gerenciamento</strong></span>
-                        <span><strong>do Restaurante Estudantil</strong></span>
+                        <span className="text-center"><strong>Sistema de Gerenciamento</strong></span>
+                        <span className="text-center"><strong>do Restaurante Estudantil</strong></span>
                         <br/>
                         <br/>
                         <div></div>

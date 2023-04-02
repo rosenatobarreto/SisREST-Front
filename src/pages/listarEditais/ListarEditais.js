@@ -1,25 +1,22 @@
 import React, { Component} from "react";
-// import Header from "../../components/Header";
-
-// import { withRouter } from "react-router-dom";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import BeneficiarioApiService from "../../services/BeneficiarioApiService";
-import UsersTable from "../../components/UsersTable";
+import EditalApiService from "../../services/EditalApiService";
+import EditaisTable from "../../components/EditaisTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class ListarBeneficiarios extends Component {
+class ListarEditais extends Component {
   state = {
+    numero: 0,
+    ano: 0,
     nome: "",
-    id: 0,
-    email: "",
-    tipo: "",
-    matricula: 0,
-    admin: "",
-    beneficiarios: [],
+    link: "",
+    vigenteInicio: "",
+    vigenteFinal: "",
+    editais: [],
   };
   constructor(props) {
     super(props);
-    this.service = new BeneficiarioApiService();
+    this.service = new EditalApiService();
     console.log(props);
     
   }
@@ -31,9 +28,9 @@ class ListarBeneficiarios extends Component {
       this.clear();
   }
 
-  delete = (userId) => {
+  delete = (editalId) => {
     this.service
-      .delete(userId)
+      .delete(editalId)
       .then((response) => {
         this.find();
       })
@@ -42,12 +39,12 @@ class ListarBeneficiarios extends Component {
       });
   };
 
-  edit = (userId) => {
-    this.props.history.push(`/atualizarBeneficiario/${userId}`);
+  edit = (editalId) => {
+    this.props.history.push(`/atualizarEdital/${editalId}`);
   };
 
-  createBeneficiario = () => {
-    this.props.history.push(`/cadastrarBeneficiario`);
+  createEdital = () => {
+    this.props.history.push(`/cadastrarEdital`);
   };
 
   find = (id) => {
@@ -62,52 +59,52 @@ class ListarBeneficiarios extends Component {
       params = `${params}id=${this.state.id}`;
     }
 
+    if (this.state.numero !== 0) {
+      if (params !== "?") {
+        params = `${params}&`;
+      }
+
+      params = `${params}numero=${this.state.numero}`;
+    }
+
+    if (this.state.ano !== 0) {
+      if (params !== "?") {
+        params = `${params}&`;
+      }
+
+      params = `${params}ano=${this.state.ano}`;
+    }
+
     if (this.state.nome !== "") {
       if (params !== "?") {
         params = `${params}&`;
       }
 
-      params = `${params}nome=${this.state.nome}`;
+      params = `${params}ano=${this.state.ano}`;
     }
 
-    if (this.state.email !== "") {
+    if (this.state.vigenteInicio !== "") {
       if (params !== "?") {
         params = `${params}&`;
       }
 
-      params = `${params}email=${this.state.email}`;
+      params = `${params}vigenteInicio=${this.state.vigenteInicio}`;
     }
 
-    if (this.state.matricula !== 0) {
+    if (this.state.vigenteFinal !== "") {
       if (params !== "?") {
         params = `${params}&`;
       }
 
-      params = `${params}matricula=${this.state.matricula}`;
-    }
-
-    if (this.state.tipo !== "") {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
-
-      params = `${params}tipo=${this.state.tipo}`;
-    }
-
-    if (this.state.admin !== false) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
-
-      params = `${params}admin=${this.state.admin}`;
+      params = `${params}vigenteFinal=${this.state.vigenteFinal}`;
     }
 
     this.service
       .get(this.state.id)
       .then((response) => {
-        const beneficiarios = response.data;
-        this.setState({ beneficiarios });
-        console.log(beneficiarios);
+        const editais = response.data;
+        this.setState({ editais });
+        console.log(editais);
       })
       .catch((error) => {
         console.log(error.response);
@@ -118,19 +115,14 @@ class ListarBeneficiarios extends Component {
     this.service
       .get("/buscarTodos")
       .then((response) => {
-        const beneficiarios = response.data;
-        this.setState({ beneficiarios });
-        console.log(beneficiarios);
+        const editais = response.data;
+        this.setState({ editais });
+        console.log(editais);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
-
-  importarDadosEdital = () => {
-    this.props.history.push("/importarBeneficiarios");
-  };
-
 
   render() {
     return (
@@ -151,7 +143,7 @@ class ListarBeneficiarios extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Usuários</p>
+              <p className="text-xl font-semibold">Gerenciar Editais</p>
             </div>
           </div>
 
@@ -186,12 +178,12 @@ class ListarBeneficiarios extends Component {
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="cpf" className="block text-sm font-medium text-gray-700">Filtrar por edital</label>
+                              <label for="cpf" className="block text-sm font-medium text-gray-700">Filtrar por início da vigência</label>
                               <input type="text" name="filterEdital" id="filterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por matrícula</label>
+                              <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por final da vigência</label>
                               <input type="email" name="filterMatricula" id="filterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
@@ -277,4 +269,4 @@ class ListarBeneficiarios extends Component {
   }
 }
 
-export default ListarBeneficiarios;
+export default ListarEditais;

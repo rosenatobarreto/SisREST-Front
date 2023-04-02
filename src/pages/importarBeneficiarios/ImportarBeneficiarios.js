@@ -120,7 +120,7 @@ class ImportarBeneficiarios extends React.Component {
   };
 
   cancel = () => {
-    this.props.history.push("/");
+    this.props.history.push("/listarBeneficiarios");
   };
 
   inputSelectEdital = (e) => {

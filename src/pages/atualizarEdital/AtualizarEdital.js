@@ -1,32 +1,25 @@
 import React, { Component } from "react";
-// import LogoIntern from "../../assets/imgs/SisRestLogoIntern.png";
-// import SideBar from "../../components/SideBar";
-// import Header from "../../components/Header";
-
-// import { withRouter } from "react-router-dom";
+import EditalApiService from "../../services/EditalApiService";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import BeneficiarioApiService from "../../services/BeneficiarioApiService";
-import SelectEdital from "../../components/SelectEdital";
-// import Footer from "../../components/Footer";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class CadastrarBeneficiario extends Component {
 
-  constructor(props) {
+class AtualizarEdital extends Component {
+
+constructor(props) {
     super(props);
     console.log(props);
-    this.service = new BeneficiarioApiService();
+    this.service = new EditalApiService();
   }
 
   state = {
+    numero: 0,
+    ano: 0,
     nome: "",
-    matricula: "",
-    email: "",
-    senha: "",
-    admin: false,
-    editalId: "",
+    link: "",
+    vigenteInicio: "",
+    vigenteFinal: "",
   };
-
 
   componentWillUnmount() {
     this.clear();
@@ -35,43 +28,51 @@ class CadastrarBeneficiario extends Component {
   validate = () => {
     const errors = [];
 
+    if (!this.state.numero) {
+      errors.push("Campo Número é obrigatório!");
+    } else if (!this.state.numero.match(/[0-9 ]{2,50}$/)) {
+      errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
+    }
+
+    if (!this.state.ano) {
+      errors.push("Campo E-mail é obrigatório! ");
+    } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
+      errors.push("Informe um ano válido!");
+    }
+
     if (!this.state.nome) {
       errors.push("Campo Nome é obrigatório!");
-    } else if (!this.state.nome.match(/[A-z ]{2,50}$/)) {
-      errors.push("O Nome deve ter no mínimo 2 e no máximo 50 caracteres!");
+    } else if (!this.state.nome.match(/[A-z ]{13,250}$/)) {
+      errors.push(
+        "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
+      );
     }
 
-    if (!this.state.email) {
-      errors.push("Campo E-mail é obrigatório! ");
-    } else if (!this.state.email.match(/[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
-      errors.push("Informe um E-mail válido!");
-    }
-
-    if (!this.state.matricula) {
-      errors.push("Campo Matrícula é obrigatório!");
-      errors.push("A Matrícula deve conter apenas números!");
-    }
-
-    if (!this.state.senha) {
-      errors.push("Campo Senha é obrigatório!");
+    if (!this.state.vigenteInicio) {
+      errors.push("Campo Data de Início é obrigatório!");
     } else if (
-      !this.state.senha.match(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,30}$/
+      !this.state.vigenteInicio.match(
+        /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
       )
     ) {
-      errors.push("A Senha deve ter no mínimo 8 e no máximo 30 caracteres.");
-      errors.push("A Senha deve conter ao menos um número.");
-      errors.push("A Senha deve conter ao menos uma letra minúscula.");
-      errors.push("A Senha deve conter ao menos uma letra maiúscula.");
-      errors.push("A Senha deve conter ao menos um caractere especial.");
+      errors.push("Data inválida!");
     }
 
+    if (!this.state.vigenteFinal) {
+      errors.push("Campo Data de Início é obrigatório!");
+    } else if (
+      !this.state.vigenteFinal.match(
+        /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
+      )
+    ) {
+      errors.push("Data inválida!");
+    }
     return errors;
   };
 
-  create = () => {
+  cadastrar = () => {
     const errors = this.validate();
-    //this.service.create(this.state)
+
     if (errors.length > 0) {
       errors.forEach((message, index) => {
         showErrorMessage(message);
@@ -81,35 +82,29 @@ class CadastrarBeneficiario extends Component {
 
     this.service
       .create({
+        numero: this.state.numero,
+        ano: this.state.ano,
         nome: this.state.nome,
-        matricula: this.state.matricula,
-        email: this.state.email,
-        senha: this.state.senha,
-        admin: this.state.admin,
+        vigenteInicio: this.state.vigenteInicio,
+        vigenteFinal: this.state.vigenteFinal,
+        link: this.state.link,
       })
       .then((response) => {
         console.log(response);
         console.log(this.state);
-        showSuccessMessage("Beneficiário criado com sucesso!");
+        showSuccessMessage("Edital cadastrado com sucesso!");
       })
       .catch((error) => {
         console.log(error.response);
         console.log(this.state);
-        showErrorMessage("O beneficiário não pode ser salvo!");
+        showErrorMessage("O edital não pode ser cadastrado!");
       });
 
     console.log("request finished");
   };
 
   cancel = () => {
-    this.props.history.push("/boasVindas");
-  };
-
-
-  inputSelectEdital = (e) => {
-    this.setState({ editalId: e.target.value }, () => {
-      console.log("Id do Edital: ", this.state.editalId);
-    });
+    this.props.history.push("/");
   };
 
   render() {
@@ -118,20 +113,20 @@ class CadastrarBeneficiario extends Component {
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
-          <MenuAdministrador /> 
+          <MenuAdministrador />
         </div>
         {/* Col right */}
         <div className="w-full">
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{this.props.currentUser.email}</p>
+              <p className="text-xs">{this.props.currentUser.email}</p>
             </div>
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-lg font-semibold">Administrador</p>
+              <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Cadastrar Beneficiário</p>
+              <p className="text-xl font-semibold">Cadastrar Edital</p>
             </div>
           </div>
 
@@ -140,38 +135,23 @@ class CadastrarBeneficiario extends Component {
             <div className="mt-0 sm:mt-0">
               <div className="md:grid md:grid-cols-1 md:gap-6">
                 <div className="md:col-span-1">
-                  <div className="px-4 sm:px-0">
-                    
-                  </div>
+                  <div className="px-4 sm:px-0"></div>
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
                   <form action="" method="POST">
-                    
-                    
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="edital"
+                            for="numero"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Edital
-                          </label>
-                          
-                          <SelectEdital onChange={this.inputSelectEdital} />
-                        </div>
-
-                        <div className="col-span-6 sm:col-span-3">
-                          <label
-                            for="name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Nome
+                            Número
                           </label>
                           <input
-                            type="text"
-                            name="name"
-                            id="name"
+                            type="number"
+                            name="numero"
+                            id="numeroEdital"
                             autocomplete="given-name"
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                           />
@@ -179,30 +159,30 @@ class CadastrarBeneficiario extends Component {
 
                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                           <label
-                            for="matricula"
+                            for="ano"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Matrícula
+                            Ano
                           </label>
                           <input
-                            type="text"
-                            name="matricula"
-                            id="matricula"
+                            type="number"
+                            name="ano"
+                            id="anoEdital"
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                           <label
-                            for="cpf"
+                            for="nome"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            CPF
+                            Título do Edital
                           </label>
                           <input
                             type="text"
-                            name="cpf"
-                            id="cpf"
+                            name="nome"
+                            id="nomeEdital"
                             autocomplete=""
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                           />
@@ -210,50 +190,49 @@ class CadastrarBeneficiario extends Component {
 
                         <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                           <label
-                            for="email"
+                            for="vigenteInicio"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            E-mail
+                            Vigente a partir de
                           </label>
                           <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            autocomplete="email"
+                            type="date"
+                            name="vigenteInicio"
+                            id="vigenteInicio"
+                            autocomplete="date"
                             className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                           />
                         </div>
 
                         <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="campus"
+                            for="vigenteFinal"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Campus
+                            Vigente até
                           </label>
-                          <select
-                            id="campus"
-                            name="campus"
-                            autocomplete="campus"
+                          <input
+                            type="date"
+                            name="vigenteFinal"
+                            id="vigenteFinal"
+                            autocomplete="date"
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
                           >
-                            <option>Monteiro</option>
-                            
-                          </select>
+                          </input>
                         </div>
 
                         <div className="col-span-6 sm:col-span-3">
                           <label
-                            for="curso"
+                            for="link"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Curso
+                            Link do Edital
                           </label>
                           <input
                             type="text"
-                            name="curso"
-                            id="curso"
-                            autocomplete="curso"
+                            name="link"
+                            id="linkEdital"
+                            autocomplete=""
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                           />
                         </div>
@@ -290,8 +269,6 @@ class CadastrarBeneficiario extends Component {
 
                     <div className=""></div>
                     <br />
-                    
-                    
                   </form>
                 </div>
               </div>
@@ -303,4 +280,4 @@ class CadastrarBeneficiario extends Component {
   }
 }
 
-export default CadastrarBeneficiario;
+export default AtualizarEdital;

@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 // import LogoutButton from "./components/Logout";
 // import { useEffect } from 'react';
 // import { gapi } from 'gapi-script';
-import { showSuccessMessage, showErrorMessage } from "./components/Toastr";
+import { showSuccessMessage } from "./components/Toastr";
 
 import Login from "./pages/login/Login";
 import Signup from "./components/signup/Signup";
@@ -21,7 +21,7 @@ import LoadingIndicator from "./components/common/LoadingIndicator";
 import { getCurrentUser } from "./util/APIUtils";
 import { ACCESS_TOKEN } from "./services/constants";
 import PrivateRoute from "./main/PrivateRoute";
-import AppHeader from "./components/common/AppHeader";
+// import AppHeader from "./components/common/AppHeader";
 // import Alert from 'react-s-alert';
 // import 'react-s-alert/dist/s-alert-default.css';
 // import 'react-s-alert/dist/s-alert-css-effects/slide.css';
@@ -30,6 +30,9 @@ import CadastrarBeneficiario from "./pages/cadastrarBeneficiario/CadastrarBenefi
 import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios";
 import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
 import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
+import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
+import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
+
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
 
@@ -100,8 +103,6 @@ class App extends Component {
               currentUser={this.state.currentUser}
               component={Profile}
             ></PrivateRoute>
-            {/* <Route path="/login"
-              render={(props) => <Login authenticated={this.state.authenticated} {...props} />}></Route> */}
             <Route
               path="/signup"
               render={(props) => (
@@ -136,14 +137,27 @@ class App extends Component {
               currentUser={this.state.currentUser}
               component={AtualizarBeneficiario}
             ></PrivateRoute>
-            {/* <Route path="/boasVindas" component={BoasVindas}></Route> */}
+            <PrivateRoute 
+              path="/cadastrarEdital" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarEdital}>
+            </PrivateRoute>
+            <PrivateRoute 
+              path="/atualizarEdital"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser} 
+              component={AtualizarEdital}>
+            </PrivateRoute>
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={BoasVindas}
             ></PrivateRoute>    
-            <Route component={NotFound}></Route>
+            <Route 
+              component={NotFound}>
+            </Route>
           </Switch>
         </div>
         {/* <Alert stack={{limit: 3}} 

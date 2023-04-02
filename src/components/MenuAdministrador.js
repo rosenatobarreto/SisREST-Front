@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../assets/css/Style.css";
 import LogoIntern from "../assets/imgs/SisRestLogoIntern.png";
-import SideBar from "../components/SideBar";
+// import SideBar from "../components/SideBar";
 
 class MenuAdministrador extends Component {
   render() {
@@ -15,58 +15,43 @@ class MenuAdministrador extends Component {
             alt="SisRest"
             src={LogoIntern}
           />
-          {/* <div className="items-center">
-            <spam className="text-xs text-center pl-4 pr-6 flex-auto">
-              maria.monteiro@ifpb.edu.br
-            </spam>
-          </div> */}
         </div>
 
         <div class="border-b-2 mt-2 mb-2 border-green-100 ..."></div>
-        {/* Inicio do menu */}
+        
         <ul className="flex sm:flex-col overflow-hidden content-center justify-center divide-y divide-gray-600">
           <li className="py-2 hover:bg-gray-300">
             <a className="truncate" href="/">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/home.svg" className="w-7 sm:mx-2 mx-4 inline" /> */}
-              <span className="hidden sm:inline text-sm">
-                Pedidos de Refeição
-              </span>
+                <span className="hidden sm:inline text-sm">Pedidos de Refeição</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="truncate" href="/">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/cog.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
               <span className="hidden sm:inline text-sm">Lista Diária</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/gift.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
               <span className="hidden sm:inline text-sm">Cancelamentos</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/listarBeneficiarios">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/chart-bar.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
-              <span className="hidden sm:inline text-sm">
-                Gerenciar Usuários
-              </span>
+              <span className="hidden sm:inline text-sm">Gerenciar Usuários</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/collection.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
               <span className="hidden sm:inline text-sm">Consultar Faltas</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/">
-              {/* <img src="//cdn.jsdelivr.net/npm/heroicons@1.0.1/outline/collection.svg" className="w-7 sm:mx-2 mx-4 inline" />  */}
               <span className="hidden sm:inline text-sm">Sair</span>
             </a>
           </li>
         </ul>
-        {/* Fim do menu */}
+        
       </div>
     );
   }

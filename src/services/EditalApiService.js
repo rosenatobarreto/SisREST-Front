@@ -1,20 +1,20 @@
 import ApiService from './ApiService';
 
-export default class BeneficiarioApiService extends ApiService{
+export default class EditalApiService extends ApiService{
     constructor(){
-        super('/contaBeneficiario');
+        super('/edital');
     }
     create(object){
         return this.post('/criar', object);
     }
     update(id,object){
-        return this.put(`/${id}`, object);
+        return this.put(`/atualizar/${id}`, object);
     }
     delete(id){
-        return super.delete(`/${id}`)
+        return super.delete(`/deletar/${id}`)
     }
-    find(params){
-        return this.get(`/${params}`);
+    find(id){
+        return this.get(`/buscarPorID/${id}`);
     }
     findAll(){
         return this.getAll('/buscarTodos');

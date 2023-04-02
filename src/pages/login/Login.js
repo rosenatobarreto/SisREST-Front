@@ -1,85 +1,12 @@
 import React, { Component } from 'react';
 import './Login.css';
-// import Logo from '../../assets/imgs/SisRestLogo.png';
-// import LogoIFPB from '../../assets/imgs/ifpb-1.png';
 import SideBarLogin from '../../components/SideBarLogin';
-// import GoogleLogin from 'react-google-login';
-// import LoginButton from "../../components/Login";
-// import LogoutButton from "../../components/Logout";
-// import GoogleLoginComponent from '../../components/GoogleLoginComponent';
-// import { useEffect } from 'react';
-// import { gapi } from 'gapi-script';
-import { showSuccessMessage, showErrorMessage } from '../../components/Toastr';
-// import { withRouter } from 'react-router-dom';
-// import { FACEBOOK_AUTH_URL, GITHUB_AUTH_URL, ACCESS_TOKEN } from '../../services/constants';
-// import { Link, Redirect } from 'react-router-dom'
+import { showErrorMessage } from '../../components/Toastr';
 import { GOOGLE_AUTH_URL, ACCESS_TOKEN } from '../../services/constants';
-import { login } from '../../util/APIUtils';
+// import { login } from '../../util/APIUtils';
 import { Redirect } from 'react-router-dom'
-// import fbLogo from '../../assets/imgs/fb-logo.png';
 import googleLogo from '../../assets/imgs/btn-google-entrar.png';
-// import githubLogo from '../../assets/imgs/github-logo.png';
-// import Alert from 'react-s-alert';
 
-// const CLIENT_ID = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
-// const SCOPES = "https://www.googleapis.com/auth/drive";
-// function Login() {
-
-    // useEffect(() => {
-    //     function start() {
-    //         gapi.client.init({
-    //         clientId: CLIENT_ID,
-    //         scope: ""
-    //     })
-    //  };
-    //     gapi.load('client:auth2', start);
-    // });
-
-    // GoogleLogin.accounts.oauth2.initTokenClient({
-    //     client_id: CLIENT_ID,
-    //     scope: SCOPES,
-    //     callback: (tokenResponse) => {
-    //         console.log(tokenResponse);
-    //     }
-    // })
-
-    // state = {
-    //     matricula: '',
-    //     senha: ''
-    // };
-
-
-    // login = () => {
-    //     this.context.login(
-    //         this.state.matricula,
-    //         this.state.senha
-        
-    //     ).then(user => 
-    //         {
-    //             if (user) {
-
-    //                 console.log("if",user.CLIENT_ID);
-    //                 showSuccessMessage(`${user.name}, você está logado!`);
-    //                 this.props.history.push('/viewUsers');
-        
-    //             } else {
-    //                 console.log("else");
-    //                 showErrorMessage("Dados incorretos! Login inválido");
-    //             }
-
-    //         }
-    //     ).catch(error => 
-    //         {
-    //             console.log("catch");
-    //             console.log(error);
-    //             showErrorMessage('Erro! processando autenticação:', error);
-    //         }
-    //     );
-    // }
-
-    // create = () => {
-    //     this.props.history.push('/createUser');
-    // }
 
     class Login extends Component {
 
@@ -122,16 +49,16 @@ import googleLogo from '../../assets/imgs/btn-google-entrar.png';
                         <img className="mt-{463px}" alt='ifpb' src={LogoIFPB} width='89px' heidth='108px' /> */}
                     </div>
                 </div>
-                <div className="flex flex-1 flex-col justify-center align-middle px-4 py-6 sm:px-12 lg:flex lg:px-20 xl:px-24">
+                <div className="flex flex-1 flex-col justify-center align-middle px-4 py-6 sm:px-6 lg:flex lg:px-20 xl:px-24">
                     
                     <div className="mx-auto w-full max-w-sm align-middle">
                         
-                        <div className="">
+                        <div className="items-center">
                             {/* <img className="mt-4 lg:hidden w-24 h-22" alt='logo' src={Logo} /> */}
-                            <h1 className="mt-1 text-[24px] text-center font-bold text-[#38761d] py-1">Login</h1>
+                            <h1 className="mt-1 text-[24px] text-center font-bold text-[#38761d]">Login</h1>
                         </div>
                         {/* <div className="hidden sm:block relative h-[161px] w-[400px] p-4 border-0 bg-[#b6d7a8] rounded-md"></div> */}
-                        <div className="hidden sm:block relative h-[161px] w-[400px] p-4 border-0 bg-white rounded-md">
+                        <div className=" sm:block relative h-[161px] w-full p-4 border-0 bg-white rounded-md">
                             
                             {/* <form action="">
                                 <div className="mb-4 flex items-center">
@@ -160,12 +87,12 @@ import googleLogo from '../../assets/imgs/btn-google-entrar.png';
                             </form> */}
                             <div className="row flex justify-center align-middle px-4 mt-4">
                                 <div className="col m-2">
-                                <p className="text-sm">Acesse com sua conta Google:</p>
+                                <p className="text-sm text-center">Acesse com sua conta Google:</p>
                                 </div>
                                 
                             </div>
                             <div className="row flex justify-center align-middle px-4 mt-1">
-                                <div className="col mr-2">
+                                <div className="col">
                                     {/* <LoginButton /> */}
                                     <SocialLogin />
                                 </div>
@@ -188,78 +115,73 @@ import googleLogo from '../../assets/imgs/btn-google-entrar.png';
 class SocialLogin extends Component {
     render() {
         return (
-            <div className="row flex justify-center align-middle px-4 mt-1">
+            <div className="row flex justify-center align-middle mt-1 items-center">
                 <a className="social-btn" href={GOOGLE_AUTH_URL}>
                     <img src={googleLogo} alt="Google" /></a>
-                {/* <a className="btn btn-block social-btn facebook" href={FACEBOOK_AUTH_URL}>
-                    <img src={fbLogo} alt="Facebook" /> Log in with Facebook</a>
-                <a className="btn btn-block social-btn github" href={GITHUB_AUTH_URL}>
-                    <img src={githubLogo} alt="Github" /> Log in with Github</a> */}
             </div>
         );
     }
 }
 
-class LoginForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: ''
-        };
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+// class LoginForm extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             email: '',
+//             password: ''
+//         };
+//         this.handleInputChange = this.handleInputChange.bind(this);
+//         this.handleSubmit = this.handleSubmit.bind(this);
+//     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const inputName = target.name;        
-        const inputValue = target.value;
+//     handleInputChange(event) {
+//         const target = event.target;
+//         const inputName = target.name;        
+//         const inputValue = target.value;
 
-        this.setState({
-            [inputName] : inputValue
-        });        
-    }
+//         this.setState({
+//             [inputName] : inputValue
+//         });        
+//     }
 
-    handleSubmit(event) {
-        event.preventDefault();   
+//     handleSubmit(event) {
+//         event.preventDefault();   
 
-        const loginRequest = Object.assign({}, this.state);
+//         const loginRequest = Object.assign({}, this.state);
 
-        login(loginRequest)
-        .then(response => {
-            localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            showSuccessMessage("You're successfully logged in!");
-            this.props.history.push("/");
-        }).catch(error => {
-            showErrorMessage((error && error.message) || 'Oops! Something went wrong. Please try again!');
-        });
-    }
+//         login(loginRequest)
+//         .then(response => {
+//             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+//             showSuccessMessage("Você foi logado com sucesso!");
+//             this.props.history.push("/")
+//         }).catch(error => {
+//             showErrorMessage((error && error.message) || "Algo deu errado. Por favor, tente novamente!");
+//         });
+//     }
     
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                    <input type="email" name="email" 
-                        className="form-controlmt-1 block w-full rounded-md border border-green-300 
-                        bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 
-                        sm:text-sm" placeholder="Email"
-                        value={this.state.email} onChange={this.handleInputChange} required/>
-                </div>
-                <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                    <input type="password" name="password" 
-                        className="form-controlmt-1 block w-full rounded-md border border-green-300 
-                        bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 
-                        sm:text-sm" placeholder="Password"
-                        value={this.state.password} onChange={this.handleInputChange} required/>
-                </div>
-                <div className="">
-                    <button type="submit" className="btn-save">Login</button>
-                </div>
-            </form>                    
-        );
-    }
-}
+//     render() {
+//         return (
+//             <form onSubmit={this.handleSubmit}>
+//                 <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+//                     <input type="email" name="email" 
+//                         className="form-controlmt-1 block w-full rounded-md border border-green-300 
+//                         bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 
+//                         sm:text-sm" placeholder="Email"
+//                         value={this.state.email} onChange={this.handleInputChange} required/>
+//                 </div>
+//                 <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+//                     <input type="password" name="password" 
+//                         className="form-controlmt-1 block w-full rounded-md border border-green-300 
+//                         bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 
+//                         sm:text-sm" placeholder="Password"
+//                         value={this.state.password} onChange={this.handleInputChange} required/>
+//                 </div>
+//                 <div className="">
+//                     <button type="submit" className="btn-save">Login</button>
+//                 </div>
+//             </form>                    
+//         );
+//     }
+// }
 
-// export default withRouter (Login);
 export default Login;

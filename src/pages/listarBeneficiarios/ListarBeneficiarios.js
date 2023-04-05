@@ -27,9 +27,9 @@ class ListarBeneficiarios extends Component {
     this.findAll();
   }
 
-  componentWillUnmount() {
-      this.clear();
-  }
+  // componentWillUnmount() {
+  //     this.clear();
+  // }
 
   delete = (userId) => {
     this.service

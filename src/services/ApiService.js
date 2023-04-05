@@ -1,6 +1,6 @@
 import axios from 'axios';
 import StorageService from './StorageService';
-import { API_BASE_URL} from '../services/constants';
+import { API_BASE_URL} from './constants/Constants';
 
 export const LOGGED_USER = 'loggedUser';
 export const TOKEN = 'token';
@@ -8,7 +8,7 @@ export const TOKEN = 'token';
 //const baseURL = process.env.REACT_APP_API_URL;
 
 export const httpClient = axios.create({
-    baseURL: API_BASE_URL + '/api',
+    baseURL: API_BASE_URL+`/api`,
     withCredentials: true,
 });
 export default class ApiService{

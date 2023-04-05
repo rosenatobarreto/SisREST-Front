@@ -80,7 +80,7 @@ class ListarEditais extends Component {
         params = `${params}&`;
       }
 
-      params = `${params}ano=${this.state.ano}`;
+      params = `${params}nome=${this.state.nome}`;
     }
 
     if (this.state.vigenteInicio !== "") {
@@ -208,13 +208,13 @@ class ListarEditais extends Component {
                                 </div> 
                       <div className="col mr-2">
                         <button
-                          onClick={this.createBeneficiario}
+                          onClick={this.createEdital}
                           type="submit"
                           className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVO USUÁRIO
+                        >NOVO EDITAL
                         </button>
                       </div>
                     </div>
@@ -249,8 +249,8 @@ class ListarEditais extends Component {
                   <div className="row">
                     <div className="">
                       <div className="">
-                        <UsersTable
-                          beneficiarios={this.state.beneficiarios}
+                        <EditaisTable
+                          editais={this.state.editais}
                           delete={this.delete}
                           edit={this.edit}
                           id="idEdit"

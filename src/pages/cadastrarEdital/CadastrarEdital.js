@@ -18,8 +18,9 @@ constructor(props) {
     nome: "",
     link: "",
     vigenteInicio: "",
-    vigenteFinal: ""
+    vigenteFinal: "",
   };
+
 
   componentWillUnmount() {
     this.clear();
@@ -28,49 +29,49 @@ constructor(props) {
   validate = () => {
     const errors = [];
 
-    if (!this.state.numero) {
-      errors.push("Campo Número é obrigatório!");
-    } else if (!this.state.numero.match(/[0-9 ]{2,50}$/)) {
-      errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
-    }
+    // if (!this.state.numero) {
+    //   errors.push("Campo Número é obrigatório!");
+    // } else if (!this.state.numero.match(/[0-9 ]{1,50}$/)) {
+    //   errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
+    // }
 
-    if (!this.state.ano) {
-      errors.push("Campo E-mail é obrigatório! ");
-    } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
-      errors.push("Informe um ano válido!");
-    }
+    // if (!this.state.ano) {
+    //   errors.push("Campo E-mail é obrigatório! ");
+    // } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
+    //   errors.push("Informe um ano válido!");
+    // }
 
-    if (!this.state.nome) {
-      errors.push("Campo Nome é obrigatório!");
-    } else if (!this.state.nome.match(/[A-Z]+(.){13,250}$/)) {
-      errors.push(
-        "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
-      );
-    }
+    // if (!this.state.nome) {
+    //   errors.push("Campo Nome é obrigatório!");
+    // } else if (!this.state.nome.match(/[A-Z]+(.){13,250}$/)) {
+    //   errors.push(
+    //     "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
+    //   );
+    // }
 
-    if (!this.state.vigenteInicio) {
-      errors.push("Campo Data de Início é obrigatório!");
-    } else if (
-      !this.state.vigenteInicio.match(
-        /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
-      )
-    ) {
-      errors.push("Data inválida!");
-    }
+    // if (!this.state.vigenteInicio) {
+    //   errors.push("Campo Data de Início é obrigatório!");
+    // } else if (
+    //   !this.state.vigenteInicio.match(
+    //     /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
+    //   )
+    // ) {
+    //   errors.push("Data inválida!");
+    // }
 
-    if (!this.state.vigenteFinal) {
-      errors.push("Campo Data de Início é obrigatório!");
-    } else if (
-      !this.state.vigenteFinal.match(
-        /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
-      )
-    ) {
-      errors.push("Data inválida!");
-    }
+    // if (!this.state.vigenteFinal) {
+    //   errors.push("Campo Data de Início é obrigatório!");
+    // } else if (
+    //   !this.state.vigenteFinal.match(
+    //     /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
+    //   )
+    // ) {
+    //   errors.push("Data inválida!");
+    // }
     return errors;
   };
 
-  cadastrar = () => {
+  criar = () => {
     const errors = this.validate();
 
     if (errors.length > 0) {
@@ -81,7 +82,7 @@ constructor(props) {
     }
 
     this.service
-      .cadastrar({
+      .criar({
         numero: this.state.numero,
         ano: this.state.ano,
         nome: this.state.nome,
@@ -89,12 +90,12 @@ constructor(props) {
         vigenteInicio: this.state.vigenteInicio,
         vigenteFinal: this.state.vigenteFinal
       })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         console.log(this.state);
         showSuccessMessage("Edital cadastrado com sucesso!");
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error.response);
         console.log(this.state);
         showErrorMessage("O edital não pode ser cadastrado!");
@@ -247,33 +248,25 @@ constructor(props) {
 
                     <div className="row flex flex-row-reverse align-middle px-6 mt-1">
                       <div className="col ml-2">
-                        <button
-                          onClick={this.cancel}
-                          type="submit"
+                        <button onClick={this.cancel} type="submit"
                           className=" btn-cancel inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >
-                          CANCELAR
+                        >CANCELAR
                         </button>
                       </div>
                       <div className="col mr-2">
-                        <button
-                          onClick={this.cadastrar}
-                          type="submit"
+                        <button onClick={this.criar} type="submit"
                           className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >
-                          CADASTRAR
+                        >CADASTRAR
                         </button>
                       </div>
                       <br />
                     </div>
-
-                    <div className=""></div>
                     <br />
                   </form>
                 </div>

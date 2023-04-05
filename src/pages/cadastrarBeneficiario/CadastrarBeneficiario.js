@@ -24,6 +24,8 @@ class CadastrarBeneficiario extends Component {
     email: "",
     senha: "",
     admin: false,
+    vinculo: true,
+    motivo: "",
     editalId: "",
   };
 
@@ -86,6 +88,8 @@ class CadastrarBeneficiario extends Component {
         email: this.state.email,
         senha: this.state.senha,
         admin: this.state.admin,
+        vinculo: this.state.vinculo,
+        motivo: this.state.motivo
       })
       .then((response) => {
         console.log(response);

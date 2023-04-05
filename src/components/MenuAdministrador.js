@@ -46,6 +46,11 @@ class MenuAdministrador extends Component {
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
+            <a className="" href="/listarEditais">
+              <span className="hidden sm:inline text-sm">Gerenciar Editais</span>
+            </a>
+          </li>
+          <li className="py-2 hover:bg-gray-300">
             <a className="" href="/">
               <span className="hidden sm:inline text-sm">Sair</span>
             </a>

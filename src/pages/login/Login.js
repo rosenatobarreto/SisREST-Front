@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Login.css';
 import SideBarLogin from '../../components/SideBarLogin';
 import { showErrorMessage } from '../../components/Toastr';
-import { GOOGLE_AUTH_URL, ACCESS_TOKEN } from '../../services/constants';
+import { GOOGLE_AUTH_URL, ACCESS_TOKEN } from '../../services/constants/Constants';
 // import { login } from '../../util/APIUtils';
 import { Redirect } from 'react-router-dom'
 import googleLogo from '../../assets/imgs/btn-google-entrar.png';

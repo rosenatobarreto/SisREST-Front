@@ -19,7 +19,7 @@ import OAuth2RedirectHandler from "./services/oauth2/OAuth2RedirectHandler";
 import NotFound from "./components/common/NotFound";
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import { getCurrentUser } from "./util/APIUtils";
-import { ACCESS_TOKEN } from "./services/constants";
+import { ACCESS_TOKEN } from "./services/constants/Constants";
 import PrivateRoute from "./main/PrivateRoute";
 // import AppHeader from "./components/common/AppHeader";
 // import Alert from 'react-s-alert';
@@ -32,6 +32,7 @@ import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBenefic
 import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
 import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
 import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
+import ListarEditais from "./pages/listarEditais/ListarEditais";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -148,6 +149,12 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser} 
               component={AtualizarEdital}>
+            </PrivateRoute>
+            <PrivateRoute 
+              path="/listarEditais"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser} 
+              component={ListarEditais}>
             </PrivateRoute>
             <PrivateRoute
               path="/boasVindas"

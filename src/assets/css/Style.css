@@ -7,6 +7,8 @@
     @apply container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow;
 } */
 
+
+
 .header {
     position: relative;
     left: 0;

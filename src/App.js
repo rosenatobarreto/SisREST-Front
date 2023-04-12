@@ -79,6 +79,8 @@ class App extends Component {
     this.loadCurrentlyLoggedInUser();
   }
 
+
+
   render() {
     if (this.state.loading) {
       return <LoadingIndicator />;
@@ -145,7 +147,7 @@ class App extends Component {
               component={CadastrarEdital}>
             </PrivateRoute>
             <PrivateRoute 
-              path="/atualizarEdital"
+              path="/atualizarEdital/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser} 
               component={AtualizarEdital}>

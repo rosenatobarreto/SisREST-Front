@@ -3,7 +3,7 @@ import React, { Component} from "react";
 
 // import { withRouter } from "react-router-dom";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import BeneficiarioApiService from "../../services/BeneficiarioApiService";
+import ContaBeneficiarioApiService from "../../services/ContaBeneficiarioApiService";
 import UsersTable from "../../components/UsersTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
@@ -19,7 +19,7 @@ class ListarBeneficiarios extends Component {
   };
   constructor(props) {
     super(props);
-    this.service = new BeneficiarioApiService();
+    this.service = new ContaBeneficiarioApiService();
     console.log(props);
     
   }

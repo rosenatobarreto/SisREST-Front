@@ -4,6 +4,17 @@ import { formatDateBr } from "../util/FormateDate";
 
 export default props => {
 
+    // const [total, setTotal] = useState(0);
+    // const [limit, setLimit] = useState(5);
+    // const [pages, setPages] = useState([]);
+    // const [currentPage, setCurrentPage] = useState(1);
+
+    // useEffect(() => {
+        
+    //     setTotal(response)
+    // })
+
+
     const rows = props.editais.map(edital => {
         return (
             <tr key={edital.id}>

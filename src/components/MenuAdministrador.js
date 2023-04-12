@@ -17,7 +17,7 @@ class MenuAdministrador extends Component {
           />
         </div>
 
-        <div class="border-b-2 mt-2 mb-2 border-green-100 ..."></div>
+        <div className="border-b-2 mt-2 mb-2 border-green-100 ..."></div>
         
         <ul className="flex sm:flex-col overflow-hidden content-center justify-center divide-y divide-gray-600">
           <li className="py-2 hover:bg-gray-300">

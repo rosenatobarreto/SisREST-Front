@@ -8,51 +8,6 @@ class BoasVindas extends Component {
     console.log(props);
   }
 
-  //   componentWillUnmount() {
-  //     this.clear();
-  //   }
-
-  //   create = () => {
-  //     const errors = this.validate();
-  //     //this.service.create(this.state)
-  //     if (errors.length > 0) {
-  //       errors.forEach((message, index) => {
-  //         showErrorMessage(message);
-  //       });
-  //       return false;
-  //     }
-
-  //     this.service
-  //       .create({
-  //         nome: this.state.nome,
-  //         matricula: this.state.matricula,
-  //         email: this.state.email,
-  //         senha: this.state.senha,
-  //         admin: this.state.admin,
-  //       })
-  //       .then((response) => {
-  //         console.log(response);
-  //         console.log(this.state);
-  //         showSuccessMessage("Beneficiário criado com sucesso!");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error.response);
-  //         console.log(this.state);
-  //         showErrorMessage("O beneficiário não pode ser salvo!");
-  //       });
-
-  //     console.log("request finished");
-  //   };
-
-  //   cancel = () => {
-  //     this.props.history.push("/");
-  //   };
-
-  //   inputSelectEdital = (e) => {
-  //     this.setState({ editalId: e.target.value }, () => {
-  //       console.log("Id do Edital: ", this.state.editalId);
-  //     });
-  //   };
 
   render() {
     return (

@@ -5,7 +5,7 @@ import React, { Component } from "react";
 
 // import { withRouter } from "react-router-dom";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import BeneficiarioApiService from "../../services/BeneficiarioApiService";
+import ContaBeneficiarioApiService from "../../services/ContaBeneficiarioApiService";
 import SelectEdital from "../../components/SelectEdital";
 // import Footer from "../../components/Footer";
 import MenuAdministrador from "../../components/MenuAdministrador";
@@ -15,7 +15,7 @@ class AtualizarBeneficiario extends Component {
   constructor(props) {
     super(props);
     console.log(props);
-    this.service = new BeneficiarioApiService();
+    this.service = new ContaBeneficiarioApiService();
   }
 
   state = {

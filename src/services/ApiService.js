@@ -8,14 +8,13 @@ export const TOKEN = 'token';
 //const baseURL = process.env.REACT_APP_API_URL;
 
 export const httpClient = axios.create({
-    baseURL: API_BASE_URL+`/api`,
+    baseURL: API_BASE_URL+'/api',
     withCredentials: true,
 });
 export default class ApiService{
     
     constructor(endpoint){
         this.endpoint = endpoint;
-
         this.StorageService = new StorageService();
         const token = this.StorageService.getItem(TOKEN);
         this.registerToken(token);

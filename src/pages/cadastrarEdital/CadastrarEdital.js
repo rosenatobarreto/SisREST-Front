@@ -96,7 +96,7 @@ constructor(props) {
         console.log(response);
         console.log(this.state);
         showSuccessMessage("Edital cadastrado com sucesso!");
-        this.props.history.push("/cadastrarEdital");
+        this.props.history.push("/listarEditais");
       })
       .catch(error => {
         console.log(error.response);
@@ -144,7 +144,7 @@ constructor(props) {
                   <div className="px-4 sm:px-0"></div>
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="#" method="POST">
+                  <form action="">
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-2 sm:col-span-2 lg:col-span-2">

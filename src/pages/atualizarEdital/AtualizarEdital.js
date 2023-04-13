@@ -100,7 +100,7 @@ class AtualizarEdital extends Component {
     ).then(response => {
       console.log(response);
       showSuccessMessage('Edital atualizado com sucesso!');
-      this.props.history.push("/");
+      this.props.history.push("/listarEditais");
     }
     ).catch(error => {
       console.log(error.response);
@@ -169,7 +169,7 @@ class AtualizarEdital extends Component {
                   <div className="px-4 sm:px-0"></div>
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="" method="POST">
+                  <form action="" method="PUT">
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
                         <div className="col-span-6 sm:col-span-3">

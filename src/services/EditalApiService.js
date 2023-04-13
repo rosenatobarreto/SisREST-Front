@@ -5,7 +5,7 @@ export default class EditalApiService extends ApiService{
         super('/edital');
     }
     create(object){
-        return this.post('/criar', object);
+        return this.post(`/criar`, object);
     }
     update(id,object){
         return this.put(`/${id}`, object);
@@ -17,6 +17,6 @@ export default class EditalApiService extends ApiService{
         return this.get(`/${params}`);
     }
     findAll(){
-        return this.getAll('/buscarTodos');
+        return this.getAll(`/buscarTodos`);
     }
 }

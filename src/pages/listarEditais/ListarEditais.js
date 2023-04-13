@@ -21,9 +21,6 @@ class ListarEditais extends Component {
     editais: [],
   };
 
-  componentWillUnmount() {
-      this.clear();
-  }
   
   componentDidMount() {
     this.findAll();
@@ -38,6 +35,7 @@ class ListarEditais extends Component {
       .delete(editalId)
       .then((response) => {
         this.find();
+        this.props.history.push(`/listarEditais`);
       })
       .catch((error) => {
         console.log(error.response);
@@ -130,6 +128,9 @@ class ListarEditais extends Component {
   };
 
 
+  componentWillUnmount() {
+      this.clear();
+  }
   //  importarDadosEdital = () => {
   //   this.props.history.push("/importarBeneficiarios");
   // };

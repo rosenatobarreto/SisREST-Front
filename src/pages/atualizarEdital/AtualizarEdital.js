@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import EditalApiService from "../../services/EditalApiService";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import { stringToDate } from "../../util/FormatDate";
 
 class AtualizarEdital extends Component {
   
@@ -26,38 +27,35 @@ class AtualizarEdital extends Component {
     this.findById(id);
   }
   
-  componentWillUnmount() {
-    this.clear();
-  }
   
   
   validate = () => {
     const errors = [];
-
+    
     // if (!this.state.numero) {
-    //   errors.push("Campo Número é obrigatório!");
-    // } else if (!this.state.numero.match(/[0-9 ]{2,50}$/)) {
-    //   errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
-    // }
-
-    // if (!this.state.ano) {
-    //   errors.push("Campo E-mail é obrigatório! ");
-    // } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
-    //   errors.push("Informe um ano válido!");
-    // }
-    
-    // if (!this.state.nome) {
-    //   errors.push("Campo Nome é obrigatório!");
-    // } else if (!this.state.nome.match(/[A-z ]{13,250}$/)) {
-    //   errors.push(
-    //     "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
-    //     );
-    // }
-    
-    // if (!this.state.vigenteInicio) {
-    //   errors.push("Campo Data de Início é obrigatório!");
-    // } else if (
-    //   !this.state.vigenteInicio.match(
+      //   errors.push("Campo Número é obrigatório!");
+      // } else if (!this.state.numero.match(/[0-9 ]{2,50}$/)) {
+        //   errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
+        // }
+        
+        // if (!this.state.ano) {
+          //   errors.push("Campo E-mail é obrigatório! ");
+          // } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
+            //   errors.push("Informe um ano válido!");
+            // }
+            
+            // if (!this.state.nome) {
+              //   errors.push("Campo Nome é obrigatório!");
+              // } else if (!this.state.nome.match(/[A-z ]{13,250}$/)) {
+                //   errors.push(
+                  //     "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
+                  //     );
+                  // }
+                  
+                  // if (!this.state.vigenteInicio) {
+                    //   errors.push("Campo Data de Início é obrigatório!");
+                    // } else if (
+                      //   !this.state.vigenteInicio.match(
     //     /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
     //   )
     // ) {
@@ -108,13 +106,12 @@ class AtualizarEdital extends Component {
     }
     );
 
-        console.log('request finished');
-}
+    console.log('request finished');
+  }
 
-    findById = (id) => {
+  findById = (id) => {
         
-    this.service
-      .get(`/${id}`)
+    this.service.get(`/${id}`)
       .then((response) => {
         const edital = response.data;
         const id = edital.id;
@@ -124,7 +121,7 @@ class AtualizarEdital extends Component {
         const link = edital.link;
         const vigenteInicio = edital.vigenteInicio;
         const vigenteFinal = edital.vigenteFinal;
-
+        
         this.setState({id, numero, ano, nome, link, vigenteInicio, vigenteFinal});
       })
       .catch((error) => {
@@ -133,10 +130,13 @@ class AtualizarEdital extends Component {
     };
     
 
-  cancel = () => {
-    this.props.history("/");
+    cancel = () => {
+      this.props.history("/");
   };
   
+  // componentWillUnmount() {
+  //   this.clear();
+  // }
   
   render() {
     return (
@@ -157,7 +157,7 @@ class AtualizarEdital extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Atualiza Edital</p>
+              <p className="text-xl font-semibold">Atualizar Edital</p>
             </div>
           </div>
 
@@ -172,7 +172,7 @@ class AtualizarEdital extends Component {
                   <form action="" method="PUT">
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        <div className="col-span-6 sm:col-span-3">
+                        <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                           <label
                             for="numero"
                             className="block text-sm font-medium text-gray-700"
@@ -190,7 +190,7 @@ class AtualizarEdital extends Component {
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                        <div className="col-span-2 sm:col-span-2 lg:col-span-2">
                           <label
                             for="ano"
                             className="block text-sm font-medium text-gray-700"
@@ -207,7 +207,7 @@ class AtualizarEdital extends Component {
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                           <label
                             for="nome"
                             className="block text-sm font-medium text-gray-700"
@@ -233,17 +233,17 @@ class AtualizarEdital extends Component {
                             Vigente a partir de
                           </label>
                           <input
-                            type="text"
+                            type="date"
                             name="vigenteInicio"
                             id="vigenteInicio"
                             autocomplete="text"
                             className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 
                             shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.vigenteInicio} onChange={e => this.setState({ vigenteInicio: e.target.value }) }
+                            value={this.state.vigenteInicio} onChange={(e) => { stringToDate(this.setState({ vigenteInicio: e.target.value }) )}}
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                           <label
                             for="vigenteFinal"
                             className="block text-sm font-medium text-gray-700"
@@ -251,17 +251,17 @@ class AtualizarEdital extends Component {
                             Vigente até
                           </label>
                           <input
-                            type="text"
+                            type="date"
                             name="vigenteFinal"
                             id="vigenteFinal"
                             autocomplete="text"
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 
                             shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
-                            value={this.state.vigenteFinal} onChange={e => this.setState({ vigenteFinal: e.target.value }) }
+                            value={this.state.vigenteFinal} onChange={(e) => { stringToDate(this.setState({ vigenteFinal: e.target.value }) )}}
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-3">
+                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                           <label
                             for="link"
                             className="block text-sm font-medium text-gray-700"

@@ -2,8 +2,8 @@ import React, { Component, useState } from "react";
 import EditalApiService from "../../services/EditalApiService";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import MenuAdministrador from "../../components/MenuAdministrador";
-import { stringToDate } from "../../util/FormateDate";
-import moment from 'moment';
+import { stringToDate } from "../../util/FormatDate";
+// import moment from 'moment';
 class CadastrarEdital extends Component {
 
 constructor(props) {
@@ -28,43 +28,43 @@ constructor(props) {
   validate = () => {
     const errors = [];
     
-    console.log('Inicia validação')
+    // console.log('Inicia validação')
     
-    if (!this.state.numero) {
-        errors.push("Campo Número é obrigatório!");
-      } else if (!this.state.numero.match(/[0-9 ]{1,50}$/)) {
-          errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
-        }
+    // if (!this.state.numero) {
+    //     errors.push("Campo Número é obrigatório!");
+    //   } else if (!this.state.numero.match(/[0-9 ]{1,50}$/)) {
+    //       errors.push("O Número deve ter no mínimo 2 e no máximo 50 digitos!");
+    //     }
         
-        if (!this.state.ano) {
-            errors.push("Campo E-mail é obrigatório! ");
-          } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
-              errors.push("Informe um ano válido!");
-            }
+    //     if (!this.state.ano) {
+    //         errors.push("Campo E-mail é obrigatório! ");
+    //       } else if (!this.state.ano.match(/[0-9.]{4,4}$/)) {
+    //           errors.push("Informe um ano válido!");
+    //         }
             
-            if (!this.state.nome) {
-                errors.push("Campo Nome é obrigatório!");
-              } else if (!this.state.nome.match(/[A-Z]+(.){13,250}$/)) {
-                  errors.push(
-        "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
-      );
-    }
+    //         if (!this.state.nome) {
+    //             errors.push("Campo Nome é obrigatório!");
+    //           } else if (!this.state.nome.match(/[A-Z]+(.){13,250}$/)) {
+    //               errors.push(
+    //     "O Nome do edital deve ter no mínimo 13 e no máximo 250 caracteres!"
+    //   );
+    // }
     
     // if (!this.state.vigenteInicio) {
     //   errors.push("Campo Data de Início é obrigatório!");
     // } else if (
-    //     !this.state.vigenteInicio.match(
-    //         /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
+    //     !this.state.vigenteInicio.match(/\d{2}\/\d{2}\/\d{4}$/
+    // //        /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
     //       )
     //     ) {
     //   errors.push("Data inválida!");
     // }
 
     // if (!this.state.vigenteFinal) {
-    //   errors.push("Campo Data de Início é obrigatório!");
+    //   errors.push("Campo Data Final é obrigatório!");
     // } else if (
-    //   !this.state.vigenteFinal.match(
-    //     /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
+    //   !this.state.vigenteFinal.match(/\d{2}\/\d{2}\/\d{4}$/
+    // //    /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[012])\/\d{4}$/
     //   )
     // ) {
     //   errors.push("Data inválida!");
@@ -96,7 +96,7 @@ constructor(props) {
         console.log(response);
         console.log(this.state);
         showSuccessMessage("Edital cadastrado com sucesso!");
-        this.props.history.push("/listarEditais");
+        // this.props.history.push("/listarEditais");
       })
       .catch(error => {
         console.log(error.response);
@@ -147,7 +147,7 @@ constructor(props) {
                   <form action="">
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        <div className="col-span-2 sm:col-span-2 lg:col-span-2">
+                        <div className="col-span-3 sm:col-span-2 lg:col-span-1">
                           <label
                             for="numero"
                             className="block text-sm font-medium text-gray-700"
@@ -165,7 +165,7 @@ constructor(props) {
                           />
                         </div>
 
-                        <div className="col-span-2 sm:col-span-2 lg:col-span-2">
+                        <div className="col-span-3 sm:col-span-2 lg:col-span-2">
                           <label
                             for="ano"
                             className="block text-sm font-medium text-gray-700"
@@ -182,7 +182,7 @@ constructor(props) {
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                        <div className="col-span-12 sm:col-span-12 lg:col-span-12">
                           <label
                             for="nome"
                             className="block text-sm font-medium text-gray-700"
@@ -208,13 +208,13 @@ constructor(props) {
                             Vigente a partir de
                           </label>
                           <input
-                            type=""
+                            type="date"
                             name="vigenteInicio"
                             id="vigenteInicio"
                             autocomplete="date"
                             className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 
                             py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.vigenteInicio} onChange={(e) => { this.setState({ vigenteInicio: e.target.value }) }}
+                            value={this.state.vigenteInicio} onChange={(e) => { stringToDate(this.setState({ vigenteInicio: e.target.value }) )}}
                           />
                         </div>
 
@@ -225,19 +225,19 @@ constructor(props) {
                           >
                             Vigente até
                           </label>
-                          <input
-                            type=""
+                          <input 
+                            type="date"
                             name="vigenteFinal"
                             id="vigenteFinal"
                             autocomplete="date"
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 
                             py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
-                            value={this.state.vigenteFinal} onChange={(e) => { this.setState({ vigenteFinal: e.target.value }) }}
+                            value={this.state.vigenteFinal} onChange={(e) => { stringToDate(this.setState({ vigenteFinal: e.target.value }) )}}
                           >
                           </input>
                         </div>
 
-                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                        <div className="col-span-12 sm:col-span-12 lg:col-span-12">
                           <label
                             for="link"
                             className="block text-sm font-medium text-gray-700"

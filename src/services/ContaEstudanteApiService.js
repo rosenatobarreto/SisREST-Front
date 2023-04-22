@@ -1,8 +1,8 @@
 import ApiService from './ApiService';
 
-export default class BeneficiarioApiService extends ApiService{
+export default class ContaEstudanteApiService extends ApiService{
     constructor(){
-        super('/contaBeneficiario');
+        super('/contaEstudante');
     }
     create(object){
         return this.post('/criar', object);
@@ -11,10 +11,10 @@ export default class BeneficiarioApiService extends ApiService{
         return this.put(`/${id}`, object);
     }
     delete(id){
-        return super.delete(`/${id}`)
+        return super.delete(`/deletar/${id}`)
     }
-    find(params){
-        return this.get(`/${params}`);
+    find(id){
+        return this.get(`/${id}`);
     }
     findAll(){
         return this.getAll('/buscarTodos');

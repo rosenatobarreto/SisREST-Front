@@ -1,116 +1,116 @@
 import React, { Component} from "react";
-// import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import EditalApiService from "../../services/EditalApiService";
-import EditaisTable from "../../components/EditaisTable";
+
+import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
+import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
+import ContasEstudanteTable from "../../components/ContasEstudanteTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
-class ListarEditais extends Component {
+class ListarContasEstudante extends Component {
 
   constructor(props) {
     super(props);
-    this.service = new EditalApiService();    
+    this.service = new ContaEstudanteApiService();
+    console.log(props);
+    
   }
 
   state = {
-    numero: 0,
-    ano: 0,
     nome: "",
-    link: "",
-    vigenteInicio: "",
-    vigenteFinal: "",
-    editais: [],
+    email: "",
+    senha: "",
+    matricula: 0,
+    contasEstudante: [],
   };
 
-  
   componentDidMount() {
     this.findAll();
   }
 
-
-  delete = (editalId) => {
+  delete = (contaId) => {
     this.service
-      .delete(editalId)
+      .delete(contaId)
       .then((response) => {
         this.find();
-        this.props.history.push(`/listarEditais`);
+        this.props.history.push(`/listarContasEstudante`);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  edit = (editalId) => {
-    this.props.history.push(`/atualizarEdital/${editalId}`);
+  edit = (id) => {
+    this.props.history.push(`/atualizarContaEstudante/${id}`);
   };
 
-  createEdital = () => {
-    this.props.history.push(`/cadastrarEdital`);
+  createContaEstudante = () => {
+    this.props.history.push(`/cadastrarContaEstudante`);
   };
 
-  find = (id) => {
-    // this.service.findAll('')
-    var params = '?';
+  findById = (id) => {
+    // this.service.find(id);
+    var params = "?";
 
     if (this.state.id !== 0) {
-      if (params !== '?') {
+      if (params !== "?") {
         params = `${params}&`;
       }
 
       params = `${params}id=${this.state.id}`;
     }
 
-    if (this.state.nome !== '') {
-      if (params !== '?') {
+    if (this.state.nome !== "") {
+      if (params !== "?") {
         params = `${params}&`;
       }
+
       params = `${params}nome=${this.state.nome}`;
     }
-
-    if (this.state.vigenteInicio !== Date) {
-      if (params !== '?') {
+    
+    if (this.state.matricula !== 0) {
+      if (params !== "?") {
         params = `${params}&`;
       }
-      params = `${params}vigenteInicio=${this.state.vigenteInicio}`;
+
+      params = `${params}matricula=${this.state.matricula}`;
     }
 
-    if (this.state.vigenteFinal !== Date) {
-      if (params !== '?') {
+    if (this.state.email !== "") {
+      if (params !== "?") {
         params = `${params}&`;
       }
-      params = `${params}vigenteFinal=${this.state.vigenteFinal}`;
+
+      params = `${params}email=${this.state.email}`;
     }
+
 
     this.service.get(`/${id}`)
-      .then(response => {
-        const editais = response.data;
-        this.setState({ editais: editais });
-        console.log("editais:", editais);
-      }
-    ).catch(error => {
+      .then((response) => {
+        const contasEstudante = response.data;
+        this.setState({ contasEstudante: contasEstudante });
+        console.log('Contas Estudante:', contasEstudante);
+      })
+      .catch(error => {
         console.log(error.response);
       });
-  }
+  };
 
   findAll = () => {
     this.service
       .get("/buscarTodos")
       .then((response) => {
-        const editais = response.data;
-        this.setState({ editais });
-        console.log(editais);
+        const contasEstudante = response.data;
+        this.setState({ contasEstudante });
+        console.log(contasEstudante);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  // componentWillUnmount() {
-  //     this.clear();
-  // }
-
-  //  importarDadosEdital = () => {
-    //   this.props.history.push("/importarBeneficiarios");
+  // importarDadosEdital = () => {
+  //   this.props.history.push("/importarBeneficiarios");
   // };
+
 
   render() {
     return (
@@ -123,7 +123,7 @@ class ListarEditais extends Component {
         {/* Col right */}
         <div className="w-full">
           {/* Header */}
-          <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
+          <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4">
             <div className="flex flex-row-reverse pr-6">
                 <p className="text-xs">{this.props.currentUser.email}</p>
             </div>
@@ -131,7 +131,7 @@ class ListarEditais extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Editais</p>
+              <p className="text-xl font-semibold">Gerenciar Contas de Estudantes</p>
             </div>
           </div>
 
@@ -146,48 +146,35 @@ class ListarEditais extends Component {
                   </div>
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="#" method="POST">
+                  <form action="" method="POST">
                     {/* Begin Card */}
                     {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        {/* <div className="col-span-6 sm:col-span-3">
-                              <label for="edital" className="block text-sm font-medium text-gray-700">Edital</label>
-                              <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-white py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
-                                <option>Edital 2022</option>
-                                <option>Edital 2021</option>
-                                <option>Edital 2020</option>
-                              </select>
-                            </div> */}
 
                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                               <label for="nome" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
-                              <input type="text" name="nome" id="idFilterNome"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}/>
+                              <input type="text" name="filterNome" id="idFilterNome"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                              value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}
+                              />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="vigenteInicio" className="block text-sm font-medium text-gray-700">Filtrar por início da vigência</label>
-                              <input type="text" name="vigenteInicio" id="idVigenteIniciofilterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.vigenteInicio} onChange={(e) => { this.setState({ vigenteInicio: e.target.value }) }}/>
+                              <label for="matricula" className="block text-sm font-medium text-gray-700">Filtrar por matricula</label>
+                              <input type="number" name="filterMatricula" id="idFilterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                              value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                              />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="vigenteFinal" className="block text-sm font-medium text-gray-700">Filtrar por final da vigência</label>
-                              <input type="text" name="vigenteFinal" id="idfilterVigenteFinal" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.vigenteFinal} onChange={(e) => { this.setState({ vigenteFinal: e.target.value }) }}/>
+                              <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por e-mail</label>
+                              <input type="email" name="filterEmail" id="idFilterEmail" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                              value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }}
+                              />
                             </div>
+
                       </div>
                     </div>
-
-                    {/* <button onClick={this.find} type="button" id="btn-search" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                      <i className="pi pi-search"></i> PESQUISAR
-                    </button> */}
-
-
 
                     <div className="row flex flex-row-reverse align-middle px-4 mt-1">
                       {/* <div className="col ml-2">
@@ -198,13 +185,13 @@ class ListarEditais extends Component {
                                 </div>  */}
                       <div className="col mr-2">
                         <button
-                          onClick={this.createEdital}
+                          onClick={this.createContaEstudante}
                           type="submit"
                           className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVO EDITAL
+                        >NOVA CONTA
                         </button>
                       </div>
                     </div>
@@ -227,20 +214,20 @@ class ListarEditais extends Component {
                     {/* End Card */}
                   </form>
 
-                  {/* <div className="row">
-                    <div className="col-span-6">
+                  <div className="row">
+                    {/* <div className="col-span-6">
                                 <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
                                     <i className="pi pi-plus"></i> 
                                     CADASTRAR USUÁRIO
                                 </button>
-                            </div>
-                  </div> */}
+                            </div> */}
+                  </div>
                   <br />
                   <div className="row">
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
-                        <EditaisTable
-                          editais={this.state.editais}
+                        <ContasEstudanteTable
+                          contasEstudante={this.state.contasEstudante}
                           delete={this.delete}
                           edit={this.edit}
                           id="idEdit"
@@ -259,4 +246,4 @@ class ListarEditais extends Component {
   }
 }
 
-export default ListarEditais;
+export default ListarContasEstudante;

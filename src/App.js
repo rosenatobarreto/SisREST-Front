@@ -26,10 +26,16 @@ import PrivateRoute from "./main/PrivateRoute";
 // import 'react-s-alert/dist/s-alert-default.css';
 // import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 // import Home from "./home/Home";
+import CadastrarContaEstudante from "./pages/cadastrarContaEstudante/CadastrarContaEstudante";
+import ListarContasEstudante from "./pages/listarContasEstudante/ListarContasEstudante";
+import AtualizarContaEstudante from "./pages/atualizarContaEstudante/AtualizarContaEstudante";
+
 import CadastrarBeneficiario from "./pages/cadastrarBeneficiario/CadastrarBeneficiario";
 import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios";
-import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
 import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
+import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
+import DetalharBeneficiario from "./pages/detalharBeneficiario/DetalharBeneficiario";
+
 import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
 import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
 import ListarEditais from "./pages/listarEditais/ListarEditais";
@@ -117,6 +123,24 @@ class App extends Component {
               component={OAuth2RedirectHandler}
             ></Route>
             <PrivateRoute
+              path="/cadastrarContaEstudante"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarContaEstudante}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/listarContasEstudante"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarContasEstudante}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/atualizarContaEstudante/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarContaEstudante}
+            ></PrivateRoute>
+            <PrivateRoute
               path="/cadastrarBeneficiario"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
@@ -135,10 +159,16 @@ class App extends Component {
               component={ImportarBeneficiarios}
             ></PrivateRoute>
             <PrivateRoute
-              path="/atualizarBeneficiario"
+              path="/atualizarBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={AtualizarBeneficiario}
+            ></PrivateRoute>
+            <PrivateRoute
+              path="/detalharBeneficiario/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={DetalharBeneficiario}
             ></PrivateRoute>
             <PrivateRoute 
               path="/cadastrarEdital" 
@@ -172,9 +202,9 @@ class App extends Component {
         {/* <Alert stack={{limit: 3}} 
           timeout = {3000}
           position='top-right' effect='slide' offset={65} /> */}
-          <div>
+          {/* <div>
             <Footer />
-          </div>
+          </div> */}
       </div>
     );
   }

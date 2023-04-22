@@ -3,37 +3,58 @@ import React, { Component} from "react";
 
 // import { withRouter } from "react-router-dom";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import ContaBeneficiarioApiService from "../../services/ContaBeneficiarioApiService";
-import UsersTable from "../../components/UsersTable";
+import BeneficiarioApiService from "../../services/BeneficiarioApiService";
+import BeneficiariosTable from "../../components/BeneficiariosTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
 class ListarBeneficiarios extends Component {
   state = {
-    nome: "",
     id: 0,
-    email: "",
-    tipo: "",
-    matricula: 0,
-    admin: "",
-    beneficiarios: [],
+    ativo: true,
+    edital: {
+        id: 0,
+        numero: 0,
+        ano: 0,
+        nome: "",
+        link: "",
+        vigenteInicio: "",
+        vigenteFinal: ""
+      },
+    contaEstudante: {
+        nome: "",
+        senha: "",
+        email: "",
+        matricula: 0
+      },
+    beneficiarios:[],
+    beneficiarioAtivo: true,
+    editalNumero: 0,
+    editalAno: 0,
+    editalNome: "",
+    editalLink: "",
+    editalVigenteInicio: "",
+    editalVigenteFinal: "",
+    contaEstudanteNome: "",
+    contaEstudanteEmail: "",
+    contaEstudanteMatricula: 0 
+
+
   };
+
   constructor(props) {
     super(props);
-    this.service = new ContaBeneficiarioApiService();
+    this.service = new BeneficiarioApiService();
     console.log(props);
     
   }
+  
   componentDidMount() {
     this.findAll();
   }
 
-  // componentWillUnmount() {
-  //     this.clear();
-  // }
-
-  delete = (userId) => {
+  delete = (id) => {
     this.service
-      .delete(userId)
+      .delete(id)
       .then((response) => {
         this.find();
       })
@@ -42,8 +63,28 @@ class ListarBeneficiarios extends Component {
       });
   };
 
-  edit = (userId) => {
-    this.props.history.push(`/atualizarBeneficiario/${userId}`);
+  edit = (id) => {
+    this.props.history.push(`/atualizarBeneficiario/${id}`);
+  };
+
+  view = (id) => {//,ativo,editalNumero,editalNome,editalAno,editalLink,editalVigenteInicio,editalVigenteFinal,contaEstudanteNome,contaEstudanteEmail,contaEstudanteMatricula) => {
+    this.props.history.push(`/detalharBeneficiario/${id}`);
+    // console.log(id)
+    // console.log(ativo)
+    // console.log(editalNumero+"-"+editalAno+"-"+editalNome)
+    // console.log(editalLink)
+    // console.log(editalVigenteInicio)
+    // console.log(editalVigenteFinal)
+    // console.log(contaEstudanteNome)
+    // console.log(contaEstudanteEmail)
+    // console.log(contaEstudanteMatricula)
+    // this.setState({ contaEstudanteNome: contaEstudanteNome, 
+    //   contaEstudanteEmail: contaEstudanteEmail, 
+    //   contaEstudanteMatricula: contaEstudanteMatricula
+    //  }, () => {
+    //   // console.log("Id da conta estudante: ", this.state.contaEstudante);
+    // });
+    // this.setState({ nomeEstudante: nome });
   };
 
   createBeneficiario = () => {
@@ -51,7 +92,7 @@ class ListarBeneficiarios extends Component {
   };
 
   find = (id) => {
-    this.service.find.id(id);
+    this.service.find(id);
     var params = "?";
 
     if (this.state.id !== 0) {
@@ -62,52 +103,52 @@ class ListarBeneficiarios extends Component {
       params = `${params}id=${this.state.id}`;
     }
 
-    if (this.state.nome !== "") {
+    if (this.state.ativo !== false) {
       if (params !== "?") {
         params = `${params}&`;
       }
 
-      params = `${params}nome=${this.state.nome}`;
+      params = `${params}ativo=${this.state.ativo}`;
     }
 
-    if (this.state.email !== "") {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+    // if (this.state.email !== "") {
+    //   if (params !== "?") {
+    //     params = `${params}&`;
+    //   }
 
-      params = `${params}email=${this.state.email}`;
-    }
+    //   params = `${params}email=${this.state.email}`;
+    // }
 
-    if (this.state.matricula !== 0) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+    // if (this.state.matricula !== 0) {
+    //   if (params !== "?") {
+    //     params = `${params}&`;
+    //   }
 
-      params = `${params}matricula=${this.state.matricula}`;
-    }
+    //   params = `${params}matricula=${this.state.matricula}`;
+    // }
 
-    if (this.state.tipo !== "") {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+    // if (this.state.tipo !== "") {
+    //   if (params !== "?") {
+    //     params = `${params}&`;
+    //   }
 
-      params = `${params}tipo=${this.state.tipo}`;
-    }
+    //   params = `${params}tipo=${this.state.tipo}`;
+    // }
 
-    if (this.state.admin !== false) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+    // if (this.state.admin !== false) {
+    //   if (params !== "?") {
+    //     params = `${params}&`;
+    //   }
 
-      params = `${params}admin=${this.state.admin}`;
-    }
+    //   params = `${params}admin=${this.state.admin}`;
+    // }
 
     this.service
-      .get(this.state.id)
+      .get(`/${id}`)
       .then((response) => {
         const beneficiarios = response.data;
         this.setState({ beneficiarios });
-        console.log(beneficiarios);
+        console.log("teste: ",beneficiarios);
       })
       .catch((error) => {
         console.log(error.response);
@@ -151,7 +192,7 @@ class ListarBeneficiarios extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Usuários</p>
+              <p className="text-xl font-semibold">Gerenciar Beneficiários</p>
             </div>
           </div>
 
@@ -182,28 +223,18 @@ class ListarBeneficiarios extends Component {
 
                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                               <label for="matricula" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
-                              <input type="text" name="filterName" id="filterName"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="text" name="nome" id="filterName"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                               <label for="cpf" className="block text-sm font-medium text-gray-700">Filtrar por edital</label>
-                              <input type="text" name="filterEdital" id="filterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="text" name="editalNome" id="filterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                               <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por matrícula</label>
-                              <input type="email" name="filterMatricula" id="filterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="email" name="matricula" id="filterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
-
-                        {/* <div className="col-span-6 sm:col-span-3">
-                              <label for="last-name" className="block text-sm font-medium text-black">Last name</label>
-                              <input type="text" name="last-name" id="last-name" autocomplete="family-name" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div> */}
-
-                        {/* <div className="col-span-6 sm:col-span-4">
-                              <label for="email-address" className="block text-sm font-medium text-black">Email address</label>
-                              <input type="text" name="email-address" id="email-address" autocomplete="email" className="mt-1 block w-full rounded-md border border-green-300 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div> */}
                       </div>
                     </div>
 
@@ -222,7 +253,7 @@ class ListarBeneficiarios extends Component {
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVO USUÁRIO
+                        >NOVO BENEFICIÁRIO
                         </button>
                       </div>
                     </div>
@@ -257,14 +288,18 @@ class ListarBeneficiarios extends Component {
                   <div className="row">
                     <div className="">
                       <div className="">
-                        <UsersTable
+                        <BeneficiariosTable
                           beneficiarios={this.state.beneficiarios}
                           delete={this.delete}
                           edit={this.edit}
+                          view={this.view}
                           id="idEdit"
                         />
                       </div>
                     </div>
+                    <p>Beneficiário: {this.state.contaEstudanteNome}</p>
+                    <p>E-mail: {this.state.contaEstudanteEmail}</p>
+                    <p>Matrícula: {this.state.contaEstudanteMatricula}</p>
                   </div>
                 </div>
               </div>

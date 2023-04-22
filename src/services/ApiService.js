@@ -8,7 +8,7 @@ export const TOKEN = 'token';
 //const baseURL = process.env.REACT_APP_API_URL;
 
 export const httpClient = axios.create({
-    baseURL: API_BASE_URL+'/api',
+    baseURL: 'http://localhost:8080/api',
     withCredentials: true,
 });
 export default class ApiService{

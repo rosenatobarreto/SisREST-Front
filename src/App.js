@@ -168,6 +168,7 @@ class App extends Component {
               path="/detalharBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
+              // render={(props) => <DetalharBeneficiario {...props} />}
               component={DetalharBeneficiario}
             ></PrivateRoute>
             <PrivateRoute 

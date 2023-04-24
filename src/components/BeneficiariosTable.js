@@ -64,6 +64,7 @@ export default props => {
                     <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Edital</th>
                     <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
                 </tr>
+                
             </thead>
             <tbody className="bg-white dividie-y divide-gray-200">
                 {rows}

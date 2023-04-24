@@ -128,7 +128,7 @@ class AtualizarBeneficiario extends Component {
 
   findById = (id) => {
     
-    this.serviceBeneficiario.get(id)
+    this.serviceBeneficiario.get(`/${id}`)
     .then((response) => {
       const beneficiario = response.data;
       const id = beneficiario.id;
@@ -136,7 +136,7 @@ class AtualizarBeneficiario extends Component {
       const contaEstudante = beneficiario.contaEstudante;
       const edital = beneficiario.edital;
       
-      this.setState({id:id, ativo:ativo, contaEstudante:contaEstudante, edital:edital});
+      this.setState({id, ativo, contaEstudante, edital});
       console.log("Entrou no then")
       console.log(`Teste do id: ${id}`)
       })

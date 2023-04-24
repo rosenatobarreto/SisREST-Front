@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component, useContext } from "react";
 // import Header from "../../components/Header";
 
 // import { withRouter } from "react-router-dom";
@@ -8,24 +8,25 @@ import BeneficiariosTable from "../../components/BeneficiariosTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 
 class ListarBeneficiarios extends Component {
+  
   state = {
     id: 0,
     ativo: true,
     edital: {
-        id: 0,
-        numero: 0,
-        ano: 0,
-        nome: "",
-        link: "",
-        vigenteInicio: "",
-        vigenteFinal: ""
-      },
+      id: 0,
+      numero: 0,
+      ano: 0,
+      nome: "",
+      link: "",
+      vigenteInicio: "",
+      vigenteFinal: ""
+    },
     contaEstudante: {
-        nome: "",
-        senha: "",
-        email: "",
-        matricula: 0
-      },
+      nome: "",
+      senha: "",
+      email: "",
+      matricula: 0
+    },
     beneficiarios:[],
     beneficiarioAtivo: true,
     editalNumero: 0,
@@ -37,21 +38,21 @@ class ListarBeneficiarios extends Component {
     contaEstudanteNome: "",
     contaEstudanteEmail: "",
     contaEstudanteMatricula: 0 
-
-
+    
+    
   };
-
+  
   constructor(props) {
     super(props);
     this.service = new BeneficiarioApiService();
-    console.log(props);
+    console.log("Constructor props ",props);
     
   }
   
   componentDidMount() {
     this.findAll();
   }
-
+  
   delete = (id) => {
     this.service
       .delete(id)
@@ -67,8 +68,8 @@ class ListarBeneficiarios extends Component {
     this.props.history.push(`/atualizarBeneficiario/${id}`);
   };
 
-  view = (id) => {//,ativo,editalNumero,editalNome,editalAno,editalLink,editalVigenteInicio,editalVigenteFinal,contaEstudanteNome,contaEstudanteEmail,contaEstudanteMatricula) => {
-    this.props.history.push(`/detalharBeneficiario/${id}`);
+  view = (id) => {//id,ativo,editalNumero,editalNome,editalAno,editalLink,editalVigenteInicio,editalVigenteFinal,contaEstudanteNome,contaEstudanteEmail,contaEstudanteMatricula) => {
+      this.props.history.push(`/detalharBeneficiario/${id}`);
     // console.log(id)
     // console.log(ativo)
     // console.log(editalNumero+"-"+editalAno+"-"+editalNome)
@@ -82,15 +83,16 @@ class ListarBeneficiarios extends Component {
     //   contaEstudanteEmail: contaEstudanteEmail, 
     //   contaEstudanteMatricula: contaEstudanteMatricula
     //  }, () => {
-    //   // console.log("Id da conta estudante: ", this.state.contaEstudante);
-    // });
-    // this.setState({ nomeEstudante: nome });
+    //     // console.log("Id da conta estudante: ", this.state.contaEstudante);
+    //   });
+    //   // this.setState({ nomeEstudante: nome });
+    //console.log("resultado da view ",props)
   };
 
-  createBeneficiario = () => {
-    this.props.history.push(`/cadastrarBeneficiario`);
+      createBeneficiario = () => {
+        this.props.history.push(`/cadastrarBeneficiario`);
   };
-
+  
   find = (id) => {
     this.service.find(id);
     var params = "?";
@@ -102,50 +104,50 @@ class ListarBeneficiarios extends Component {
 
       params = `${params}id=${this.state.id}`;
     }
-
+    
     if (this.state.ativo !== false) {
       if (params !== "?") {
         params = `${params}&`;
       }
-
+      
       params = `${params}ativo=${this.state.ativo}`;
     }
-
+    
     // if (this.state.email !== "") {
-    //   if (params !== "?") {
-    //     params = `${params}&`;
-    //   }
+      //   if (params !== "?") {
+        //     params = `${params}&`;
+        //   }
+        
+        //   params = `${params}email=${this.state.email}`;
+        // }
 
-    //   params = `${params}email=${this.state.email}`;
-    // }
-
-    // if (this.state.matricula !== 0) {
+        // if (this.state.matricula !== 0) {
     //   if (params !== "?") {
     //     params = `${params}&`;
     //   }
 
     //   params = `${params}matricula=${this.state.matricula}`;
     // }
-
+    
     // if (this.state.tipo !== "") {
-    //   if (params !== "?") {
-    //     params = `${params}&`;
-    //   }
-
-    //   params = `${params}tipo=${this.state.tipo}`;
+      //   if (params !== "?") {
+        //     params = `${params}&`;
+        //   }
+        
+        //   params = `${params}tipo=${this.state.tipo}`;
     // }
-
+    
     // if (this.state.admin !== false) {
-    //   if (params !== "?") {
-    //     params = `${params}&`;
-    //   }
-
+      //   if (params !== "?") {
+        //     params = `${params}&`;
+        //   }
+        
     //   params = `${params}admin=${this.state.admin}`;
     // }
-
+    
     this.service
-      .get(`/${id}`)
-      .then((response) => {
+    .get(`/${id}`)
+    .then((response) => {
         const beneficiarios = response.data;
         this.setState({ beneficiarios });
         console.log("teste: ",beneficiarios);
@@ -153,25 +155,45 @@ class ListarBeneficiarios extends Component {
       .catch((error) => {
         console.log(error.response);
       });
-  };
-
-  findAll = () => {
-    this.service
+    };
+    
+    findAll = () => {
+      this.service
       .get("/buscarTodos")
       .then((response) => {
         const beneficiarios = response.data;
         this.setState({ beneficiarios });
-        console.log(beneficiarios);
+        console.table(beneficiarios);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
-
+  
   importarDadosEdital = () => {
     this.props.history.push("/importarBeneficiarios");
   };
 
+  // carregarDados = () => {
+  //   const [beneficiario, setBeneficiario] = useContext(BeneficiarioContext);
+
+  //   return (
+  //     <div>
+  //       Olá {beneficiario.contaEstudanteNome}
+  //       {/* <button onClick={() => setUser(false)}>Sair</button> */}
+  //     </div>
+  //   );
+  // };
+  
+  // view = () => {
+  //   // const [beneficiario, setBeneficiario] = useContext(Context);
+  //   // <h3>{beneficiario}</h3>
+  //   // setBeneficiario(beneficiario)
+
+  //   const [, setBeneficiario] = useContext(BeneficiarioContext);
+
+  // return <button onClick={() => setBeneficiario({ contaEstudanteNome: "Bruno" })}>Entrar</button>;
+  // }
 
   render() {
     return (
@@ -215,9 +237,9 @@ class ListarBeneficiarios extends Component {
                         {/* <div className="col-span-6 sm:col-span-3">
                               <label for="edital" className="block text-sm font-medium text-gray-700">Edital</label>
                               <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-white py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
-                                <option>Edital 2022</option>
-                                <option>Edital 2021</option>
-                                <option>Edital 2020</option>
+                              <option>Edital 2022</option>
+                              <option>Edital 2021</option>
+                              <option>Edital 2020</option>
                               </select>
                             </div> */}
 
@@ -264,9 +286,9 @@ class ListarBeneficiarios extends Component {
             rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
             font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
             focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
-          </div>
+            </div>
           <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
+          <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
             rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
             font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
             focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
@@ -279,22 +301,24 @@ class ListarBeneficiarios extends Component {
                   <div className="row">
                     {/* <div className="col-span-6">
                                 <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
-                                    <i className="pi pi-plus"></i> 
-                                    CADASTRAR USUÁRIO
+                                <i className="pi pi-plus"></i> 
+                                CADASTRAR USUÁRIO
                                 </button>
-                            </div> */}
+                              </div> */}
                   </div>
                   <br />
                   <div className="row">
                     <div className="">
                       <div className="">
-                        <BeneficiariosTable
-                          beneficiarios={this.state.beneficiarios}
-                          delete={this.delete}
-                          edit={this.edit}
-                          view={this.view}
-                          id="idEdit"
-                        />
+                        
+                          <BeneficiariosTable
+                            beneficiarios={this.state.beneficiarios}
+                            delete={this.delete}
+                            edit={this.edit}
+                            view={this.view}
+                            id="idEdit"
+                          />
+                        
                       </div>
                     </div>
                     <p>Beneficiário: {this.state.contaEstudanteNome}</p>

@@ -13,8 +13,11 @@ export default class BeneficiarioApiService extends ApiService{
     delete(id){
         return super.delete(`/deletar/${id}`)
     }
+    // find(id,object){
+    //     return this.get(`/${id}`, object);
+    // }
     find(id){
-        return this.get(`${id}`);
+        return this.get(`/${id}`)
     }
     findAll(){
         return this.getAll('/buscarTodos');

@@ -1,13 +1,10 @@
 import React, { Component} from "react";
-// import Header from "../../components/Header";
-
-// import { withRouter } from "react-router-dom";
-// import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import BeneficiarioApiService from "../../services/BeneficiarioApiService";
 import EditalApiService from "../../services/EditalApiService";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
-import BeneficiariosTable from "../../components/BeneficiariosTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import axios from 'axios';
+import { formatDateBr } from "../../util/FormatDate";
 
 class DetalharBeneficiario extends Component {
     
@@ -21,7 +18,7 @@ class DetalharBeneficiario extends Component {
     }
 
   state = {
-    id: 0,
+    // id: 0,
     ativo: true,
     editalNumero: 0,
     editalAno: 0,
@@ -32,136 +29,41 @@ class DetalharBeneficiario extends Component {
     contaEstudanteNome: "",
     contaEstudanteEmail: "",
     contaEstudanteMatricula: 0
-    // edital: {
-    //     id: 0,
-    //     numero: 0,
-    //     ano: 0,
-    //     nome: "",
-    //     link: "",
-    //     vigenteInicio: "",
-    //     vigenteFinal: ""
-    //   },
-    // contaEstudante: {
-    //     nome: "",
-    //     senha: "",
-    //     email: "",
-    //     matricula: 0
-    //   },
   };
 
-
+  
   componentDidMount() {
     const params = this.props.match.params;
     const id = params.id;
-    const ativo = params.ativo;
-    const editalNumero = params.editalNumero;
-    const editalAno = params.editalAno;
-    const editalNome = params.editalNome;
-    const editalLink = params.editalLink;
-    const editalVigenteInicio = params.editalVigenteInicio;
-    const editalVigenteFinal = params.editalVigenteFinal;
-    const contaEstudanteNome = params.contaEstudanteNome;
-    const contaEstudanteEmail = params.contaEstudanteEmail;
-    const contaEstudanteMatricula = params.contaEstudanteMatricula
-    // this.findById(id);
-    this.view(id,ativo,editalNumero,editalNome,editalAno,editalLink,editalVigenteInicio,editalVigenteFinal,contaEstudanteNome,contaEstudanteEmail,contaEstudanteMatricula);
-    this.selectedBeneficiario(id);
+    this.findById(id);
    }
- 
-  selectedBeneficiario = () => {
-
-  // this.setState({ id: props.id }, () => {
-  //     console.log("Id do beneficiario: ", this.state.id);
-
-  //   });
-    // this.setState({ nomeEstudante: nome });
-  }
-
 
   findById = (id) => {
         
-    this.service.get(`/${id}`)
+    axios.get(`http://localhost:8080/api/beneficiario/${id}`)
       .then((response) => {
         const beneficiario = response.data;
         const id = beneficiario.id;
         const ativo = beneficiario.ativo;
-        // const email = beneficiario.contaEstudante.email;
-        // const edital = response.data;
-        // const id = edital.id;
-        // const numero = edital.numero;
-        // const ano = edital.ano;
-        // const nome = edital.nome;
-        // const link = edital.link;
-        // const vigenteInicio = edital.vigenteInicio;
-        // const vigenteFinal = edital.vigenteFinal;
+        const editalNumero = beneficiario.edital.numero;
+        const editalAno = beneficiario.edital.ano;
+        const editalNome = beneficiario.edital.nome;
+        const editalLink = beneficiario.edital.link;
+        const editalVigenteInicio = beneficiario.edital.vigenteInicio;
+        const editalVigenteFinal = beneficiario.edital.vigenteFinal;
+        const contaEstudanteNome = beneficiario.contaEstudante.nome;
+        const contaEstudanteEmail = beneficiario.contaEstudante.email;
+        const contaEstudanteMatricula = beneficiario.contaEstudante.matricula;
         
-        this.setState({id, ativo});
-        console.log("findById: "+beneficiario.id)
+        this.setState({ativo:ativo,editalNumero:editalNumero,editalNome:editalNome,
+          editalAno:editalAno,editalLink:editalLink,editalVigenteInicio:editalVigenteInicio,
+          editalVigenteFinal:editalVigenteFinal,contaEstudanteNome:contaEstudanteNome,
+          contaEstudanteEmail:contaEstudanteEmail,contaEstudanteMatricula:contaEstudanteMatricula});
       })
       .catch((error) => {
         console.log(error.response);
       });
     };
-
-
-
-
-//   edit = (id) => {
-//     this.props.history.push(`/atualizarBeneficiario/${id}`);
-//   };
-
-//   createBeneficiario = () => {
-//     this.props.history.push(`/cadastrarBeneficiario`);
-//   };
-
-//   find = (id) => {
-//     // this.service.find.id(id);
-//     var params = "?";
-
-//     if (this.state.id !== 0) {
-//       if (params !== "?") {
-//         params = `${params}&`;
-//       }
-
-//       params = `${params}id=${this.state.id}`;
-//     }
-
-//     if (this.state.nome !== "") {
-//       if (params !== "?") {
-//         params = `${params}&`;
-//       }
-
-//       params = `${params}nome=${this.state.nome}`;
-//     }
-
-//     if (this.state.email !== "") {
-//       if (params !== "?") {
-//         params = `${params}&`;
-//       }
-
-//       params = `${params}email=${this.state.email}`;
-//     }
-
-//     if (this.state.matricula !== 0) {
-//       if (params !== "?") {
-//         params = `${params}&`;
-//       }
-
-//       params = `${params}matricula=${this.state.matricula}`;
-//     }
-
-//     this.service
-//       .get(`/${id}`)
-//       .then((response) => {
-//         const beneficiarios = response.data;
-//         this.setState({ beneficiarios });
-//         console.log(beneficiarios);
-//       })
-//       .catch((error) => {
-//         console.log(error.response);
-//       });
-//   };
-
 
   render() {
     return (
@@ -191,19 +93,26 @@ class DetalharBeneficiario extends Component {
             <div className="mt-0 sm:mt-0">
               <div className="md:grid md:grid-cols-1 md:gap-6">
                 <div className="md:col-span-1">
-                  <div className="px-4 sm:px-0">
-                    {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
-                    {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
+                  <div className="px-4 ml-5 sm:px-0">
+                    <h3 className="text-lg mb-10 font-medium leading-6 text-gray-900">Dados do Beneficiário</h3>
 
-                    <div>Dados do Beneficiário</div>
-                    {/* contaEstudante */}
-                    <p>Nome: </p>
-                    <p>E-mail: {this.state.contaEstudanteEmail}</p>
-                    <p>Matrícula: </p>
-                    <p>Edital: numero ano - nome </p>
-                    <p>Link do edital: </p>
-                    <p>Vigência do edital: vigenteInicio a vigenteFinal </p>
+                    <p className="mt-1 ml-10 text-md text-gray-900">Nome:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.contaEstudanteNome}</p>
 
+                    <p className="mt-1 ml-10 text-md text-gray-900">E-mail:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.contaEstudanteEmail}</p>
+
+                    <p className="mt-1 ml-10 text-md text-gray-900">Matrícula:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.contaEstudanteMatricula}</p>
+
+                    <p className="mt-1 ml-10 text-md text-gray-900">Edital:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.editalNumero}-{this.state.editalAno} {this.state.editalNome}</p>
+
+                    <p className="mt-1 ml-10 text-md text-gray-900">Link do edital:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900"><a href={this.state.editalLink} target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{this.state.editalLink}</a></p>
+
+                    <p className="mt-1 ml-10 text-md text-gray-900">Vigência do edital:</p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{formatDateBr(this.state.editalVigenteInicio)} a {formatDateBr(this.state.editalVigenteFinal)}</p>
 
                   </div>
                 </div>

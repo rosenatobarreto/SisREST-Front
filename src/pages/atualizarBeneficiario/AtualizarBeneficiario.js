@@ -14,8 +14,7 @@ import MenuAdministrador from "../../components/MenuAdministrador";
 import ListContasEstudanteTable from "../../components/ListContasEstudanteTable";
 import ListEditaisTable from "../../components/ListEditaisTable";
 import axios from 'axios';
-// import { API_BASE_URL} from './constants/Constants';
-
+// import { formatDateBr } from "../util/FormatDate";
 
 class AtualizarBeneficiario extends Component {
 
@@ -28,17 +27,20 @@ class AtualizarBeneficiario extends Component {
 
   state = {
     id: "",
-    ativo: true,
-    contaEstudante: 0,
-    edital: 0,
-    numero: "",
-    ano: "",
-    tituloEdital: "",
-    nomeEstudante: "",
+    ativoNoSistema: true,
+    editalNumero: 0,
+    editalAno: 0,
+    editalNome: "",
+    editalLink: "",
+    editalVigenteInicio: "",
+    editalVigenteFinal: "",
+    contaEstudanteNome: "",
+    contaEstudanteEmail: "",
+    contaEstudanteMatricula: 0,
     listEditais: [],
     listContasEstudante:[]
   };
-
+  
   componentDidMount() {
     const params = this.props.match.params;
     const id = params.id;
@@ -46,8 +48,40 @@ class AtualizarBeneficiario extends Component {
     this.findAllEditais();
     this.findAllContasEstudantes();
   }
+  
+  findById = (id) => {
+    console.log(`Teste do id: ${id}`)
+    
+    // this.serviceBeneficiario
+    // .get(`/${id}`)
+    axios.get(`http://localhost:8080/api/beneficiario/${id}`)
+    .then((response) => {
+      const beneficiario = response.data;
+        const id = beneficiario.id;
+        const ativoNoSistema = beneficiario.ativo;
+        const editalNumero = beneficiario.edital.numero;
+        const editalAno = beneficiario.edital.ano;
+        const editalNome = beneficiario.edital.nome;
+        const editalLink = beneficiario.edital.link;
+        const editalVigenteInicio = beneficiario.edital.vigenteInicio;
+        const editalVigenteFinal = beneficiario.edital.vigenteFinal;
+        const contaEstudanteNome = beneficiario.contaEstudante.nome;
+        const contaEstudanteEmail = beneficiario.contaEstudante.email;
+        const contaEstudanteMatricula = beneficiario.contaEstudante.matricula;
+        
+        this.setState({id:id, ativoNoSistema:ativoNoSistema, editalNumero:editalNumero, editalNome:editalNome,
+          editalAno:editalAno, editalLink:editalLink, editalVigenteInicio:editalVigenteInicio,
+          editalVigenteFinal:editalVigenteFinal, contaEstudanteNome:contaEstudanteNome,
+          contaEstudanteEmail:contaEstudanteEmail, contaEstudanteMatricula:contaEstudanteMatricula});
+      console.log("Entrou no then")
+      })
+      .catch((error) => {
+        console.log(error.response);
+        console.log("Entrou no catch")
+      });
+    };
 
-  validate = () => {
+    validate = () => {
     const errors = [];
 
     return errors;
@@ -127,27 +161,6 @@ class AtualizarBeneficiario extends Component {
       });
   };
 
-  findById = (id) => {
-    
-    //axios.get(`http://localhost:8080/api/beneficiario/${id}`)
-    this.serviceBeneficiario
-    .get(`/${id}`)
-    .then((response) => {
-      const beneficiario = response.data;
-      const id = beneficiario.id;
-      const ativo = beneficiario.ativo;
-      const contaEstudante = beneficiario.contaEstudante;
-      const edital = beneficiario.edital;
-      
-      this.setState({id:id, ativo:ativo, contaEstudante:contaEstudante, edital:edital});
-      console.log("Entrou no then")
-      console.log(`Teste do id: ${id}`)
-      })
-      .catch((error) => {
-        console.log(error.response);
-        console.log("Entrou no catch")
-      });
-    };
 
 
   selectOneEdital = (id, numero, ano, tituloEdital) => {
@@ -212,16 +225,18 @@ class AtualizarBeneficiario extends Component {
                             for="edital"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Dados do beneficiário:
+                            Beneficiário selecionado:
                           </label>
-                          <p className="block text-md font-medium" id="labelEstudante">{this.state.nome}</p>
-                          <p className="block text-md font-medium" id="labelEstudante">{this.state.contaEstudante}</p>
-                          <p className="block text-md font-medium" id="labelEstudante">{this.state.edital}</p>
-                          <p className="block text-md font-medium" id="labelEstudante">{this.state.nomeEstudante}</p>
+                          <p className="block text-md font-medium" id="labelEstudante">Nome: {this.state.contaEstudanteNome}</p>
+                          <p className="block text-md font-medium" id="labelEstudante">Matrícula: {this.state.contaEstudanteMatricula}</p>
+                          <p className="block text-md font-medium" id="labelEstudante">Edital: {this.state.editalNumero}-{this.state.editalAno} {this.state.editalNome}</p>
+                          <p className="block text-md font-medium" id="labelEstudante">Ativo no Sistema: {this.state.ativoNoSistema===true?'Sim':'Não'}</p>
                           {/* <SelectContaEstudante onChange={this.inputSelectContaEstudante} /> */}
                         </div>
-
-                        <div className="col-span-6 sm:col-span-3">
+                        <div className="col-span-12 sm:col-span-12">
+                          <p className="mt-6 text-md text-emerald-900">Opções de atualização:</p>
+                        </div>
+                        <div className="col-span-6 sm:col-span-6">
                           <label
                             for="ativo"
                             className="block text-sm font-medium text-gray-700"
@@ -231,11 +246,11 @@ class AtualizarBeneficiario extends Component {
                           <select
                             id="idAtivo"
                             name="ativo"
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
-                            value={this.state.ativo} onChange={e => this.setState({ ativo: e.target.value }) }
+                            className="mt-1 block w-auto rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm"
+                            value={this.state.ativoNoSistema} onChange={e => this.setState({ ativoNoSistema: e.target.value }) }
                           >
-                            <option value="true" >Sim</option>
-                            {/* <option value="false">Não</option> */}
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
                             
                           </select>
                         </div>
@@ -311,16 +326,16 @@ class AtualizarBeneficiario extends Component {
                         <br />
                     </div>
                     <div className="">
-                      <div className="pt-4 pl-8 pr-8 mb-4 text-gray-700">
-                      <p className="mb-1 text-md font-semibold">Selecione o estudante</p>
-                        <ListContasEstudanteTable
-                          contasEstudante={this.state.listContasEstudante}
-                          selectOneContaEstudante={this.selectOneContaEstudante}
-                          // edit={this.edit}
-                          id="idEditContasEstudante"
-                        />
+                      {/* <div className="pt-4 pl-8 pr-8 mb-4 text-gray-700">
+                        <p className="mb-1 text-md font-semibold">Selecione o estudante</p>
+                          <ListContasEstudanteTable
+                            contasEstudante={this.state.listContasEstudante}
+                            selectOneContaEstudante={this.selectOneContaEstudante}
+                            // edit={this.edit}
+                            id="idEditContasEstudante"
+                          />
                         <br />
-                    </div>
+                      </div> */}
                     <div className="row flex flex-row-reverse align-middle px-6 mt-1">
                       <div className="col ml-2">
                         <button

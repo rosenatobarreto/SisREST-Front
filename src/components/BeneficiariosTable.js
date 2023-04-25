@@ -5,20 +5,20 @@ export default props => {
 
     const rows = props.beneficiarios.map(user => {
         return (
-            <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-green-50">
+            <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
                 
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.ativo===true?'Sim':'Não'}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.ativo===true?'Sim':'Não'}</td>
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.numero}</td> */}
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.ano}</td> */}
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.link}</td> */}
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.vigenteInicio}</td> */}
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.vigenteFinal}</td> */}
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.nome}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.email}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.matricula}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.numero+'-'+user.edital.ano+" "+user.edital.nome}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.nome}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.email}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.matricula}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.edital.numero+'-'+user.edital.ano+" "+user.edital.nome}</td>
                 {/* <td className="px-6 py-4 text-md font-medium text-gray-900 whitespace-nowrap">{user.tipo}</td> */}
-                <td  className="px-3 py-4 text-md font-medium text-gray-900 whitespace-nowrap col-span-2">
+                <td  className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap col-span-2">
 
                     <button type="button" title="Detalhar" className="btn-edit" onClick={e => props.view(
                         user.id,
@@ -48,21 +48,21 @@ export default props => {
     } )
 
     return (
-
-        <table className="w-full divide-y divide-gray-200">
+        <div class="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Ativo</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ativo</th>
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Número do Edital</th> */}
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Ano do Edital</th> */}
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Link do Edital</th> */}
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Início da vigência</th> */}
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Final da vigência</th> */}
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Aluno</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Edital</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Aluno</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Edital</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
                 </tr>
                 
             </thead>
@@ -70,5 +70,6 @@ export default props => {
                 {rows}
             </tbody>
         </table>
+        </div>
     )
 }

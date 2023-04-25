@@ -38,15 +38,12 @@ class ListarBeneficiarios extends Component {
     contaEstudanteNome: "",
     contaEstudanteEmail: "",
     contaEstudanteMatricula: 0 
-    
-    
   };
   
   constructor(props) {
     super(props);
     this.service = new BeneficiarioApiService();
     console.log("Constructor props ",props);
-    
   }
   
   componentDidMount() {
@@ -68,29 +65,12 @@ class ListarBeneficiarios extends Component {
     this.props.history.push(`/atualizarBeneficiario/${id}`);
   };
 
-  view = (id) => {//id,ativo,editalNumero,editalNome,editalAno,editalLink,editalVigenteInicio,editalVigenteFinal,contaEstudanteNome,contaEstudanteEmail,contaEstudanteMatricula) => {
-      this.props.history.push(`/detalharBeneficiario/${id}`);
-    // console.log(id)
-    // console.log(ativo)
-    // console.log(editalNumero+"-"+editalAno+"-"+editalNome)
-    // console.log(editalLink)
-    // console.log(editalVigenteInicio)
-    // console.log(editalVigenteFinal)
-    // console.log(contaEstudanteNome)
-    // console.log(contaEstudanteEmail)
-    // console.log(contaEstudanteMatricula)
-    // this.setState({ contaEstudanteNome: contaEstudanteNome, 
-    //   contaEstudanteEmail: contaEstudanteEmail, 
-    //   contaEstudanteMatricula: contaEstudanteMatricula
-    //  }, () => {
-    //     // console.log("Id da conta estudante: ", this.state.contaEstudante);
-    //   });
-    //   // this.setState({ nomeEstudante: nome });
-    //console.log("resultado da view ",props)
+  view = (id) => {
+    this.props.history.push(`/detalharBeneficiario/${id}`);
   };
 
-      createBeneficiario = () => {
-        this.props.history.push(`/cadastrarBeneficiario`);
+  createBeneficiario = () => {
+    this.props.history.push(`/cadastrarBeneficiario`);
   };
   
   find = (id) => {
@@ -234,16 +214,7 @@ class ListarBeneficiarios extends Component {
                     {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        {/* <div className="col-span-6 sm:col-span-3">
-                              <label for="edital" className="block text-sm font-medium text-gray-700">Edital</label>
-                              <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-white py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
-                              <option>Edital 2022</option>
-                              <option>Edital 2021</option>
-                              <option>Edital 2020</option>
-                              </select>
-                            </div> */}
-
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                            <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                               <label for="matricula" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
                               <input type="text" name="nome" id="filterName"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
@@ -321,9 +292,6 @@ class ListarBeneficiarios extends Component {
                         
                       </div>
                     </div>
-                    <p>Beneficiário: {this.state.contaEstudanteNome}</p>
-                    <p>E-mail: {this.state.contaEstudanteEmail}</p>
-                    <p>Matrícula: {this.state.contaEstudanteMatricula}</p>
                   </div>
                 </div>
               </div>

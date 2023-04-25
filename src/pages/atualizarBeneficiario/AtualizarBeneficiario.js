@@ -16,6 +16,7 @@ import ListEditaisTable from "../../components/ListEditaisTable";
 import axios from 'axios';
 // import { API_BASE_URL} from './constants/Constants';
 
+
 class AtualizarBeneficiario extends Component {
 
   constructor(props) {
@@ -128,7 +129,9 @@ class AtualizarBeneficiario extends Component {
 
   findById = (id) => {
     
-    this.serviceBeneficiario.get(`/${id}`)
+    //axios.get(`http://localhost:8080/api/beneficiario/${id}`)
+    this.serviceBeneficiario
+    .get(`/${id}`)
     .then((response) => {
       const beneficiario = response.data;
       const id = beneficiario.id;
@@ -136,7 +139,7 @@ class AtualizarBeneficiario extends Component {
       const contaEstudante = beneficiario.contaEstudante;
       const edital = beneficiario.edital;
       
-      this.setState({id, ativo, contaEstudante, edital});
+      this.setState({id:id, ativo:ativo, contaEstudante:contaEstudante, edital:edital});
       console.log("Entrou no then")
       console.log(`Teste do id: ${id}`)
       })

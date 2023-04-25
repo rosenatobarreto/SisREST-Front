@@ -65,6 +65,10 @@ class DetalharBeneficiario extends Component {
       });
     };
 
+  voltar = () => {
+    this.props.history.push("/listarBeneficiarios");
+  };
+
   render() {
     return (
       <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -113,6 +117,20 @@ class DetalharBeneficiario extends Component {
 
                     <p className="mt-1 ml-10 text-md text-gray-900">Vigência do edital:</p>
                     <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{formatDateBr(this.state.editalVigenteInicio)} a {formatDateBr(this.state.editalVigenteFinal)}</p>
+
+
+                  </div>
+                  <div className="row flex flex-row-reverse align-middle px-6 mt-1">
+                    <button
+                          onClick={this.voltar}
+                          type="submit"
+                          className=" btn-save inline-flex justify-center 
+                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
+                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        >
+                        VOLTAR
+                    </button>
 
                   </div>
                 </div>

@@ -8,7 +8,7 @@ export default props => {
 
 
         return (
-            <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-green-50">
+            <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
                 
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{edital.numero}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{edital.ano}</td>
@@ -33,8 +33,8 @@ export default props => {
     } )
 
     return (
-        
-        <table className="w-full divide-y divide-gray-200 lg:rounded-sm">
+       <div class="overflow-x-auto"> 
+        <table className="min-w-full divide-y divide-gray-200 lg:rounded-sm">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Número</th>
@@ -50,6 +50,6 @@ export default props => {
                 {rows}
             </tbody>
         </table>
-
+        </div>
     )
 }

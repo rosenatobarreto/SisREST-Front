@@ -130,13 +130,9 @@ class AtualizarEdital extends Component {
     };
     
 
-    cancel = () => {
-      this.props.history("/");
+  cancel = () => {
+    this.props.history.push("/listarEditais");
   };
-  
-  // componentWillUnmount() {
-  //   this.clear();
-  // }
   
   render() {
     return (

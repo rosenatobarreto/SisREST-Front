@@ -5,12 +5,12 @@ export default props => {
 
     const rows = props.contasEstudante.map(conta => {
         return (
-            <tr key={conta.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
+            <tr key={conta.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{conta.nome}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{conta.email}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{conta.matricula}</td>
-                <td className="px-3 py-4 text-sm font-medium text-gray-900 whitespace-nowrap col-span-2">
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.nome}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.email}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.matricula}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap col-span-2">
                     <button type="button" title="Editar"
                         className="btn-edit"
                         onClick={e => props.edit(conta.id)}>
@@ -27,14 +27,14 @@ export default props => {
     } )
 
     return (
-        <div class="overflow-x-auto">
+        <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">
-                    <th className="px-3 py-3 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Nome</th>
-                    <th className="px-3 py-3 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
-                    <th className="px-3 py-3 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
-                    <th className="px-3 py-3 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Nome</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">

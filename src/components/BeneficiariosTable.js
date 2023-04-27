@@ -5,7 +5,7 @@ export default props => {
 
     const rows = props.beneficiarios.map(user => {
         return (
-            <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
+            <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.ativo===true?'Sim':'Não'}</td>
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.numero}</td> */}
@@ -66,7 +66,7 @@ export default props => {
                 </tr>
                 
             </thead>
-            <tbody className="bg-white dividie-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200">
                 {rows}
             </tbody>
         </table>

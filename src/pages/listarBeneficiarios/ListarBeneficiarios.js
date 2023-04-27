@@ -1,4 +1,4 @@
-import React, { Component, useContext } from "react";
+import React, { Component } from "react";
 // import Header from "../../components/Header";
 
 // import { withRouter } from "react-router-dom";
@@ -43,7 +43,7 @@ class ListarBeneficiarios extends Component {
   constructor(props) {
     super(props);
     this.service = new BeneficiarioApiService();
-    console.log("Constructor props ",props);
+    // console.log("Constructor props ",props);
   }
   
   componentDidMount() {
@@ -221,7 +221,7 @@ class ListarBeneficiarios extends Component {
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                               <label for="cpf" className="block text-sm font-medium text-gray-700">Filtrar por edital</label>
-                              <input type="text" name="editalNome" id="filterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
+                              <input type="text" name="editalNome" id="filterEdital" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">

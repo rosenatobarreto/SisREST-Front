@@ -5,7 +5,7 @@ export default props => {
 
     const rows = props.contasEstudante.map(conta => {
         return (
-            <tr key={conta.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
+            <tr key={conta.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{conta.id}</td> */}
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.nome}</td>

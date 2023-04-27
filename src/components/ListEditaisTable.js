@@ -7,7 +7,7 @@ export default props => {
     const rows = props.editais.map(edital => {
 
         return (
-            <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-green-50 min-w-full">
+            <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{edital.numero}</td>
                 <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{edital.ano}</td> */}

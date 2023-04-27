@@ -46,53 +46,53 @@ class ListarContasEstudante extends Component {
     this.props.history.push(`/cadastrarContaEstudante`);
   };
 
-  findById = (id) => {
-    // this.service.find(id);
-    var params = "?";
+  // findById = (id) => {
+  //   // this.service.find(id);
+  //   var params = "?";
 
-    if (this.state.id !== 0) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+  //   if (this.state.id !== 0) {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
 
-      params = `${params}id=${this.state.id}`;
-    }
+  //     params = `${params}id=${this.state.id}`;
+  //   }
 
-    if (this.state.nome !== "") {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+  //   if (this.state.nome !== "") {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
 
-      params = `${params}nome=${this.state.nome}`;
-    }
+  //     params = `${params}nome=${this.state.nome}`;
+  //   }
     
-    if (this.state.matricula !== 0) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+  //   if (this.state.matricula !== 0) {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
 
-      params = `${params}matricula=${this.state.matricula}`;
-    }
+  //     params = `${params}matricula=${this.state.matricula}`;
+  //   }
 
-    if (this.state.email !== "") {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
+  //   if (this.state.email !== "") {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
 
-      params = `${params}email=${this.state.email}`;
-    }
+  //     params = `${params}email=${this.state.email}`;
+  //   }
 
 
-    this.service.get(`/${id}`)
-      .then((response) => {
-        const contasEstudante = response.data;
-        this.setState({ contasEstudante: contasEstudante });
-        console.log('Contas Estudante:', contasEstudante);
-      })
-      .catch(error => {
-        console.log(error.response);
-      });
-  };
+  //   this.service.get(`/${id}`)
+  //     .then((response) => {
+  //       const contasEstudante = response.data;
+  //       this.setState({ contasEstudante: contasEstudante });
+  //       console.log('Contas Estudante:', contasEstudante);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // };
 
   findAll = () => {
     this.service
@@ -153,23 +153,51 @@ class ListarContasEstudante extends Component {
                       <div className="grid grid-cols-6 gap-6">
 
                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label for="nome" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
-                              <input type="text" name="filterNome" id="idFilterNome"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}
+                              <label 
+                                for="nome" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por nome
+                              </label>
+                              <input 
+                                type="text" 
+                                name="filterNome" id="idFilterNome"  
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.nome} 
+                                onChange={(e) => { this.setState({ nome: e.target.value }) }}
                               />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="matricula" className="block text-sm font-medium text-gray-700">Filtrar por matricula</label>
-                              <input type="number" name="filterMatricula" id="idFilterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                              <label 
+                                for="matricula" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por matricula
+                              </label>
+                              <input 
+                                type="number" 
+                                name="filterMatricula" 
+                                id="idFilterMatricula" 
+                                autocomplete="filterMatricula" 
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.matricula} 
+                                onChange={(e) => { this.setState({ matricula: e.target.value }) }}
                               />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por e-mail</label>
-                              <input type="email" name="filterEmail" id="idFilterEmail" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }}
+                              <label 
+                                for="email" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por e-mail
+                              </label>
+                              <input 
+                                type="email" 
+                                name="filterEmail" 
+                                id="idFilterEmail" 
+                                autocomplete="filterMatricula" 
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.email} 
+                                onChange={(e) => { this.setState({ email: e.target.value }) }}
                               />
                             </div>
 
@@ -187,8 +215,7 @@ class ListarContasEstudante extends Component {
                         <button
                           onClick={this.createContaEstudante}
                           type="submit"
-                          className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+                          className=" btn-save inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
                                     font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
                                     focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         >NOVA CONTA
@@ -197,18 +224,7 @@ class ListarContasEstudante extends Component {
                     </div>
 
                     <div className="">
-                      {/* <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
-          </div>
-          <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
-          </div> */}
+
                     </div>
                     {/* </div> */}
                     {/* End Card */}

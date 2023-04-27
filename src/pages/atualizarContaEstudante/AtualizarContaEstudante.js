@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import MenuAdministrador from "../../components/MenuAdministrador";
-
+import axios from 'axios';
 class AtualizarContaEstudante extends Component {
   
   constructor(props) {
@@ -11,7 +11,7 @@ class AtualizarContaEstudante extends Component {
   }
   
   state = {
-    id: "",
+    id: 0,
     nome: "",
     email: "",
     senha: "",
@@ -95,16 +95,17 @@ class AtualizarContaEstudante extends Component {
 
   find = (id) => {
         
-    this.service.get(`/${id}`)
+    // this.service.get(`/${id}`)
+    axios.get(`http://localhost:8080/api/contaEstudante/${id}`)
       .then((response) => {
-        const contasEstudante = response.data;
-        const id = contasEstudante.id;
-        const nome = contasEstudante.nome;
-        const email = contasEstudante.email;
-        const senha = contasEstudante.senha;
-        const matricula = contasEstudante.matricula;
+        const contaEstudante = response.data;
+        const id = contaEstudante.id;
+        const nome = contaEstudante.nome;
+        const email = contaEstudante.email;
+        const senha = contaEstudante.senha;
+        const matricula = contaEstudante.matricula;
                 
-        this.setState({id, nome, email, senha, matricula});
+        this.setState({id:id, nome:nome, email:email, senha:senha, matricula:matricula});
       })
       .catch((error) => {
         console.log(error.response);
@@ -112,8 +113,8 @@ class AtualizarContaEstudante extends Component {
     };
     
 
-    cancel = () => {
-      this.props.history("/listarContasEstudante");
+  cancel = () => {
+      this.props.history.push("/listarContasEstudante");
   };
   
   // componentWillUnmount() {

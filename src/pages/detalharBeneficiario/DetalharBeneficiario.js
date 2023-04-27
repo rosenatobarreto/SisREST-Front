@@ -55,7 +55,7 @@ class DetalharBeneficiario extends Component {
         const contaEstudanteEmail = beneficiario.contaEstudante.email;
         const contaEstudanteMatricula = beneficiario.contaEstudante.matricula;
         
-        this.setState({ativo:ativo,editalNumero:editalNumero,editalNome:editalNome,
+        this.setState({id:id, ativo:ativo,editalNumero:editalNumero,editalNome:editalNome,
           editalAno:editalAno,editalLink:editalLink,editalVigenteInicio:editalVigenteInicio,
           editalVigenteFinal:editalVigenteFinal,contaEstudanteNome:contaEstudanteNome,
           contaEstudanteEmail:contaEstudanteEmail,contaEstudanteMatricula:contaEstudanteMatricula});
@@ -113,7 +113,7 @@ class DetalharBeneficiario extends Component {
                     <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.editalNumero}-{this.state.editalAno} {this.state.editalNome}</p>
 
                     <p className="mt-1 ml-10 text-md text-gray-900">Link do edital:</p>
-                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900"><a href={this.state.editalLink} target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{this.state.editalLink}</a></p>
+                    <p className="mt-0 ml-10 mb-5 text-lg text-gray-900"><a href={this.state.editalLink} target="_blank" rel="noreferrer" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">{this.state.editalLink}</a></p>
 
                     <p className="mt-1 ml-10 text-md text-gray-900">Vigência do edital:</p>
                     <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{formatDateBr(this.state.editalVigenteInicio)} a {formatDateBr(this.state.editalVigenteFinal)}</p>

@@ -3,7 +3,7 @@ import BeneficiarioApiService from "../../services/BeneficiarioApiService";
 import EditalApiService from "../../services/EditalApiService";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
 import MenuAdministrador from "../../components/MenuAdministrador";
-import axios from 'axios';
+
 import { formatDateBr } from "../../util/FormatDate";
 
 class DetalharBeneficiario extends Component {
@@ -40,7 +40,7 @@ class DetalharBeneficiario extends Component {
 
   findById = (id) => {
         
-    axios.get(`http://localhost:8080/api/beneficiario/${id}`)
+    this.serviceBeneficiario.get(`/${id}`)
       .then((response) => {
         const beneficiario = response.data;
         const id = beneficiario.id;
@@ -98,7 +98,7 @@ class DetalharBeneficiario extends Component {
               <div className="md:grid md:grid-cols-1 md:gap-6">
                 <div className="md:col-span-1">
                   <div className="px-4 ml-5 sm:px-0">
-                    <h3 className="text-lg mb-10 font-medium leading-6 text-gray-900">Dados do Beneficiário</h3>
+                    <h3 className="text-lg mb-10 font-medium leading-6 text-gray-900">Dados do Estudante</h3>
 
                     <p className="mt-1 ml-10 text-md text-gray-900">Nome:</p>
                     <p className="mt-0 ml-10 mb-5 text-lg text-gray-900">{this.state.contaEstudanteNome}</p>

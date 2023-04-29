@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import MenuAdministrador from "../../components/MenuAdministrador";
-import axios from 'axios';
 class AtualizarContaEstudante extends Component {
   
   constructor(props) {
@@ -24,6 +23,10 @@ class AtualizarContaEstudante extends Component {
     this.find(id);
   }
   
+  componentWillUnmount() {
+    this.clear();
+  }
+
   validate = () => {
     const errors = [];
     
@@ -95,8 +98,7 @@ class AtualizarContaEstudante extends Component {
 
   find = (id) => {
         
-    // this.service.get(`/${id}`)
-    axios.get(`http://localhost:8080/api/contaEstudante/${id}`)
+    this.service.get(`/${id}`)
       .then((response) => {
         const contaEstudante = response.data;
         const id = contaEstudante.id;

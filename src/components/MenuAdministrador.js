@@ -42,7 +42,7 @@ class MenuAdministrador extends Component {
           </li>
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/listarContasEstudante">
-              <span className="hidden sm:inline text-sm">Gerenciar Contas</span>
+              <span className="hidden sm:inline text-sm">Gerenciar Usuários</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">

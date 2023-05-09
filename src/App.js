@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
+
+// import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/themes/saga-green/theme.css"
+import "primereact/resources/primereact.min.css";                                       
 import "primeicons/primeicons.css";
+
 import "toastr/build/toastr.min.js";
 import "toastr/build/toastr.css";
 // import AppRoutes from './main/AppRoutes';
@@ -12,6 +17,7 @@ import Footer from "./components/Footer";
 // import { gapi } from 'gapi-script';
 import { showSuccessMessage } from "./components/Toastr";
 
+import TemplateDemo from "./pages/login/templateDemo";
 import Login from "./pages/login/Login";
 import Signup from "./components/signup/Signup";
 import Profile from "./components/profile/Profile";
@@ -39,6 +45,9 @@ import DetalharBeneficiario from "./pages/detalharBeneficiario/DetalharBeneficia
 import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
 import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
 import ListarEditais from "./pages/listarEditais/ListarEditais";
+
+import CadastrarContaServidor from "./pages/cadastrarContaServidor/CadastrarContaServidor";
+import ListarContasServidor from "./pages/listarContasServidor/ListarContasServidor";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -100,6 +109,7 @@ class App extends Component {
         <div className="">
           <Switch>
             <Route exact path="/" component={Login}></Route>
+            <Route path="/templateDemo" component={TemplateDemo}></Route>
             <PrivateRoute
               path="/header"
               authenticated={this.state.authenticated}
@@ -189,6 +199,18 @@ class App extends Component {
               currentUser={this.state.currentUser} 
               component={ListarEditais}>
             </PrivateRoute>
+            <PrivateRoute 
+              path="/cadastrarContaServidor" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarContaServidor}>
+            </PrivateRoute> 
+            <PrivateRoute 
+              path="/listarContasServidor" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarContasServidor}>
+            </PrivateRoute>       
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}

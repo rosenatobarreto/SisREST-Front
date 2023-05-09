@@ -161,20 +161,20 @@ class ListarEditais extends Component {
                             </div> */}
 
                         <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label for="nome" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
+                              <label htmlFor="nome" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
                               <input type="text" name="nome" id="idFilterNome"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                               value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="vigenteInicio" className="block text-sm font-medium text-gray-700">Filtrar por início da vigência</label>
-                              <input type="text" name="vigenteInicio" id="idVigenteIniciofilterEdital" autocomplete="filterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                              <label htmlFor="vigenteInicio" className="block text-sm font-medium text-gray-700">Filtrar por início da vigência</label>
+                              <input type="text" name="vigenteInicio" id="idVigenteIniciofilterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                               value={this.state.vigenteInicio} onChange={(e) => { this.setState({ vigenteInicio: e.target.value }) }}/>
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="vigenteFinal" className="block text-sm font-medium text-gray-700">Filtrar por final da vigência</label>
-                              <input type="text" name="vigenteFinal" id="idfilterVigenteFinal" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                              <label htmlFor="vigenteFinal" className="block text-sm font-medium text-gray-700">Filtrar por final da vigência</label>
+                              <input type="text" name="vigenteFinal" id="idfilterVigenteFinal" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                               value={this.state.vigenteFinal} onChange={(e) => { this.setState({ vigenteFinal: e.target.value }) }}/>
                             </div>
                       </div>

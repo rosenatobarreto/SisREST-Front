@@ -3,14 +3,26 @@ import '../assets/css/Style.css';
 import { formatDateBr } from "../util/FormatDate";
 
 export default props => {
+    // console.log('props; ', props)
+    let dataAtual = new Date();
+    const editaisSelecionados=[];
+    let dataVigente;
 
-    const rows = props.editais.map(edital => {
+    const editaisSelected = props.editais.map(edital => {
+
+        dataVigente = new Date(edital.vigenteFinal)
+
+        if (dataVigente.getFullYear() === dataAtual.getFullYear()){
+
+            editaisSelecionados.push(edital);
+        }
+    })
+    
+    const rows = editaisSelecionados.map(edital => {
 
         return (
             <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 
-                {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{edital.numero}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{edital.ano}</td> */}
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{edital.numero+"-"+edital.ano+" "+edital.nome}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{formatDateBr(edital.vigenteInicio)}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{formatDateBr(edital.vigenteFinal)}</td>
@@ -29,7 +41,7 @@ export default props => {
 
 
     return (  
-        <div class="overflow-x-auto">      
+        <div className="overflow-x-auto">      
         <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">

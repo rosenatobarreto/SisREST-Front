@@ -215,7 +215,7 @@ class ListarBeneficiarios extends Component {
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
                             <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label for="matricula" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
+                              <label htmlFor="matricula" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
                               <input type="text" name="nome" id="filterName"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
                             </div>
 

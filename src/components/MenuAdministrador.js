@@ -7,7 +7,7 @@ class MenuAdministrador extends Component {
   render() {
     return (
 
-      <div className="w-[220px] sticky top-0 pt-4 pl-4 pr-4 bg-[#93c47d] h-full">
+      <div className="w-[220px] sticky top-0 pt-4 pl-4 pr-4 bg-[#93c47d] h-screen">
          
         <div className="mx-auto">
           <img
@@ -53,6 +53,11 @@ class MenuAdministrador extends Component {
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/listarEditais">
               <span className="hidden sm:inline text-sm">Gerenciar Editais</span>
+            </a>
+          </li>
+          <li className="py-2 hover:bg-gray-300">
+            <a className="" href="/listarContasServidor">
+              <span className="hidden sm:inline text-sm">Gerenciar Servidores</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">

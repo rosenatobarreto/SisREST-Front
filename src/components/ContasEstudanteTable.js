@@ -10,6 +10,8 @@ export default props => {
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.nome}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.email}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.matricula}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.campus}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{conta.curso}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap col-span-2">
                     <button type="button" title="Editar"
                         className="btn-edit"
@@ -31,10 +33,12 @@ export default props => {
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">
-                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Nome</th>
-                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
-                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
-                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ações</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">Nome</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">E-mail</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">Matrícula</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">Campus</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">Curso</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-gray-500 tracking-wider" scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">

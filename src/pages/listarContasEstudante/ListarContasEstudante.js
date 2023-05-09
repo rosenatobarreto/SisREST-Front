@@ -16,9 +16,10 @@ class ListarContasEstudante extends Component {
 
   state = {
     nome: "",
-    email: "",
-    senha: "",
     matricula: 0,
+    email: "",
+    campus: "",
+    curso: "",
     contasEstudante: [],
   };
 
@@ -131,7 +132,7 @@ class ListarContasEstudante extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Contas de Estudantes</p>
+              <p className="text-xl font-semibold">Gerenciar Cadastro de Estudantes</p>
             </div>
           </div>
 

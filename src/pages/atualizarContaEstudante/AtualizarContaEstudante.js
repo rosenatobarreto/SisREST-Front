@@ -12,9 +12,10 @@ class AtualizarContaEstudante extends Component {
   state = {
     id: 0,
     nome: "",
+    matricula: "",
     email: "",
-    senha: "",
-    matricula: 0,
+    campus: "",
+    curso: "",
   };
   
   componentDidMount() {
@@ -23,9 +24,6 @@ class AtualizarContaEstudante extends Component {
     this.find(id);
   }
   
-  componentWillUnmount() {
-    this.clear();
-  }
 
   validate = () => {
     const errors = [];
@@ -78,9 +76,10 @@ class AtualizarContaEstudante extends Component {
     this.service.update(this.state.id,
       {
         nome: this.state.nome,
-        email: this.state.email,
-        senha: this.state.senha,
         matricula: this.state.matricula,
+        email: this.state.email,
+        campus: this.state.campus,
+        curso: this.state.curso,
       }
     ).then(response => {
       console.log(response);
@@ -103,11 +102,12 @@ class AtualizarContaEstudante extends Component {
         const contaEstudante = response.data;
         const id = contaEstudante.id;
         const nome = contaEstudante.nome;
-        const email = contaEstudante.email;
-        const senha = contaEstudante.senha;
         const matricula = contaEstudante.matricula;
+        const email = contaEstudante.email;
+        const campus = contaEstudante.campus;
+        const curso = contaEstudante.curso;
                 
-        this.setState({id:id, nome:nome, email:email, senha:senha, matricula:matricula});
+        this.setState({id:id, nome:nome, email:email, matricula:matricula, campus:campus, curso:curso});
       })
       .catch((error) => {
         console.log(error.response);
@@ -142,7 +142,7 @@ class AtualizarContaEstudante extends Component {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Atualizar Conta de Estudante</p>
+              <p className="text-xl font-semibold">Atualizar Usuário</p>
             </div>
           </div>
 
@@ -157,9 +157,10 @@ class AtualizarContaEstudante extends Component {
                   <form action="" method="PUT">
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                        
+                        <div className="col-span-12 sm:col-span-12 lg:col-span-12">
                           <label
-                            for="nome"
+                            for="name"
                             className="block text-sm font-medium text-gray-700"
                           >
                             Nome
@@ -167,50 +168,15 @@ class AtualizarContaEstudante extends Component {
                           <input
                             type="text"
                             name="nome"
-                            id="idContaEstudante"
+                            id="idNome"
                             autocomplete="given-name"
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 
-                            shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.nome} onChange={e => this.setState({ nome: e.target.value }) }
+                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}
                           />
                         </div>
 
-                        <div className="col-span-6 sm:col-span-4 lg:col-span-4">
-                          <label
-                            for="email"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            email
-                          </label>
-                          <input
-                            type="email"
-                            name="email"
-                            id="idEmail"
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 
-                            shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.email} onChange={e => this.setState({ email: e.target.value }) }
-                          />
-                        </div>
-
-                        <div className="col-span-6 sm:col-span-4 lg:col-span-4">
-                          <label
-                            for="senha"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Senha
-                          </label>
-                          <input
-                            type="text"
-                            name="senha"
-                            id="idSenha"
-                            autocomplete=""
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 
-                            shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.senha} onChange={e => this.setState({ senha: e.target.value }) }
-                          />
-                        </div>
-
-                        <div className="col-span-6 sm:col-span-4 lg:col-span-4">
+                        <div className="col-span-4 sm:col-span-6 lg:col-span-6">
                           <label
                             for="matricula"
                             className="block text-sm font-medium text-gray-700"
@@ -221,10 +187,63 @@ class AtualizarContaEstudante extends Component {
                             type="number"
                             name="matricula"
                             id="idMatricula"
-                            autocomplete=""
-                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 
-                            shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.matricula} onChange={e => this.setState({ matricula: e.target.value }) }
+                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                          />
+                        </div>
+                        
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-6">
+                          <label
+                            for="email"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            E-mail
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            id="idEmail"
+                            autocomplete="email"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }}
+                          />
+                        </div>
+
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-6">
+                          <label
+                            for="campus"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Campus
+                          </label>
+                          <input
+                            type="campus"
+                            name="campus"
+                            id="idCampus"
+                            autocomplete="campus"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }}
+                          />
+                        </div>
+
+                        <div className="col-span-12 sm:col-span-6 lg:col-span-6">
+                          <label
+                            for="curso"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Curso
+                          </label>
+                          <input
+                            type="curso"
+                            name="curso"
+                            id="idCurso"
+                            autocomplete="curso"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.curso} onChange={(e) => { this.setState({ curso: e.target.value }) }}
                           />
                         </div>
                       </div>

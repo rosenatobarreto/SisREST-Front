@@ -16,14 +16,11 @@ class CadastrarContaEstudante extends Component {
 
   state = {
     nome: "",
-    email: "",
-    senha: "",
     matricula: "",
+    email: "",
+    campus: "",
+    curso: "",
   };
-
-  componentWillUnmount() {
-    this.clear();
-  }
 
   validate = () => {
     const errors = [];
@@ -75,9 +72,10 @@ class CadastrarContaEstudante extends Component {
     this.service
       .create({
         nome: this.state.nome,
-        email: this.state.email,
-        senha: this.state.senha,
         matricula: this.state.matricula,
+        email: this.state.email,
+        campus: this.state.campus,
+        curso: this.state.curso,
       })
       .then((response) => {
         console.log(response);
@@ -117,7 +115,7 @@ class CadastrarContaEstudante extends Component {
                 <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Cadastrar Conta Estudante</p>
+              <p className="text-xl font-semibold">Cadastrar Usuário</p>
             </div>
           </div>
 
@@ -137,9 +135,9 @@ class CadastrarContaEstudante extends Component {
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
                         
-                        <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                        <div className="col-span-12 sm:col-span-12 lg:col-span-12">
                           <label
-                            for="name"
+                            for="nome"
                             className="block text-sm font-medium text-gray-700"
                           >
                             Nome
@@ -149,11 +147,31 @@ class CadastrarContaEstudante extends Component {
                             name="nome"
                             id="idNome"
                             autocomplete="given-name"
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
                             value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}
                           />
                         </div>
-                        <div className="col-span-6 sm:col-span-4 lg:col-span-2">
+
+                        <div clasName="">
+                          {/* //className="col-span-6 sm:col-span-6 lg:col-span-6"> */}
+                          <label
+                            for="matricula"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Matrícula
+                          </label>
+                          <input
+                            type="number"
+                            name="matricula"
+                            id="idMatricula"
+                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                          />
+                        </div>
+                        
+                        <div className="col-span-8 sm:col-span-6 lg:col-span-6">
                           <label
                             for="email"
                             className="block text-sm font-medium text-gray-700"
@@ -165,41 +183,48 @@ class CadastrarContaEstudante extends Component {
                             name="email"
                             id="idEmail"
                             autocomplete="email"
-                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
                             value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }}
                           />
                         </div>
-                        <div className="col-span-6 sm:col-span-4 lg:col-span-2">
+
+                        <div className="col-span-10 sm:col-span-6 lg:col-span-6">
                           <label
-                            for="senha"
+                            for="campus"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Senha
+                            Campus
                           </label>
                           <input
-                            type="password"
-                            name="senha"
-                            id="idSenha"
-                            autocomplete=""
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.senha} onChange={(e) => { this.setState({ senha: e.target.value }) }}
+                            type="campus"
+                            name="campus"
+                            id="idCampus"
+                            autocomplete="campus"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }}
                           />
                         </div>
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+
+                        <div className="col-span-10 sm:col-span-6 lg:col-span-6">
                           <label
-                            for="matricula"
+                            for="curso"
                             className="block text-sm font-medium text-gray-700"
                           >
-                            Matrícula
+                            Curso
                           </label>
                           <input
-                            type="number"
-                            name="matricula"
-                            id="idMatricula"
-                            className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                            value={this.state.matricula} onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                            type="curso"
+                            name="curso"
+                            id="idCurso"
+                            autocomplete="curso"
+                            className="mt-1 block w-full rounded-md border border-gray-300 bg-green-50 py-2 px-3 shadow-sm 
+                            focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                            value={this.state.curso} onChange={(e) => { this.setState({ curso: e.target.value }) }}
                           />
                         </div>
+
                       </div>
                     </div>
 
@@ -233,7 +258,7 @@ class CadastrarContaEstudante extends Component {
 
                     <div className=""></div>
                     <br />
-                                        
+                  
                   </form>
                 </div>
               </div>

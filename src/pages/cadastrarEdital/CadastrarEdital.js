@@ -4,6 +4,7 @@ import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { stringToDate } from "../../util/FormatDate";
 // import moment from 'moment';
+import { InputText } from "primereact/inputtext";
 class CadastrarEdital extends Component {
 
 constructor(props) {
@@ -189,7 +190,7 @@ constructor(props) {
                           >
                             Título do Edital
                           </label>
-                          <input
+                          {/* <input
                             type="text"
                             name="nome"
                             id="nomeEdital"
@@ -197,8 +198,14 @@ constructor(props) {
                             className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 
                             py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                             value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}
-                          />
+                          /> */}
+
+                        <div className="card flex justify-content-center">
+                          <InputText value={this.state.nome} onChange={(e) => this.setState({nome:e.target.value})} />
                         </div>
+
+                        </div>
+
 
                         <div className="col-span-10 sm:col-span-10 lg:col-span-2">
                           <label

@@ -40,7 +40,7 @@ class DetalharBeneficiario extends Component {
 
   findById = (id) => {
         
-    this.serviceBeneficiario.get(`/${id}`)
+    this.serviceBeneficiario.get(`/buscarPorID/${id}`)
       .then((response) => {
         const beneficiario = response.data;
         const id = beneficiario.id;

@@ -13,13 +13,10 @@ export default class ContaServidorApiService extends ApiService{
     delete(id){
         return super.delete(`/deletar/${id}`)
     }
-    // find(id,object){
-    //     return this.get(`/${id}`, object);
-    // }
-    // find(id){
-    //     return this.get(`/${id}`)
-    // }
-    // findAll(){
-    //     return this.getAll('/buscarTodos');
-    // }
+    find(id){
+        return this.get(`/buscarPorID/${id}`)
+    }
+    findAll(){
+        return this.getAll('/buscarTodos');
+    }
 }

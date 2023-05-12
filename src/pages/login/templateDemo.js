@@ -32,26 +32,66 @@
 import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { CustomerService } from "./CustomerService";
-// import EditalApiService from "../../services/EditalApiService";
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
+
+import EditalApiService from "../../services/EditalApiService";
 
 export default function PaginatorBasicDemo() {
-    const [customers, setCustomers] = useState([]);
+    const [editais, setEditais] = useState([]);
+    const serviceEdital = new EditalApiService();
+
+    const actionBodyTemplate = (rowData) => {
+        return (
+            <React.Fragment>
+                <Button icon="pi pi-pencil" rounded outlined className="mr-3" onClick={() => editProduct(rowData)} />
+                <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
+            </React.Fragment>
+        );
+    };
+
+    const editProduct = (product) => {
+        // setProduct({ ...product });
+        // setProductDialog(true);
+    };
+
+    const confirmDeleteProduct = (product) => {
+        // setProduct(product);
+        // setDeleteProductDialog(true);
+    };
 
     useEffect(() => {
-        CustomerService.getCustomersMedium().then((data) => setCustomers(data));
-        // this. service.get("/buscarTodos").then((data) => setCustomers(data));
+
+        const loadEditais = async () => {
+            const response = await serviceEdital.get('/buscarTodos');//.then((data) => setEditais(data));
+            setEditais(response.data);
+        };
+        loadEditais(); 
+        
         
     }, []);
 
     return (
         <div className="card">
-            <DataTable value={customers} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
-                <Column field="name" header="Name" style={{ width: '25%' }}></Column>
-                <Column field="country.name" header="Country" style={{ width: '25%' }}></Column>
-                <Column field="company" header="Company" style={{ width: '25%' }}></Column>
-                <Column field="representative.name" header="Representative" style={{ width: '25%' }}></Column>
+            <DataTable value={editais} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
+                <Column field="numero" header="Número" ></Column>
+                <Column field="ano" header="Ano" ></Column>
+                <Column field="nome" header="Título" ></Column>
+                <Column field="vigenteInicio" header="Início da vigência" ></Column>
+                <Column field="vigenteFinal" header="Fim da vigência" ></Column>
+                <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
+            
         </div>
     );
 }
+
+        // <div className="card">
+        //     <DataTable value={editais} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
+        //         <Column field="numero" header="Número" style={{ width: '5%' }}></Column>
+        //         <Column field="ano" header="Ano" style={{ width: '10%' }}></Column>
+        //         <Column field="nome" header="Título" style={{ width: '20%' }}></Column>
+        //         <Column field="vigenteInicio" header="Início da vigência" style={{ width: '20%' }}></Column>
+        //         <Column field="vigenteFinal" header="Fim da vigência" style={{ width: '20%' }}></Column>
+        //     </DataTable>
+        // </div>

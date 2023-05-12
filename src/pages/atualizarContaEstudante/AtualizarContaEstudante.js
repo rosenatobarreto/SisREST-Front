@@ -97,7 +97,7 @@ class AtualizarContaEstudante extends Component {
 
   find = (id) => {
         
-    this.service.get(`/${id}`)
+    this.service.get(`/buscarPorID/${id}`)
       .then((response) => {
         const contaEstudante = response.data;
         const id = contaEstudante.id;

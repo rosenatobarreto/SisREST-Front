@@ -48,6 +48,7 @@ import ListarEditais from "./pages/listarEditais/ListarEditais";
 
 import CadastrarContaServidor from "./pages/cadastrarContaServidor/CadastrarContaServidor";
 import ListarContasServidor from "./pages/listarContasServidor/ListarContasServidor";
+import AtualizarContaServidor from "./pages/atualizarContaServidor/AtualizarContaServidor";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -210,7 +211,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarContasServidor}>
-            </PrivateRoute>       
+            </PrivateRoute>
+            <PrivateRoute 
+              path="/atualizarContaServidor/:id" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarContaServidor}>
+            </PrivateRoute>    
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}

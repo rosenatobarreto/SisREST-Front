@@ -1,235 +1,267 @@
-import React, { useEffect, useState, memo } from "react";
-import ContaServidorApiService from "../../services/ContaServidorApiService";
-// import Footer from "../../components/Footer";
-import MenuAdministrador from "../../components/MenuAdministrador";
-import Footer from "../../components/Footer";
+import React, { Component} from "react";
+
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import { InputMask } from 'primereact/inputmask';
-import { InputText } from "primereact/inputtext";
-import { InputNumber } from 'primereact/inputnumber';
-import { RadioButton } from "primereact/radiobutton";
-import { Button } from 'primereact/button';
+import ContaServidorApiService from "../../services/ContaServidorApiService";
+import ContasServidorTable from "../../components/ContasServidorTable";
+import MenuAdministrador from "../../components/MenuAdministrador";
 
-const CadastrarContaServidor = (props) => {
+class ListarContasServidor extends Component {
 
-  const service = new ContaServidorApiService();
+  constructor(props) {
+    super(props);
+    this.service = new ContaServidorApiService();
+    console.log(props);
+    
+  }
 
-  const [nome, setNome] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [matriculaSIAPE, setMatriculaSIAPE] = useState(0);
-  const [isAdmin, setIsAdmin] = useState(null);
-  const [campus, setCampus] = useState(null);
-
-  useEffect(() => {
-    // findAllEditais();
-    // findAllContasEstudantes();
-  
-    // // return () => {
-    // //   window.removeEventListener('scroll', handleScroll)
-    // // }
-
-    // const loadEditais = async () => {
-    //         const response = await serviceEdital.get('/buscarTodos');//.then((data) => setEditais(data));
-    //         setEditais(response.data);
-    //     };
-    //     loadEditais(); 
-
-      }, []
-  );
-
-  const validate = () => {
-    const errors = [];
-    return errors;
+  state = {
+    nome: "",
+    matricula: 0,
+    email: "",
+    campus: "",
+    isAdmin: true,
+    contasServidor: [],
   };
 
-  const create = () => {
-    const errors = validate();
+  componentDidMount() {
+    this.findAll();
+  }
 
-    if (errors.length > 0) {
-      errors.forEach((message, index) => {
-        showErrorMessage(message);
-      });
-      return false;
-    }
-
-    service.create(
-      setNome(nome),
-      setEmail(email),
-      setMatriculaSIAPE(matriculaSIAPE),
-      setIsAdmin(isAdmin),
-      setCampus(campus),
-    )
+  delete = (contaId) => {
+    this.service
+      .delete(contaId)
       .then((response) => {
-        console.log(response);
-        // console.log(this.state);
-        showSuccessMessage("Beneficiário criado com sucesso!");
-        props.history.push("/cadastrarContaServidor");
+        this.find();
+        this.props.history.push(`/listarContasServidor`);
       })
       .catch((error) => {
         console.log(error.response);
-        // console.log(this.state);
-        showErrorMessage("O beneficiário não pode ser salvo!");
       });
-
-    console.log("request finished");
   };
 
-  const cancel = () => {
-    props.history.push("/boasVindas");
+  edit = (id) => {
+    this.props.history.push(`/atualizarContaServidor/${id}`);
   };
 
-  return (
+  createContaServidor = () => {
+    this.props.history.push(`/cadastrarContaServidor`);
+  };
 
-    <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
-      {/*Col left  */}
-      <div className="w-[220px] flex-shrink flex-grow-0 px-0">
-        {/* Side Menu */}
-        <MenuAdministrador />
-      </div>
-      {/* Col right */}
-      <div className="w-full">
-        {/* Header */}
-        <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
-          <div className="flex flex-row-reverse pr-6">
-            <p className="text-xs">{props.currentUser.email}</p>
-          </div>
-          <div className="flex flex-row-reverse pr-6">
-            <p className="text-lg font-semibold">Administrador</p>
-          </div>
-          <div className="flex flex-row pl-6">
-            <p className="text-xl font-semibold">Gerenciar Cadastro de Servidores</p>
-          </div>
+  // findById = (id) => {
+  //   // this.service.find(id);
+  //   var params = "?";
+
+  //   if (this.state.id !== 0) {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
+
+  //     params = `${params}id=${this.state.id}`;
+  //   }
+
+  //   if (this.state.nome !== "") {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
+
+  //     params = `${params}nome=${this.state.nome}`;
+  //   }
+    
+  //   if (this.state.matricula !== 0) {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
+
+  //     params = `${params}matricula=${this.state.matricula}`;
+  //   }
+
+  //   if (this.state.email !== "") {
+  //     if (params !== "?") {
+  //       params = `${params}&`;
+  //     }
+
+  //     params = `${params}email=${this.state.email}`;
+  //   }
+
+
+  //   this.service.get(`/${id}`)
+  //     .then((response) => {
+  //       const contasEstudante = response.data;
+  //       this.setState({ contasEstudante: contasEstudante });
+  //       console.log('Contas Estudante:', contasEstudante);
+  //     })
+  //     .catch(error => {
+  //       console.log(error.response);
+  //     });
+  // };
+
+  findAll = () => {
+    this.service
+      .get("/buscarTodos")
+      .then((response) => {
+        const contasServidor = response.data;
+        this.setState({ contasServidor });
+        console.log(contasServidor);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  // importarDadosEdital = () => {
+  //   this.props.history.push("/importarBeneficiarios");
+  // };
+
+
+  render() {
+    return (
+      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+        {/*Col left  */}
+        <div className="w-[220px] flex-shrink flex-grow-0 px-0">
+          {/* Side Menu */}
+          <MenuAdministrador /> 
         </div>
+        {/* Col right */}
+        <div className="w-full">
+          {/* Header */}
+          <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4">
+            <div className="flex flex-row-reverse pr-6">
+                <p className="text-xs">{this.props.currentUser.email}</p>
+            </div>
+            <div className="flex flex-row-reverse pr-6">
+              <p className="text-lg font-semibold">Administrador</p>
+            </div>
+            <div className="flex flex-row pl-6">
+              <p className="text-xl font-semibold">Gerenciar Cadastro de Servidores</p>
+            </div>
+          </div>
 
-        {/* Content two */}
-        <div className="pt-4 pl-8 pr-8 mb-4">
-          <div className="mt-0 sm:mt-0">
-            <div className="md:grid md:grid-cols-1 md:gap-6">
-              <div className="md:col-span-1">
-                <div className="px-4 sm:px-0">
-
+          {/* Content two */}
+          <div className="pt-4 pl-8 pr-8 mb-4">
+            <div className="mt-0 sm:mt-0">
+              <div className="md:grid md:grid-cols-1 md:gap-6">
+                <div className="md:col-span-1">
+                  <div className="px-4 sm:px-0">
+                    {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
+                    {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
+                  </div>
                 </div>
-              </div>
-              <div className="mt-2 md:col-span-2 md:mt-0">
-                <form action="">
-                  <div className="bg-white px-4 py-5 sm:p-6">
-                    {/* <div className="grid grid-cols-6 gap-6">
-                    </div> */}
+                <div className="mt-5 md:col-span-2 md:mt-0">
+                  <form action="" method="POST">
+                    {/* Begin Card */}
+                    {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
+                    <div className="bg-white px-4 py-5 sm:p-6">
+                      <div className="grid grid-cols-6 gap-6">
 
-                    <div className="col-span-10 sm:col-span-10 lg:col-span-12">
-                      <label
-                      for="nome"
-                      className="block text-sm font-medium text-gray-700 pb-2">
-                      Nome
-                      </label>
-                      <div className="card flex justify-content-center gap-3">
-                        <InputText id="nomeId" className="w-full" value={nome} onChange={(e) => setNome(e.target.value)} />
+                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                              <label 
+                                for="nome" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por nome
+                              </label>
+                              <input 
+                                type="text" 
+                                name="filterNome" id="idFilterNome"  
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.nome} 
+                                onChange={(e) => { this.setState({ nome: e.target.value }) }}
+                              />
+                            </div>
+
+                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                              <label 
+                                for="matricula" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por matricula
+                              </label>
+                              <input 
+                                type="number" 
+                                name="filterMatricula" 
+                                id="idFilterMatricula" 
+                                autocomplete="filterMatricula" 
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.matricula} 
+                                onChange={(e) => { this.setState({ matricula: e.target.value }) }}
+                              />
+                            </div>
+
+                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                              <label 
+                                for="email" 
+                                className="block text-sm font-medium text-gray-700">
+                                Filtrar por e-mail
+                              </label>
+                              <input 
+                                type="email" 
+                                name="filterEmail" 
+                                id="idFilterEmail" 
+                                autocomplete="filterMatricula" 
+                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                                value={this.state.email} 
+                                onChange={(e) => { this.setState({ email: e.target.value }) }}
+                              />
+                            </div>
+
                       </div>
                     </div>
 
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-6">
-                      
-                      <label
-                      for="email"
-                      className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                      E-mail
-                      </label>
-
-                      <div className="card flex justify-content-center gap-3">
-                        <InputText  id="emailId" className="w-96" value={email} onChange={(e) => setEmail(e.target.value)} />
-                      </div>
-
-
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-6">
-                      <label
-                      for="matSiape"
-                      className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                      Administrador do Sistema?
-                      </label>
-
-                      <div className="card flex justify-content-center gap-3">
-                        {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
-                      <select
-                            id="idIsAdmin"
-                            name="isAdmin"
-                            className="w-20 h-10 md:w-20rem border-green-50"
-                            value={isAdmin} onChange={(e) => setIsAdmin(e.target.value)}
-                          >
-                            <option value="true" >Sim</option>
-                            <option value="false" >Não</option>
-                            
-                            
-                          </select>
-
-                      </div>
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-6">
-                      <label
-                      for="matSiape"
-                      className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                      Matrícula Siape
-                      </label>
-
-                      <div className="card flex justify-content-center gap-3">
-                        <InputText type="number" id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} />
-                      </div>
-                    </div>
-
-                    <div className="col-span-10 sm:col-span-10 lg:col-span-12">
-                      <label
-                      for="campus"
-                      className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                      Campus
-                      </label>
-                      <div className="card flex justify-content-center gap-3">
-                        <InputText id="campusId" className="w-full" value={campus} onChange={(e) => setCampus(e.target.value)} />
-                      </div>
-                    </div>
-
-                  </div>
-            
-                  <div className="">
-                  
-                    <div className="row flex flex-row-reverse align-middle px-6 mt-1">
-
-                      <div className="col ml-2">
-                        <div className="card flex justify-content-center">
-                          <Button label="CANCELAR" severity="sucess" outlined onClick={cancel} />
-                        </div>
-                      </div>
-
+                    <div className="row flex flex-row-reverse align-middle px-4 mt-1">
+                      {/* <div className="col ml-2">
+                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
+                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
+                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
+                                </div>  */}
                       <div className="col mr-2">
-                        <div className="card flex justify-content-center">
-                          <Button label="CADASTRAR" severity="sucess" onClick={create} />
-                        </div>
+                        <button
+                          onClick={this.createContaServidor}
+                          type="submit"
+                          className=" btn-save inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
+                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
+                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        >NOVA CONTA
+                        </button>
                       </div>
                     </div>
-                  </div>
-                </form>
 
-                {/* <div className="row">
+                    <div className="">
+
+                    </div>
+                    {/* </div> */}
+                    {/* End Card */}
+                  </form>
+
+                  <div className="row">
+                    {/* <div className="col-span-6">
+                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
+                                    <i className="pi pi-plus"></i> 
+                                    CADASTRAR USUÁRIO
+                                </button>
+                            </div> */}
+                  </div>
+                  <br />
+                  <div className="row">
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
-                        <ContasEstudanteTable
-                          contasEstudante={this.state.contasEstudante}
+                        <ContasServidorTable
+                          contasServidor={this.state.contasServidor}
                           delete={this.delete}
                           edit={this.edit}
                           id="idEdit"
                         />
                       </div>
                     </div>
-                  </div> */}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-  );
+      </div>
+    );
+  }
 }
 
-export default memo(CadastrarContaServidor);
+export default ListarContasServidor;
+

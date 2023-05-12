@@ -8,7 +8,7 @@ export default class BeneficiarioApiService extends ApiService{
         return this.post('/criar', object);
     }
     update(id,object){
-        return this.put(`/${id}`, object);
+        return this.put(`/atualizar/${id}`, object);
     }
     delete(id){
         return super.delete(`/deletar/${id}`)
@@ -17,7 +17,7 @@ export default class BeneficiarioApiService extends ApiService{
     //     return this.get(`/${id}`, object);
     // }
     find(id){
-        return this.get(`/${id}`)
+        return this.get(`/buscarPorID/${id}`)
     }
     findAll(){
         return this.getAll('/buscarTodos');

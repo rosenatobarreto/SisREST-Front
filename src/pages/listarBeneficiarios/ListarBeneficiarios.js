@@ -126,7 +126,7 @@ class ListarBeneficiarios extends Component {
     // }
     
     this.service
-    .get(`/${id}`)
+    .get(`/buscarPorID/${id}`)
     .then((response) => {
         const beneficiarios = response.data;
         this.setState({ beneficiarios });

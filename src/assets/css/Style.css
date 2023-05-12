@@ -215,7 +215,7 @@
 }
 
 
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
     .footer {
         position:fixed;
         left: 0;
@@ -230,5 +230,5 @@
         color: grey;
         text-align: right;
       }
-}
+} */
 

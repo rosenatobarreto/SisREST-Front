@@ -153,8 +153,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
 
-                        <div clasName="">
-                          {/* //className="col-span-6 sm:col-span-6 lg:col-span-6"> */}
+                        <div clasName="col-span-6 sm:col-span-6 lg:col-span-8">
                           <label
                             for="matricula"
                             className="block text-sm font-medium text-gray-700"
@@ -171,7 +170,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
                         
-                        <div className="col-span-8 sm:col-span-6 lg:col-span-6">
+                        <div className="col-span-8 sm:col-span-6 lg:col-span-8">
                           <label
                             for="email"
                             className="block text-sm font-medium text-gray-700"
@@ -207,7 +206,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
 
-                        <div className="col-span-10 sm:col-span-6 lg:col-span-6">
+                        <div className="col-span-10 sm:col-span-6 lg:col-span-12">
                           <label
                             for="curso"
                             className="block text-sm font-medium text-gray-700"

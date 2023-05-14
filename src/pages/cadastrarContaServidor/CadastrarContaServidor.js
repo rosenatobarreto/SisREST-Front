@@ -94,11 +94,6 @@ class CadastrarContaServidor extends Component {
           <div className="pt-4 pl-8 pr-8 mb-4">
             <div className="mt-0 sm:mt-0">
               <div className="md:grid md:grid-cols-1 md:gap-6">
-                <div className="md:col-span-1">
-                  {/* <div className="px-4 sm:px-0">
-
-                  </div> */}
-                </div>
                 <div className="mt-2 md:col-span-2 md:mt-0">
                   <form action="">
                     <div className="bg-white px-4 py-5 sm:p-6">

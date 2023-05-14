@@ -9,11 +9,11 @@ export default props => {
                 
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.ativo===true?'Sim':'Não'}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.nome}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.cpf}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.cpf}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.email}</td>
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.contaEstudante.matricula}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.situacao}</td>
-                <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.programa}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.situacao}</td>
+                <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.programa}</td>
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.vigenteInicio}</td> */}
                 {/* <td className="px-3 py-4 text-xs font-medium text-gray-900 whitespace-nowrap">{user.edital.vigenteFinal}</td> */}
                 <td className="px-3 py-2 text-sm font-medium text-gray-900 whitespace-nowrap">{user.edital.numero+'-'+user.edital.ano+" "+user.edital.nome}</td>
@@ -56,11 +56,11 @@ export default props => {
                 <tr className="table-active">
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Ativo</th>
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Aluno</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">CPF</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">CPF</th>
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">E-mail</th>
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Matrícula</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Situação</th>
-                    <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Programa</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Situação</th>
+                    <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Programa</th>
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Início da vigência</th> */}
                     {/* <th className="px-3 py-3 text-left text-xs font-medium text-grady-500 tracking-wider" scope="col">Final da vigência</th> */}
                     <th className="px-3 py-2 text-left text-sm font-medium text-grady-500 tracking-wider" scope="col">Edital</th>

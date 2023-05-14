@@ -52,9 +52,8 @@ class AtualizarBeneficiario extends Component {
   findById = (id) => {
     console.log(`Teste do id: ${id}`)
     
-    // this.serviceBeneficiario
-    // .get(`/${id}`)
-    axios.get(`http://localhost:8080/api/beneficiario/${id}`)
+    this.serviceBeneficiario
+    .get(`/buscarPorID/${id}`)
     .then((response) => {
       const beneficiario = response.data;
         const id = beneficiario.id;
@@ -182,7 +181,7 @@ class AtualizarBeneficiario extends Component {
 
   render() {
     return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}

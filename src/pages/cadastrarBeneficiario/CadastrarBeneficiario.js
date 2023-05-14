@@ -21,7 +21,7 @@ const CadastrarBeneficiario = (props) => {
   const [ativo, setAtivo] = useState(true);
   const [cpf, setCpf] = useState(null);
   const [programa, setPrograma] = useState(null);
-  const [situacao, setSituacao] = useState(null);
+  const [situacao, setSituacao] = useState('Deferido');
   const [contaEstudante, setContaEstudante] = useState(0);
   const [nomeEstudante, setNomeEstudante] = useState(null);
   const [matriculaEstudante, setMatriculaEstudante] = useState([]);
@@ -39,26 +39,29 @@ const CadastrarBeneficiario = (props) => {
   const [filteredEstudantes, setFilteredEstudantes] = useState(null);
 
   useEffect(() => {
-    findAllEditais();
+    // findAllEditais();
     findAllContasEstudantes();
 
-    // let dataAtual = new Date();
-    // const editaisSelecionados=[];
-    // let dataVigente;
+    let dataVigente;
+    let dataAtual = new Date();
+    const editaisSelecionados = [];
 
-    // const editaisSelected = props.editais.map(edital => {
-
-    //     dataVigente = new Date(edital.vigenteFinal)
-
-    //     if (dataVigente.getFullYear() === dataAtual.getFullYear()){
-
-    //         editaisSelecionados.push(edital);
-    //     }
-    // })
 
     const loadEditais = async () => {
+
       const response = await serviceEdital.get('/buscarTodos');//.then((data) => setEditais(data));
-      setEditais(response.data);
+
+      const editaisSelected = response.data.map(edital => {
+        dataVigente = new Date(edital.vigenteFinal)
+
+        if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
+          editaisSelecionados.push(edital);
+        }
+      })
+
+
+      setEditais(editaisSelecionados);
+
     };
     loadEditais();
 
@@ -106,19 +109,6 @@ const CadastrarBeneficiario = (props) => {
     props.history.push("/listarBeneficiarios");
   };
 
-
-  // inputSelectEdital = (e) => {
-  //   this.setState({ editalId: e.target.value }, () => {
-  //     console.log("Id do Edital: ", this.state.editalId);
-  //   });
-  // };
-
-  // inputSelectContaEstudante = (e) => {
-  //   this.setState({ contaEstudanteId: e.target.value }, () => {
-  //     console.log("Id da conta estudante: ", this.state.contaEstudanteId);
-  //   });
-  // };
-
   const findAllEditais = () => {
     serviceEdital
       .get("/buscarTodos")
@@ -164,12 +154,6 @@ const CadastrarBeneficiario = (props) => {
 
   }
 
-  // const selectOneContaEstudante = (contaId, nome) => {
-
-  //   setContaEstudante(contaId);
-  //   setNomeEstudante(nome);
-  // }
-
   const searchEdital = (event) => {
 
     setTimeout(() => {
@@ -200,7 +184,6 @@ const CadastrarBeneficiario = (props) => {
       }
       setFilteredEstudantes(_filteredEstudantes);
     }, 250);
-    // selectOneEdital(filteredEditais);
   }
 
   return (
@@ -261,46 +244,60 @@ const CadastrarBeneficiario = (props) => {
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                       <div className="row flex justify-content gap-10 mt-6 ">
-                      <div className="">
-                        <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o edital</p>
-                        <div className="card flex justify-content-center">
-                          <AutoComplete
-                            className="w-full"
-                            field="nome"
-                            multiple value={selectedEditais}
-                            suggestions={filteredEditais}
-                            completeMethod={searchEdital}
-                            onChange={(e) => selectOneEdital(e.target.value)}
-                          />
-                        </div>
+                        <div className="">
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o edital</p>
+                          <div className="card flex justify-content-center">
+                            <AutoComplete
+                              className="w-full"
+                              field="nome"
+                              multiple value={selectedEditais}
+                              suggestions={filteredEditais}
+                              completeMethod={searchEdital}
+                              onChange={(e) => selectOneEdital(e.target.value)}
+                            />
+                          </div>
 
-                      </div>
-                      <div className="row">
-                        <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o estudante</p>
-                        <div className="card flex justify-content-center">
-                          <AutoComplete
-                            className="w-full"
-                            field="nome"
-                            multiple value={selectedEstudantes}
-                            suggestions={filteredEstudantes}
-                            completeMethod={searchEstudante}
-                            onChange={(e) => selectOneContaEstudante(e.target.value)}
-                          />
                         </div>
-                      </div>
+                        <div className="row">
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o estudante</p>
+                          <div className="card flex justify-content-center">
+                            <AutoComplete
+                              className="w-full"
+                              field="nome"
+                              multiple value={selectedEstudantes}
+                              suggestions={filteredEstudantes}
+                              completeMethod={searchEstudante}
+                              onChange={(e) => selectOneContaEstudante(e.target.value)}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
 
                     <div className="col-span-3 lg:col-span-2">
                       <div className="row flex justify-content-center gap-6 mt-6">
-                      <label className="mb-1 text-sm font-semibold text-gray-700">
-                        Ativo no Sistema?
-                      </label>
-                      <div className="card flex justify-content-center">
-                        <RadioButton checked disabled></RadioButton>
-                        <label htmlFor="sim" className="ml-2">Sim</label>
+                        <label className="mb-1 text-sm font-semibold text-gray-700">
+                          Ativo no Sistema?
+                        </label>
+                        <div className="card flex justify-content-center">
+                          <RadioButton checked disabled>
+                          </RadioButton>
+                            <label htmlFor="sim" className="ml-2">Sim</label>
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="col-span-3 lg:col-span-2">
+                      <div className="row flex justify-content-center gap-6 mt-6">
+                        <label className="mb-1 text-sm font-semibold text-gray-700">
+                          Situação?
+                        </label>
+                        <div className="card flex justify-content-center">
+                          <RadioButton checked disabled>
+                          </RadioButton>
+                            <label htmlFor="deferido" className="ml-2">Deferido</label>
+                        </div>
                       </div>
                     </div>
 
@@ -328,23 +325,10 @@ const CadastrarBeneficiario = (props) => {
                       </div>
                     </div>
 
-                    <div className="col-span-6 sm:col-span-10 lg:col-span-8 gap-6 mt-6">
-                      <label
-                        htmlFor="situacao"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Situação
-                      </label>
-                      <div className="card flex justify-content-center">
-                        <InputText className="w-full" value={situacao} onChange={(e) => setSituacao(e.target.value)} />
-                      </div>
-                    </div>
-
-
                     <div className="row flex flex-row-reverse align-middle mt-6">
                       <div className="col ml-2">
                         <div className="card flex justify-content-center">
-                          <br/>
+                          <br />
                           <Button label="CANCELAR" severity="sucess" outlined onClick={cancel} />
                         </div>
                       </div>
@@ -357,20 +341,14 @@ const CadastrarBeneficiario = (props) => {
                       </div>
                       <br />
                     </div>
-
                   </div>
-
-                  {/* ////////////////// */}
-
-              
-
                 </form>
-            
+
               </div>
             </div>
           </div>
         </div>
-    
+
       </div >
     </div>
   );

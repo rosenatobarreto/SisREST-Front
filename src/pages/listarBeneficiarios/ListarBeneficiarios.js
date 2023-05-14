@@ -280,7 +280,7 @@ class ListarBeneficiarios extends Component {
                   <br />
                   <div className="row">
                     <div className="">
-                      <div className="">
+                      <div className="pt-4 pl-8 pr-8 mb-4">
                         
                           <BeneficiariosTable
                             beneficiarios={this.state.beneficiarios}

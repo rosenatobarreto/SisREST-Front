@@ -50,7 +50,7 @@ export default props => {
     } )
 
     return (
-        <div class="overflow-x-auto">
+        <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-[#e6e6e6]">
                 <tr className="table-active">

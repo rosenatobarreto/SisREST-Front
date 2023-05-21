@@ -19,55 +19,25 @@ const CadastrarBeneficiario = (props) => {
   const serviceContaEstudante = new ContaEstudanteApiService();
 
   const [ativo, setAtivo] = useState(true);
-  const [cpf, setCpf] = useState(null);
-  const [programa, setPrograma] = useState(null);
+  const [cpf, setCpf] = useState('');
+  const [programa, setPrograma] = useState('');
   const [situacao, setSituacao] = useState('Deferido');
   const [contaEstudante, setContaEstudante] = useState(0);
-  const [nomeEstudante, setNomeEstudante] = useState(null);
-  const [matriculaEstudante, setMatriculaEstudante] = useState([]);
-  const [emailEstudante, setEmailEstudante] = useState(null);
+  const [nomeEstudante, setNomeEstudante] = useState('');
+  const [matriculaEstudante, setMatriculaEstudante] = useState(0);
+  const [emailEstudante, setEmailEstudante] = useState('');
   const [listEditais, setListEditais] = useState([]);
-  const [selectedEstudantes, setSelectedEstudantes] = useState(null);
-  const [listContasEstudante, setListContasEstudante] = useState([]);
-  const [edital, setEdital] = useState(0);
-  const [numero, setNumero] = useState(null);
-  const [ano, setAno] = useState(null);
-  const [tituloEdital, setTituloEdital] = useState(null);
+  const [selectedEstudantes, setSelectedEstudantes] = useState('');
   const [editais, setEditais] = useState([]);
+  const [contasEstudante, setContasEstudante] = useState([]);
+  const [editalId, setEditalId] = useState(0);
+  const [numero, setNumero] = useState(0);
+  const [ano, setAno] = useState(0);
+  const [tituloEdital, setTituloEdital] = useState('');
   const [selectedEditais, setSelectedEditais] = useState(null);
   const [filteredEditais, setFilteredEditais] = useState(null);
   const [filteredEstudantes, setFilteredEstudantes] = useState(null);
-
-  useEffect(() => {
-    // findAllEditais();
-    findAllContasEstudantes();
-
-    let dataVigente;
-    let dataAtual = new Date();
-    const editaisSelecionados = [];
-
-
-    const loadEditais = async () => {
-
-      const response = await serviceEdital.get('/buscarTodos');//.then((data) => setEditais(data));
-
-      const editaisSelected = response.data.map(edital => {
-        dataVigente = new Date(edital.vigenteFinal)
-
-        if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
-          editaisSelecionados.push(edital);
-        }
-      })
-
-
-      setEditais(editaisSelecionados);
-
-    };
-    loadEditais();
-
-  }, []
-  );
-
+  const handleChange = (setState) => (event) => { setState(event.target.value) }
 
   const validate = () => {
     const errors = [];
@@ -85,23 +55,25 @@ const CadastrarBeneficiario = (props) => {
     }
 
     service
-      .create(
-        setAtivo(ativo),
-        setContaEstudante(contaEstudante),
-        setEdital(edital),
-      )
+      .create({
+        ativo,
+        cpf,
+        programa,
+        situacao,
+        edital: editalId,
+        contaEstudante
+
+      })
       .then((response) => {
         console.log(response);
-
+        console.log('Entrou no then');
         showSuccessMessage("Beneficiário criado com sucesso!");
         props.history.push("/listarBeneficiarios");
       })
       .catch((error) => {
         console.log(error.response);
-
         showErrorMessage("O beneficiário não pode ser salvo!");
       });
-
     console.log("request finished");
   };
 
@@ -113,8 +85,8 @@ const CadastrarBeneficiario = (props) => {
     serviceEdital
       .get("/buscarTodos")
       .then((response) => {
-        const listEditais = response.data;
-        setListEditais(listEditais);
+        const editais = response.data;
+        setListEditais(editais);
 
       })
       .catch((error) => {
@@ -126,39 +98,20 @@ const CadastrarBeneficiario = (props) => {
     serviceContaEstudante
       .get("/buscarTodos")
       .then((response) => {
-        const listContasEstudante = response.data;
-        setListContasEstudante(listContasEstudante);
+        const contasEstudante = response.data;
+        setContasEstudante(contasEstudante);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  const selectOneEdital = (props) => {
-    props.map(edital => {
-      setEdital(edital.id);
-      setTituloEdital(edital.nome);
-      setNumero(edital.numero);
-      setAno(edital.ano);
-    })
-
-  }
-
-  const selectOneContaEstudante = (props) => {
-    props.map(estudante => {
-      setContaEstudante(estudante.id);
-      setNomeEstudante(estudante.nome);
-      setMatriculaEstudante(estudante.matricula);
-      setEmailEstudante(estudante.email);
-    })
-
-  }
-
+  
+  
   const searchEdital = (event) => {
-
     setTimeout(() => {
       let _filteredEditais;
-
+      
       if (!event.query.trim().length) {
         _filteredEditais = [...editais];
       } else {
@@ -169,22 +122,79 @@ const CadastrarBeneficiario = (props) => {
       setFilteredEditais(_filteredEditais);
     }, 250);
   }
+  
+  const selectOneEdital = (props) => {
+    props.map(edital => {
+      setEditalId(edital.id);
+      setTituloEdital(edital.nome);
+      setNumero(edital.numero);
+      setAno(edital.ano);
+      console.log('edital:', edital);
+     })
+  }
 
   const searchEstudante = (event) => {
-
     setTimeout(() => {
       let _filteredEstudantes;
-
+      
       if (!event.query.trim().length) {
-        _filteredEstudantes = [...listContasEstudante];
+        _filteredEstudantes = [...contasEstudante];
       } else {
-        _filteredEstudantes = listContasEstudante.filter((estudante) => {
+        _filteredEstudantes = contasEstudante.filter((estudante) => {
           return estudante.nome.toLowerCase().startsWith(event.query.toLowerCase())
         });
       }
       setFilteredEstudantes(_filteredEstudantes);
+      
     }, 250);
   }
+  
+  const selectOneContaEstudante = (props) => {
+    props.map(estudante => {
+      setContaEstudante(estudante.id);
+      setNomeEstudante(estudante.nome);
+      setMatriculaEstudante(estudante.matricula);
+      setEmailEstudante(estudante.email);
+      console.log('estudante:', estudante);
+      })
+  }
+
+  useEffect(() => {
+
+    let dataVigente;
+    let dataAtual = new Date();
+    const editaisSelecionados = [];
+    const estudantesSelecionados = [];
+
+    const loadEditais = async () => {
+
+      const response = await serviceEdital.get('/buscarTodos');
+      const editaisSelected = response.data.map(edital => {
+        
+        dataVigente = new Date(edital.vigenteFinal)
+
+        if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
+          editaisSelecionados.push(edital);
+        }
+      })
+      setEditais(editaisSelecionados);
+    };
+    loadEditais();
+
+    const loadEstudantes = async () => {
+
+      const response = await serviceContaEstudante.get('/buscarTodos');//.then((data) => setEditais(data));
+      const estudanteSelected = response.data.map(estudante => {
+
+        estudantesSelecionados.push(estudante);
+      })
+      setContasEstudante(estudantesSelecionados);
+    };
+    loadEstudantes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []
+  );
+
 
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -237,8 +247,10 @@ const CadastrarBeneficiario = (props) => {
                       </label>
                       <p className="block text-sm font-medium ml-4" id="labelEstudante">
                         Nome: {nomeEstudante}<br />
+                        CPF: {cpf}<br />
                         Matrícula: {matriculaEstudante}<br />
-                        Email: {emailEstudante}</p>
+                        Email: {emailEstudante}<br />
+                        Programa: {programa}<br /></p>
                     </div>
 
 
@@ -283,7 +295,7 @@ const CadastrarBeneficiario = (props) => {
                         <div className="card flex justify-content-center">
                           <RadioButton checked disabled>
                           </RadioButton>
-                            <label htmlFor="sim" className="ml-2">Sim</label>
+                          <label htmlFor="sim" className="ml-2">Sim</label>
                         </div>
                       </div>
                     </div>
@@ -296,7 +308,7 @@ const CadastrarBeneficiario = (props) => {
                         <div className="card flex justify-content-center">
                           <RadioButton checked disabled>
                           </RadioButton>
-                            <label htmlFor="deferido" className="ml-2">Deferido</label>
+                          <label htmlFor="deferido" className="ml-2">Deferido</label>
                         </div>
                       </div>
                     </div>
@@ -310,9 +322,11 @@ const CadastrarBeneficiario = (props) => {
                         CPF
                       </label>
 
-                      <InputMask value={cpf} onChange={(e) => setCpf(e.target.value)} mask="999.999.999-99" placeholder="999.999.999-99" />
+                      <InputMask
+                        value={cpf}
+                        onChange={handleChange(setCpf)} mask="99999999999" placeholder="99999999999" />
                     </div>
-
+                    
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
                         htmlFor="programa"
@@ -321,7 +335,9 @@ const CadastrarBeneficiario = (props) => {
                         Programa
                       </label>
                       <div className="card flex justify-content-center gap-3">
-                        <InputText className="w-full" value={programa} onChange={(e) => setPrograma(e.target.value)} />
+                        <InputText className="w-full"
+                          value={programa}
+                          onChange={handleChange(setPrograma)} />
                       </div>
                     </div>
 
@@ -329,12 +345,12 @@ const CadastrarBeneficiario = (props) => {
                       <div className="col ml-2">
                         <div className="card flex justify-content-center">
                           <br />
-                          <Button label="CANCELAR" severity="sucess" outlined onClick={cancel} />
+                          <Button id="btnCancel" label="CANCELAR" severity="sucess" raised outlined onClick={cancel} />
                         </div>
                       </div>
                       <div className="col mr-2">
                         <div className="card flex justify-content-center">
-                          <Button label="CADASTRAR" severity="sucess" onClick={create} />
+                          <Button id="btnCreate" label="CADASTRAR" severity="sucess" raised onClick={create} />
                         </div>
                         <br />
                         <br />

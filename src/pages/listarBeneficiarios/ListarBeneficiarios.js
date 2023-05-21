@@ -1,158 +1,191 @@
-import React, { Component } from "react";
+import React, {  useEffect, useState, memo } from "react";
 // import Header from "../../components/Header";
 
 // import { withRouter } from "react-router-dom";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import BeneficiarioApiService from "../../services/BeneficiarioApiService";
-import BeneficiariosTable from "../../components/BeneficiariosTable";
+// import BeneficiariosTable from "../../components/BeneficiariosTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { ProgressBar } from 'primereact/progressbar';
+import { Slider } from 'primereact/slider';
+import { MultiSelect } from 'primereact/multiselect';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
 
-class ListarBeneficiarios extends Component {
+const ListarBeneficiarios = (props) => {
   
-  state = {
-    id: 0,
-    ativo: true,
-    edital: {
-      id: 0,
-      numero: 0,
-      ano: 0,
-      nome: "",
-      link: "",
-      vigenteInicio: "",
-      vigenteFinal: ""
-    },
-    contaEstudante: {
-      nome: "",
-      senha: "",
-      email: "",
-      matricula: 0
-    },
-    beneficiarios:[],
-    beneficiarioAtivo: true,
-    editalNumero: 0,
-    editalAno: 0,
-    editalNome: "",
-    editalLink: "",
-    editalVigenteInicio: "",
-    editalVigenteFinal: "",
-    contaEstudanteNome: "",
-    contaEstudanteEmail: "",
-    contaEstudanteMatricula: 0 
-  };
+  const service = new BeneficiarioApiService();
+  const [beneficiarios, setBeneficiarios] = useState([]);
+  const [id, setId] = useState(0);
   
-  constructor(props) {
-    super(props);
-    this.service = new BeneficiarioApiService();
-    // console.log("Constructor props ",props);
-  }
-  
-  componentDidMount() {
-    this.findAll();
-  }
-  
-  delete = (id) => {
-    this.service
-      .delete(id)
-      .then((response) => {
-        this.find();
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
+  const [beneficiariosList, setBeneficiariosList] = useState(null);
+  const [filters, setFilters] = useState({
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+        representative: { value: null, matchMode: FilterMatchMode.IN },
+        status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+    });
 
-  edit = (id) => {
-    this.props.history.push(`/atualizarBeneficiario/${id}`);
-  };
-
-  view = (id) => {
-    this.props.history.push(`/detalharBeneficiario/${id}`);
-  };
-
-  createBeneficiario = () => {
-    this.props.history.push(`/cadastrarBeneficiario`);
-  };
-  
-  find = (id) => {
-    this.service.find(id);
-    var params = "?";
-
-    if (this.state.id !== 0) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
-
-      params = `${params}id=${this.state.id}`;
-    }
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
     
-    if (this.state.ativo !== false) {
-      if (params !== "?") {
-        params = `${params}&`;
-      }
-      
-      params = `${params}ativo=${this.state.ativo}`;
-    }
-    
-    // if (this.state.email !== "") {
-      //   if (params !== "?") {
-        //     params = `${params}&`;
-        //   }
-        
-        //   params = `${params}email=${this.state.email}`;
-        // }
+    // const countryBodyTemplate = (rowData) => {
+    //     return (
+    //         <div className="flex align-items-center gap-2">
+    //             <img alt={rowData.country.code} src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{ width: '24px' }} />
+    //             <span>{rowData.country.name}</span>
+    //         </div>
+    //     );
+    // };
 
-        // if (this.state.matricula !== 0) {
-    //   if (params !== "?") {
-    //     params = `${params}&`;
-    //   }
+    // const representativeBodyTemplate = (rowData) => {
+    //     const representative = rowData.representative;
 
-    //   params = `${params}matricula=${this.state.matricula}`;
-    // }
-    
-    // if (this.state.tipo !== "") {
-      //   if (params !== "?") {
-        //     params = `${params}&`;
-        //   }
-        
-        //   params = `${params}tipo=${this.state.tipo}`;
-    // }
-    
-    // if (this.state.admin !== false) {
-      //   if (params !== "?") {
-        //     params = `${params}&`;
-        //   }
-        
-    //   params = `${params}admin=${this.state.admin}`;
-    // }
-    
-    this.service
-    .get(`/buscarPorID/${id}`)
-    .then((response) => {
-        const beneficiarios = response.data;
-        this.setState({ beneficiarios });
-        console.log("teste: ",beneficiarios);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+    //     return (
+    //         <div className="flex align-items-center gap-2">
+    //             <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" />
+    //             <span>{representative.name}</span>
+    //         </div>
+    //     );
+    // };
+
+    // const representativeFilterTemplate = (options) => {
+    //     return <MultiSelect value={options.value} options={representatives} itemTemplate={representativesItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
+    // };
+
+    // const representativesItemTemplate = (option) => {
+    //     return (
+    //         <div className="flex align-items-center gap-2">
+    //             <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
+    //             <span>{option.name}</span>
+    //         </div>
+    //     );
+    // };
+
+    // const statusBodyTemplate = (rowData) => {
+    //     return <div>
+    //       {/* // Tag value={rowData.status} severity={getSeverity(rowData.status)}  */}
+    //       </div>
+    // };
+
+    // const statusFilterTemplate = (options) => {
+    //     return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
+    // };
+
+    // const statusItemTemplate = (option) => {
+    //     return <div></div>
+    //       // <Tag value={option} severity={getSeverity(option)} />;
+    // };
+
+    const onGlobalFilterChange = (event) => {
+        const value = event.target.value;
+        let _filters = { ...filters };
+
+        _filters['global'].value = value;
+
+        setFilters(_filters);
     };
+
+    const renderHeader = () => {
+        const value = filters['global'] ? filters['global'].value : '';
+
+        return (
+            <span className="p-input-icon-left">
+                <i className="pi pi-search" />
+                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+            </span>
+        );
+    };
+
+    const header = renderHeader();
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => edit(rowData)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => apagar(rowData)} />
+      </React.Fragment>
+    );
+  };
+
+  useEffect(() => {
+    // findAll();
+            const loadBeneficiarios = async () => {
+            const response = await service.getAll('/buscarTodos')//.then((data) => setEditais(data));
+            setBeneficiariosList(response.data);
+        };
+        loadBeneficiarios(); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+  }, []
+  );
+  
+  const confirmDeleteBeneficiario = (beneficiario) => {
+    // setProduct(product);
+   // setDeleteProductDialog(true);
+  };
+  
+  const apagar = (id) => {
+    service
+      .delete(`/deletar/${id}`)
+      .then((response) => {
+        find(id);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  const edit = (id) => {
+    props.history.push(`/atualizarBeneficiario/${id}`);
+  };
+
+  const view = (id) => {
+    props.history.push(`/detalharBeneficiario/${id}`);
+  };
+
+  const createBeneficiario = () => {
+    props.history.push(`/cadastrarBeneficiario`);
+  };
+  
+
+
+  const find = (id) => {
+        
+    service
+      .get(`/buscarPorID/${id}`)
+      .then((response) => {
+        const beneficiario = response.data;
+        const id = beneficiario.id;
+ 
+        setId(id);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  }
     
-    findAll = () => {
-      this.service
-      .get("/buscarTodos")
+  const findAll = () => {
+      service
+      .getAll("/buscarTodos")
       .then((response) => {
         const beneficiarios = response.data;
-        this.setState({ beneficiarios });
-        console.table(beneficiarios);
+        setBeneficiarios({ beneficiarios });
+        console.log(beneficiarios);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
   
-  importarDadosEdital = () => {
-    this.props.history.push("/importarBeneficiarios");
+  const importarDadosEdital = () => {
+    props.history.push("/importarBeneficiarios");
   };
+
 
   // carregarDados = () => {
   //   const [beneficiario, setBeneficiario] = useContext(BeneficiarioContext);
@@ -175,7 +208,6 @@ class ListarBeneficiarios extends Component {
   // return <button onClick={() => setBeneficiario({ contaEstudanteNome: "Bruno" })}>Entrar</button>;
   // }
 
-  render() {
     return (
       <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
@@ -188,7 +220,7 @@ class ListarBeneficiarios extends Component {
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{this.props.currentUser.email}</p>
+                <p className="text-xs">{props.currentUser.email}</p>
             </div>
             <div className="flex flex-row-reverse pr-6">
               <p className="text-lg font-semibold">Administrador</p>
@@ -209,86 +241,58 @@ class ListarBeneficiarios extends Component {
                   </div>
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="#" method="POST">
-                    {/* Begin Card */}
-                    {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
-                    <div className="bg-white px-4 py-5 sm:p-6">
-                      <div className="grid grid-cols-6 gap-6">
-                            <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label htmlFor="matricula" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
-                              <input type="text" name="nome" id="filterName"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="cpf" className="block text-sm font-medium text-gray-700">Filtrar por edital</label>
-                              <input type="text" name="editalNome" id="filterEdital" autocomplete="" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label for="email" className="block text-sm font-medium text-gray-700">Filtrar por matrícula</label>
-                              <input type="email" name="matricula" id="filterMatricula" autocomplete="filterMatricula" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"/>
-                            </div>
-                      </div>
-                    </div>
-
+                  <form action="#" >
                     <div className="row flex flex-row-reverse align-middle px-4 mt-1">
                       <div className="col ml-2">
-                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
-                                </div> 
+                        <Button id="btnImport" label="IMPORTAR DADOS DO EDITAL" className="bg-green-500" raised onClick={importarDadosEdital} />
+                      </div> 
                       <div className="col mr-2">
-                        <button
-                          onClick={this.createBeneficiario}
-                          type="submit"
-                          className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVO BENEFICIÁRIO
-                        </button>
+                        <Button id="btnNew" label="NOVO BENEFICIÁRIO" severity="sucess" raised onClick={createBeneficiario} />
                       </div>
                     </div>
-
-                    <div className="">
-                      {/* <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
-            </div>
-          <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-          <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
-          </div> */}
-                    </div>
-                    {/* </div> */}
-                    {/* End Card */}
                   </form>
 
                   <div className="row">
-                    {/* <div className="col-span-6">
-                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
-                                <i className="pi pi-plus"></i> 
-                                CADASTRAR USUÁRIO
-                                </button>
-                              </div> */}
+                    
                   </div>
                   <br />
                   <div className="row">
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
                         
-                          <BeneficiariosTable
-                            beneficiarios={this.state.beneficiarios}
-                            delete={this.delete}
-                            edit={this.edit}
-                            view={this.view}
+                          {/* <BeneficiariosTable
+                            beneficiarios={beneficiarios}
+                            delete={apagar}
+                            edit={edit}
+                            view={view}
                             id="idEdit"
-                          />
+                          /> */}
+
+                          {/* <div className="card">
+                            <DataTable value={beneficiarios} filters={filters} header={header} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}>
+                              <Column field="contaEstudante.nome" sortable header="Nome" ></Column>
+                              <Column field="ativo" header="Ativo" ></Column>
+                              <Column field="programa" sortable header="Programa" ></Column>
+                              <Column field="contaEstudante.email" header="E-mail" ></Column>
+                              {/* <Column field="vigenteFinal" header="Fim da vigência" ></Column> 
+                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                            </DataTable>
+                          </div> */}
+                          <div className="card">
+                            <DataTable value={beneficiariosList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                              stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Beneficiário não encontrado!" tableStyle={{ minWidth: '50rem' }}>
+                              <Column field="contaEstudante.nome" header="Nome" sortable style={{ width: '25%' }}></Column>
+                              <Column field="edital.nome" header="Edital" sortable style={{ width: '25%' }}></Column>
+                              <Column field="programa" header="Programa" sortable sortField="programa" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              {/* <Column header="programa" sortable sortField="representative.name" filter filterField="representative" */}
+                                {/* showFilterMatchModes={false} filterElement={representativeFilterTemplate} filterMenuStyle={{ width: '14rem' }} style={{ width: '25%' }} ></Column> */}
+                              <Column field="contaEstudante.email" header="E-mail" 
+                              // body={statusBodyTemplate} sortable filter filterElement={statusFilterTemplate} 
+                              filterMenuStyle={{ width: '14rem' }} style={{ width: '25%' }}></Column>
+                              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                            </DataTable>
+                          </div>
                         
                       </div>
                     </div>
@@ -301,7 +305,6 @@ class ListarBeneficiarios extends Component {
 
       </div>
     );
-  }
 }
 
-export default ListarBeneficiarios;
+export default memo(ListarBeneficiarios);

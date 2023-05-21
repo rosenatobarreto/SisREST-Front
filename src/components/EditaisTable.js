@@ -5,8 +5,6 @@ import { formatDateBr } from "../util/FormatDate";
 export default props => {
 
     const rows = props.editais.map(edital => {
-
-
         return (
             <tr key={edital.id} className="hover:bg-gray-50 dark:hover:bg-emerald-100 min-w-full">
                 

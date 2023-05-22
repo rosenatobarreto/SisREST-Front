@@ -291,7 +291,7 @@ const AtualizarBeneficiario = (props) => {
                         </label>
                         <p className="block text-md font-medium" id="labelEstudante">Nome: {contaEstudanteNome}</p>
                         <p className="block text-md font-medium" id="labelEstudante">Matrícula: {contaEstudanteMatricula}</p>
-                        <p className="block text-md font-medium" id="labelEstudante">Edital: {editalNumero}-{editalAno} {editalNome} - id:{edital.id}</p>
+                        <p className="block text-md font-medium" id="labelEstudante">Edital: {editalNumero}-{editalAno} {editalNome}</p>
                         <p className="block text-md font-medium" id="labelEstudante">Ativo no Sistema: {ativoNoSistema === true ? 'Sim' : 'Não'}</p>
                         <p className="block text-md font-medium" id="labelEstudante">Situação: {situacao}</p>
                         <p className="block text-md font-medium" id="labelEstudante">Programa: {programa}</p>                        

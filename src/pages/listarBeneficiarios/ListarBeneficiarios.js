@@ -1,4 +1,4 @@
-import React, {  useEffect, useState, memo } from "react";
+import React, {  useEffect, useState, useRef, memo } from "react";
 // import Header from "../../components/Header";
 
 // import { withRouter } from "react-router-dom";
@@ -16,12 +16,16 @@ import { Slider } from 'primereact/slider';
 import { MultiSelect } from 'primereact/multiselect';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
+import { Toast } from 'primereact/toast';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const ListarBeneficiarios = (props) => {
   
   const service = new BeneficiarioApiService();
   const [beneficiarios, setBeneficiarios] = useState([]);
   const [id, setId] = useState(0);
+  const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);
+  const toast = useRef(null);
   
   const [beneficiariosList, setBeneficiariosList] = useState(null);
   const [filters, setFilters] = useState({
@@ -33,54 +37,25 @@ const ListarBeneficiarios = (props) => {
     });
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  //   const accept = () => {
+  //       toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Confirma a exclusão?', life: 3000 });
+  //   }
+
+  //   const reject = () => {
+  //       toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'Exclusão rejeitada!', life: 3000 });
+  //   }
+  
+  // const confirm1 = () => {
+  //     confirmDialog({
+  //       message: 'Confirma a exclusão?',
+  //       header: 'Confirmation',
+  //       icon: 'pi pi-exclamation-triangle',
+  //       accept,
+  //       reject
+  //     });
+  // };
     
-    // const countryBodyTemplate = (rowData) => {
-    //     return (
-    //         <div className="flex align-items-center gap-2">
-    //             <img alt={rowData.country.code} src="https://primefaces.org/cdn/primereact/images/flag/flag_placeholder.png" className={`flag flag-${rowData.country.code}`} style={{ width: '24px' }} />
-    //             <span>{rowData.country.name}</span>
-    //         </div>
-    //     );
-    // };
-
-    // const representativeBodyTemplate = (rowData) => {
-    //     const representative = rowData.representative;
-
-    //     return (
-    //         <div className="flex align-items-center gap-2">
-    //             <img alt={representative.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${representative.image}`} width="32" />
-    //             <span>{representative.name}</span>
-    //         </div>
-    //     );
-    // };
-
-    // const representativeFilterTemplate = (options) => {
-    //     return <MultiSelect value={options.value} options={representatives} itemTemplate={representativesItemTemplate} onChange={(e) => options.filterCallback(e.value)} optionLabel="name" placeholder="Any" className="p-column-filter" />;
-    // };
-
-    // const representativesItemTemplate = (option) => {
-    //     return (
-    //         <div className="flex align-items-center gap-2">
-    //             <img alt={option.name} src={`https://primefaces.org/cdn/primereact/images/avatar/${option.image}`} width="32" />
-    //             <span>{option.name}</span>
-    //         </div>
-    //     );
-    // };
-
-    // const statusBodyTemplate = (rowData) => {
-    //     return <div>
-    //       {/* // Tag value={rowData.status} severity={getSeverity(rowData.status)}  */}
-    //       </div>
-    // };
-
-    // const statusFilterTemplate = (options) => {
-    //     return <Dropdown value={options.value} options={statuses} onChange={(e) => options.filterCallback(e.value, options.index)} itemTemplate={statusItemTemplate} placeholder="Select One" className="p-column-filter" showClear />;
-    // };
-
-    // const statusItemTemplate = (option) => {
-    //     return <div></div>
-    //       // <Tag value={option} severity={getSeverity(option)} />;
-    // };
 
     const onGlobalFilterChange = (event) => {
         const value = event.target.value;
@@ -91,32 +66,40 @@ const ListarBeneficiarios = (props) => {
         setFilters(_filters);
     };
 
-    const renderHeader = () => {
-        const value = filters['global'] ? filters['global'].value : '';
+  const renderHeader = () => {
+    const value = filters['global'] ? filters['global'].value : '';
 
-        return (
-            <span className="p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
-            </span>
-        );
-    };
+    return (
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+          <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+      </span>
+    );
+  };
 
-    const header = renderHeader();
+  const header = renderHeader();
 
   const actionBodyTemplate = (rowData) => {
+    
     return (
       <React.Fragment>
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => edit(rowData)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => apagar(rowData)} />
+        <Button icon="pi pi-eye" rounded outlined className="mr-2" onClick={() => detailsBeneficiario(rowData.id)} />
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editBeneficiario(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteBeneficiario(rowData.id)} />
       </React.Fragment>
     );
   };
 
+  // const editBeneficiario = (beneficiario) => {
+  //   console.log(beneficiario.contaEstudante.nome)
+  //   // setProduct({ ...product });
+  //   // setProductDialog(true);
+  // };
+
   useEffect(() => {
-    // findAll();
+    
             const loadBeneficiarios = async () => {
-            const response = await service.getAll('/buscarTodos')//.then((data) => setEditais(data));
+            const response = await service.getAll('/buscarTodos')
             setBeneficiariosList(response.data);
         };
         loadBeneficiarios(); 
@@ -124,27 +107,32 @@ const ListarBeneficiarios = (props) => {
   }, []
   );
   
-  const confirmDeleteBeneficiario = (beneficiario) => {
-    // setProduct(product);
-   // setDeleteProductDialog(true);
-  };
+  // const confirmDeleteBeneficiario = (rowData) => {
+  //   // setProduct(product);
+    
+  //   if (deleteBeneficiarioDialog === true){
+  //     deleteBeneficiario(rowData.id);
+
+
+  // };
   
-  const apagar = (id) => {
+  const deleteBeneficiario = (id) => {
     service
-      .delete(`/deletar/${id}`)
+      .delete(id)
       .then((response) => {
-        find(id);
+        console.log(response);
       })
       .catch((error) => {
         console.log(error.response);
       });
+      props.history.push('/listarBeneficiarios')
   };
 
-  const edit = (id) => {
+  const editBeneficiario = (id) => {
     props.history.push(`/atualizarBeneficiario/${id}`);
   };
 
-  const view = (id) => {
+  const detailsBeneficiario = (id) => {
     props.history.push(`/detalharBeneficiario/${id}`);
   };
 
@@ -209,7 +197,7 @@ const ListarBeneficiarios = (props) => {
   // }
 
     return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
@@ -282,12 +270,12 @@ const ListarBeneficiarios = (props) => {
                             <DataTable value={beneficiariosList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Beneficiário não encontrado!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column field="contaEstudante.nome" header="Nome" sortable style={{ width: '25%' }}></Column>
-                              <Column field="edital.nome" header="Edital" sortable style={{ width: '25%' }}></Column>
-                              <Column field="programa" header="Programa" sortable sortField="programa" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="contaEstudante.nome" header="Nome" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="edital.nome" header="Edital" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="programa" header="Programa" sortable sortField="programa" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
                               {/* <Column header="programa" sortable sortField="representative.name" filter filterField="representative" */}
                                 {/* showFilterMatchModes={false} filterElement={representativeFilterTemplate} filterMenuStyle={{ width: '14rem' }} style={{ width: '25%' }} ></Column> */}
-                              <Column field="contaEstudante.email" header="E-mail" 
+                              <Column className="text-sm" field="contaEstudante.email" header="E-mail" 
                               // body={statusBodyTemplate} sortable filter filterElement={statusFilterTemplate} 
                               filterMenuStyle={{ width: '14rem' }} style={{ width: '25%' }}></Column>
                               <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>

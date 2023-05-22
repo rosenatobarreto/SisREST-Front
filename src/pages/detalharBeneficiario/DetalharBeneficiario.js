@@ -3,7 +3,7 @@ import BeneficiarioApiService from "../../services/BeneficiarioApiService";
 import EditalApiService from "../../services/EditalApiService";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
 import MenuAdministrador from "../../components/MenuAdministrador";
-
+import { Button } from 'primereact/button';
 import { formatDateBr } from "../../util/FormatDate";
 
 class DetalharBeneficiario extends Component {
@@ -71,7 +71,7 @@ class DetalharBeneficiario extends Component {
 
   render() {
     return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
@@ -121,17 +121,10 @@ class DetalharBeneficiario extends Component {
 
                   </div>
                   <div className="row flex flex-row-reverse align-middle px-6 mt-1">
-                    <button
-                          onClick={this.voltar}
-                          type="submit"
-                          className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >
-                        VOLTAR
-                    </button>
-
+                    
+                    <Button id="btnBack" label="VOLTAR" severity="sucess" raised onClick={this.voltar} />
+                    <br />
+                    <br/>
                   </div>
                 </div>
 

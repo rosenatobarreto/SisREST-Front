@@ -50,6 +50,14 @@ import CadastrarContaServidor from "./pages/cadastrarContaServidor/CadastrarCont
 import ListarContasServidor from "./pages/listarContasServidor/ListarContasServidor";
 import AtualizarContaServidor from "./pages/atualizarContaServidor/AtualizarContaServidor";
 
+import CadastrarRefeicao from "./pages/cadastrarRefeicao/CadastrarRefeicao";
+import ListarRefeicoes from "./pages/listarRefeicoes/ListarRefeicoes";
+import AtualizarRefeicao from "./pages/atualizarRefeicao/AtualizarRefeicao";
+
+import CadastrarCardapio from "./pages/cadastrarCardapio/CadastrarCardapio";
+import ListarCardapios from "./pages/listarCardapios/ListarCardapios";
+import AtualizarCardapio from "./pages/atualizarCardapio/AtualizarCardapio";
+
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
 
@@ -115,118 +123,134 @@ class App extends Component {
               path="/header"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={Header}
-            ></PrivateRoute>
+              component={Header}/>
             <PrivateRoute
               path="/profile"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={Profile}
-            ></PrivateRoute>
+              component={Profile}/>
             <Route
               path="/signup"
               render={(props) => (
                 <Signup authenticated={this.state.authenticated} {...props} />
               )}
-            ></Route>
-            <Route
-              path="/oauth2/redirect"
-              component={OAuth2RedirectHandler}
-            ></Route>
+            />
+            <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}/>
+
             <PrivateRoute
               path="/cadastrarContaEstudante"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarContaEstudante}
-            ></PrivateRoute>
+              component={CadastrarContaEstudante}/>
             <PrivateRoute
               path="/listarContasEstudante"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarContasEstudante}
-            ></PrivateRoute>
+              component={ListarContasEstudante}/>
             <PrivateRoute
               path="/atualizarContaEstudante/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={AtualizarContaEstudante}
-            ></PrivateRoute>
+              component={AtualizarContaEstudante}/>
+            
             <PrivateRoute
               path="/cadastrarBeneficiario"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarBeneficiario}
-            ></PrivateRoute>
+              component={CadastrarBeneficiario}/>
             <PrivateRoute
               path="/listarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarBeneficiarios}
-            ></PrivateRoute>
+              component={ListarBeneficiarios}/>
             <PrivateRoute
               path="/importarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ImportarBeneficiarios}
-            ></PrivateRoute>
+              component={ImportarBeneficiarios}/>
             <PrivateRoute
               path="/atualizarBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={AtualizarBeneficiario}
-            ></PrivateRoute>
+              component={AtualizarBeneficiario}/>
             <PrivateRoute
               path="/detalharBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               // render={(props) => <DetalharBeneficiario {...props} />}
-              component={DetalharBeneficiario}
-            ></PrivateRoute>
+              component={DetalharBeneficiario}/>
+            
             <PrivateRoute 
               path="/cadastrarEdital" 
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarEdital}>
-            </PrivateRoute>
+              component={CadastrarEdital}/>
             <PrivateRoute 
               path="/atualizarEdital/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser} 
-              component={AtualizarEdital}>
-            </PrivateRoute>
-            <PrivateRoute 
+              component={AtualizarEdital}/>
+            <PrivateRoute
               path="/listarEditais"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser} 
-              component={ListarEditais}>
-            </PrivateRoute>
+              component={ListarEditais}/>
+            
             <PrivateRoute 
               path="/cadastrarContaServidor" 
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarContaServidor}>
-            </PrivateRoute> 
+              component={CadastrarContaServidor}/>
             <PrivateRoute 
               path="/listarContasServidor" 
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarContasServidor}>
-            </PrivateRoute>
+              component={ListarContasServidor}/>
             <PrivateRoute 
               path="/atualizarContaServidor/:id" 
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={AtualizarContaServidor}>
-            </PrivateRoute>    
+              component={AtualizarContaServidor}/>
+            
+            <PrivateRoute 
+              path="/cadastrarRefeicao" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarRefeicao}/>
+            <PrivateRoute 
+              path="/listarRefeicoes" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarRefeicoes}/>
+            <PrivateRoute 
+              path="/atualizarRefeicao/:id" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarRefeicao}/>
+            
+            <PrivateRoute
+              path="/cadastrarCardapio" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarCardapio}/>
+            <PrivateRoute 
+              path="/listarCardapios" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarCardapios}/>
+            <PrivateRoute 
+              path="/atualizarCardapio/:id" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarCardapio}/>
+            
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={BoasVindas}
-            ></PrivateRoute>    
-            <Route 
-              component={NotFound}>
-            </Route>
+              component={BoasVindas}/>   
+
+            <Route component={NotFound}/>
           </Switch>
         </div>
         {/* <Alert stack={{limit: 3}} 

@@ -4,8 +4,13 @@ export default class UploadCsvApiService extends ApiService{
     constructor(){
         super('/csv');
     }
+
     create(object){
         return this.post('/processar', object);
+    }
+
+    upload(object){
+        return this.post('/upload', object);
     }
     // update(id,object){
     //     return this.put(`/${id}`, object);

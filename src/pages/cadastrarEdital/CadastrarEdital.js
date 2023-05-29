@@ -5,7 +5,7 @@ import MenuAdministrador from "../../components/MenuAdministrador";
 import { stringToDate } from "../../util/FormatDate";
 // import moment from 'moment';
 import { InputText } from "primereact/inputtext";
-class CadastrarEdital extends Component {
+export default class CadastrarEdital extends Component {
 
 constructor(props) {
     super(props);
@@ -297,4 +297,4 @@ constructor(props) {
   }
 }  
 
-export default CadastrarEdital;
+// export default CadastrarEdital;

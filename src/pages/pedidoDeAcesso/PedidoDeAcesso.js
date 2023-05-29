@@ -2,30 +2,39 @@ import React, { useEffect, useState, memo } from "react";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import RefeicaoApiService from "../../services/RefeicaoApiService";
 import MenuNutricionista from "../../components/MenuNutricionista";
+
+import { AutoComplete } from 'primereact/autocomplete';
+import { InputMask } from 'primereact/inputmask';
 import { RadioButton } from "primereact/radiobutton";
+import { InputText } from "primereact/inputtext";
 import { Button } from 'primereact/button';
 import { Checkbox } from "primereact/checkbox";
 import { Editor } from 'primereact/editor';
-import { SelectButton } from 'primereact/selectbutton';
-import { InputTextarea } from 'primereact/inputtextarea';
 
-
-const CadastrarRefeicao = (props) => {
+const PedidoDeAcesso = (props) => {
 
   const service = new RefeicaoApiService();
 
-  const [descricao, setDescricao] = useState('');
-  const [tipoDeRefeicao, setTipoDeRefeicao] = useState('');
-  const [restricoes, setRestricoes] = useState([]);
+  const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
+  const [tipoRefeicao, setTipoRefeicao] = useState('');
+  const [diaRefeicao, setDiaRefeicao] = useState('');
+  // const [situacao, setSituacao] = useState('Deferido');
+  // const [contaEstudante, setContaEstudante] = useState(0);
+  // const [nomeEstudante, setNomeEstudante] = useState('');
+  // const [matriculaEstudante, setMatriculaEstudante] = useState(0);
+  // const [emailEstudante, setEmailEstudante] = useState('');
+  // const [listEditais, setListEditais] = useState([]);
+  // const [selectedEstudantes, setSelectedEstudantes] = useState('');
+  // const [editais, setEditais] = useState([]);
+  // const [contasEstudante, setContasEstudante] = useState([]);
+  // const [editalId, setEditalId] = useState(0);
+  // const [numero, setNumero] = useState(0);
+  // const [ano, setAno] = useState(0);
+  // const [tituloEdital, setTituloEdital] = useState('');
+  // const [selectedEditais, setSelectedEditais] = useState(null);
+  // const [filteredEditais, setFilteredEditais] = useState(null);
+  // const [filteredEstudantes, setFilteredEstudantes] = useState(null);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
-  const items = [
-    { name: 'Diabetes', value: 'DIABETES' },
-    { name: 'Intolerância à Lactose', value: 'INTOLERANCIA_LACTOSE' },
-    { name: 'Intolerância à Glúten', value: 'INTOLERANCIA_GLUTEN' },
-    { name: 'Alergias', value: 'ALERGIAS' },
-    { name: 'Hipertenso(a)', value: 'HIPERTENSO' },
-    { name: 'Vegano(a)', value: 'VEGANO' },
-  ];
 
   const validate = () => {
     const errors = [];
@@ -44,9 +53,9 @@ const CadastrarRefeicao = (props) => {
 
     service
       .create({
-        descricao,
-        tipoDeRefeicao,
-        restricoes,
+        descricaoRefeicao,
+        tipoRefeicao,
+        diaRefeicao,
       })
       .then((response) => {
         console.log(response);
@@ -64,20 +73,6 @@ const CadastrarRefeicao = (props) => {
   const cancel = () => {
     props.history.push("/listarRefeicoes");
   };
-
-  // const onRestricoesChange = (e) => {
-  //   let updateRestricoes = [...restricoes];
-
-  //   if (e.checked)
-  //     updateRestricoes.push(e.value);
-  //   else
-  //     updateRestricoes.splice(updateRestricoes.indexOf(e.value), 1);
-
-  //   setRestricoes(updateRestricoes);
-  // }
-  console.log('tipoDeRefeicao', tipoDeRefeicao)
-  console.log('restricoes', restricoes)
-  console.log(descricao)
 
   // const findAllEditais = () => {
   //   serviceEdital
@@ -209,10 +204,10 @@ const CadastrarRefeicao = (props) => {
             <p className="text-xs">{props.currentUser.email}</p>
           </div>
           <div className="flex flex-row-reverse pr-6">
-            <p className="text-lg font-semibold">Nutricionista</p>
+            <p className="text-lg font-semibold">Estudante</p>
           </div>
           <div className="flex flex-row pl-6">
-            <p className="text-xl font-semibold">Cadastrar Refeição</p>
+            <p className="text-xl font-semibold">Solicitar dias para refeições</p>
           </div>
         </div>
 
@@ -328,105 +323,87 @@ const CadastrarRefeicao = (props) => {
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
                         htmlFor="tipoRefeicao"
-                        className="block text-md font-medium text-gray-700 mb-3">
+                        className="block text-sm font-medium text-gray-700 mb-3">
                         Tipo de Refeição
                       </label>
                       <div className="card flex justify-content-center">
                         <div className="flex flex-wrap gap-3">
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao1" name="tipoRefeicao" value="CAFE_MANHA" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Café da Manhã'} />
+                            <RadioButton inputId="tipoRefeicao1" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Café da Manhã'} />
                             <label htmlFor="tipoRefeicao1" className="ml-2">Café da Manhã</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao2" name="tipoRefeicao" value="LANCHE_MANHA" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Lanche da Manhã'} />
+                            <RadioButton inputId="tipoRefeicao2" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Lanche da Manhã'} />
                             <label htmlFor="tipoRefeicao2" className="ml-2">Lanche da Manhã</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao3" name="tipoRefeicao" value="ALMOCO" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Almoço'} />
+                            <RadioButton inputId="tipoRefeicao3" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Almoço'} />
                             <label htmlFor="tipoRefeicao3" className="ml-2">Almoço</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao4" name="tipoRefeicao" value="LANCHE_TARDE" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Lanche da Tarde'} />
+                            <RadioButton inputId="tipoRefeicao4" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Lanche da Tarde'} />
                             <label htmlFor="tipoRefeicao4" className="ml-2">Lanche da Tarde</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao5" name="tipoRefeicao" value="JANTAR" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Janta'} />
+                            <RadioButton inputId="tipoRefeicao5" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Janta'} />
                             <label htmlFor="tipoRefeicao5" className="ml-2">Janta</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="tipoRefeicao6" name="tipoRefeicao" value="CEIA" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Ceia'} />
+                            <RadioButton inputId="tipoRefeicao6" name="tipoRefeicao" value="tipoRefeicao" onChange={handleChange(setTipoRefeicao)} checked={tipoRefeicao === 'Ceia'} />
                             <label htmlFor="tipoRefeicao6" className="ml-2">Ceia</label>
                           </div>
-                          {/* <label htmlFor="selectRefeicao" class="mt-4">Tipo de Refeição</label>
-                          <select className="" id="selectRefeicao" 
-                            value={tipoDeRefeicao} onChange={e => setTipoDeRefeicao(e.target.value)}>
-                            <option value="CAFE_MANHA">1</option>
-                            <option value="LANCHE_MANHA">2</option>
-                            <option value="ALMOCO">3</option>
-                            <option value="LANCHE_TARDE">4</option>
-                            <option value="JANTAR">5</option>
-                            <option value="CEIA">6</option>
-                          </select> */}
-
                         </div>
                       </div>
                     </div>
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
-                        htmlFor="restricoes"
-                        className="block text-md font-medium text-gray-700 mt-2 mb-3">
-                        Restrições Alimentares da Refeição
-                      </label>
-                      {/* <div className="card flex flex-wrap justify-content-center gap-3">
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes1" name="restricao" value="DIABETES" onChange={onRestricoesChange} checked={restricoes.includes('Diabetes')} />
-                          <label htmlFor="restricoes1" className="ml-2">Diabetes</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes2" name="restricao" value="INTOLERANCIA_LACTOSE" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Lactose')} />
-                          <label htmlFor="restricoes2" className="ml-2">Intolerância à Lactose</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes3" name="restricao" value="INTOLERANCIA_GLUTEN" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Glúten')} />
-                          <label htmlFor="restricoes3" className="ml-2">Intolerância à Glúten</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes4" name="restricao" value="ALERGIAS" onChange={onRestricoesChange} checked={restricoes.includes('Alergias')} />
-                          <label htmlFor="restricoes4" className="ml-2">Alergias</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes5" name="restricao" value="HIPERTENSO" onChange={onRestricoesChange} checked={restricoes.includes('Hipertensão')} />
-                          <label htmlFor="restricoes5" className="ml-2">Hipertensão</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes6" name="restricao" value="VEGANO" onChange={onRestricoesChange} checked={restricoes.includes('Vegano(a)')} />
-                          <label htmlFor="restricoes6" className="ml-2">Vegano(a)</label>
-                        </div>
-                      </div> */}
-
-                      <SelectButton id="selectRefeicoesBtn" className="text-xs"
-                        value={restricoes} onChange={(e) => setRestricoes(e.value)}
-                        optionLabel="name" options={items} multiple />
-
-
-                    </div>
-
-                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-8">
-                      <label
                         htmlFor="diaRefeicao"
-                        className="block text-md font-medium text-gray-700 mt-2 mb-3">
-                        Descrição da Refeição
+                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
+                        Dia da Refeição
                       </label>
-                      {/* <div className="card flex justify-content-center">
-                        <Editor value={descricaoRefeicao} onTextChange={(e) => setDescricaoRefeicao(e.htmlValue)} style={{ width: '100%', height: '320px' }} />
-                      </div> */}
                       <div className="card flex justify-content-center">
-                        <InputTextarea id="descricao" severity="sucess" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={5} cols={50} />
+                        <div className="flex flex-wrap gap-3">
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao1" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Segunda-feira'} />
+                            <label htmlFor="diaRefeicao1" className="ml-2">Segunda-feira</label>
+                          </div>
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao2" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Terça-feira'} />
+                            <label htmlFor="diaRefeicao2" className="ml-2">Terça-feira</label>
+                          </div>
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao3" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Quarta-feira'} />
+                            <label htmlFor="diaRefeicao3" className="ml-2">Quarta-feira</label>
+                          </div>
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao4" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Quinta-feira'} />
+                            <label htmlFor="diaRefeicao4" className="ml-2">Quinta-feira</label>
+                          </div>
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao5" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Sexta-feira'} />
+                            <label htmlFor="diaRefeicao5" className="ml-2">Sexta-feira</label>
+                          </div>
+                          <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao6" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Sábado'} />
+                            <label htmlFor="diaRefeicao6" className="ml-2">Sábado</label>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="row flex flex-row-reverse align-middle mt-8">
+                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                      <label
+                        htmlFor="diaRefeicao"
+                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
+                        Descrição da Refeição
+                      </label>
+                      <div className="card flex justify-content-center">
+                        <Editor value={descricaoRefeicao} onTextChange={(e) => setDescricaoRefeicao(e.htmlValue)} style={{ width: '100%', height: '320px' }} />
+                      </div>
+                    </div>
+
+                    <div className="row flex flex-row-reverse align-middle mt-6">
                       <div className="col ml-2">
                         <div className="card flex justify-content-center">
                           <br />
@@ -455,4 +432,4 @@ const CadastrarRefeicao = (props) => {
   );
 }
 
-export default memo(CadastrarRefeicao);
+export default memo(PedidoDeAcesso);

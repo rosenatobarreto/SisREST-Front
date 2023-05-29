@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
-// import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/themes/saga-green/theme.css"
 import "primereact/resources/primereact.min.css";                                       
 import "primeicons/primeicons.css";
@@ -57,6 +56,8 @@ import AtualizarRefeicao from "./pages/atualizarRefeicao/AtualizarRefeicao";
 import CadastrarCardapio from "./pages/cadastrarCardapio/CadastrarCardapio";
 import ListarCardapios from "./pages/listarCardapios/ListarCardapios";
 import AtualizarCardapio from "./pages/atualizarCardapio/AtualizarCardapio";
+
+import PedidoDeAcesso from "./pages/pedidoDeAcesso/PedidoDeAcesso";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -243,7 +244,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={AtualizarCardapio}/>
-            
+
+            <PrivateRoute 
+              path="/pedidoDeAcesso" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={PedidoDeAcesso}/>
+
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}

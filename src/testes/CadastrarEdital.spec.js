@@ -40,6 +40,12 @@
 //     );
 // };
 
+// /////////////////
+// import React from 'react';
+// import { render, fireEvent } from '@testing-library/react';
+// import CadastrarEdital from '../../pages/cadastrarEdital/CadastrarEdital';
+// import MenuAdministrador from '../../components/MenuAdministrador';
+
 // // Iniciar a suite de testes
 // describe("CadastrarEdital component", () => {
 //     // Antes de cada teste, limpar os mocks
@@ -47,6 +53,7 @@
 //         jest.clearAllMocks();
 //     });
 
+    
 //     // Testar se o componente renderiza corretamente os elementos da interface
 //     it("should render the UI elements correctly", () => {
 //         // Renderizar o componente
@@ -152,3 +159,6 @@ describe('Jest', () => {
     expect(1).toBe(1)
   })
 })
+
+const myMock = jest.fn();
+console.log('myMock',myMock());

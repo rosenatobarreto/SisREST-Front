@@ -24,19 +24,29 @@ const ListarRefeicoes = (props) => {
   const service = new RefeicaoApiService();
   const [refeicoes, setRefeicoes] = useState([]);
   const [id, setId] = useState(0);
-  // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);
   const toast = useRef(null);
-  
-  const [refeicoesList, setRefeicoesList] = useState(null);
+  const [refeicoesList, setRefeicoesList] = useState([]);
+  const [refeicoesListConverted, setRefeicoesListConverted] = useState([]);
   const [filters, setFilters] = useState({
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        representative: { value: null, matchMode: FilterMatchMode.IN },
-        status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
-    });
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
+  
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const tipos = [
+    { name: 'CAFE_MANHA', key: 'Café da Manhã' },
+    { name: 'LANCHE_MANHA', key: 'Lanche da Manhã' },
+    { name: 'ALMOCO', key: 'Alomoço' },
+    { name: 'LANCHE_TARDE', key: 'Lanche da Tarde' },
+    { name: 'JANTAR', key: 'Jantar' },
+    { name: 'CEIA', key: 'Ceia' }
+  ];
+
+  // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);
 
   //   const accept = () => {
   //       toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Confirma a exclusão?', life: 3000 });
@@ -88,18 +98,17 @@ const ListarRefeicoes = (props) => {
       </React.Fragment>
     );
   };
-
+  
   useEffect(() => {
     
-            const loadRefeicoes = async () => {
-            const response = await service.getAll('/buscarTodos')
-            setRefeicoesList(response.data);
-        };
-        loadRefeicoes(); 
+    const loadRefeicoes = async () => {
+      const response = await service.getAll('/buscarTodos')
+      setRefeicoesList(response.data);
+    };
+    loadRefeicoes(); 
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   }, []
   );
-  
   
   const deleteRefeicao = (id) => {
     service
@@ -150,6 +159,16 @@ const ListarRefeicoes = (props) => {
         console.log(error.response);
       });
   };
+
+  // let tipo;
+  // let restriction;
+  // const refeicoesConvertidas = () => {
+  //     return {
+  //       if (refeicoesList === 'DIABETES'){
+  //         tipo = "Diabetes";
+  //       }
+  //     }
+  // }
 
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -203,8 +222,9 @@ const ListarRefeicoes = (props) => {
                             <DataTable value={refeicoesList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column className="text-sm" field="tipoRefeicao" header="Tipo" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '25%' }}></Column>
                               <Column className="text-sm" field="descricao" header="Descrição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="restricoes" header="Restrições da Refeição" sortable sortField="restricoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
                               <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                             </DataTable>
                           </div>

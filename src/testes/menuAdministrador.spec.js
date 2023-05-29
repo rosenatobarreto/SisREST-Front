@@ -1,5 +1,6 @@
 // import { render } from "@testing-library/react";
-// import { MenuAdministrador } from "../src/components/MenuAdministrador";
+// import { MenuAdministrador } from "../../components/MenuAdministrador";
+// import {expect, jest, test} from '@jest/globals';
 
 
 // describe("MenuAdministrador", () => {
@@ -9,13 +10,3 @@
 //     })
 // })
 
-// import * as React from 'react';
-//  import { render } from '@testing-library/react';
-
-// import App from './App';
-
-// describe('App', () => {
-//   it('renders App component', () => {
-//     render(<App />);
-//   });
-// });

@@ -1,120 +1,111 @@
-import React, { Component} from "react";
+import React, {  useEffect, useState, useRef, memo } from "react";
 
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
 import ContasEstudanteTable from "../../components/ContasEstudanteTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
-class ListarContasEstudante extends Component {
+const ListarContasEstudante = (props) => {
 
-  constructor(props) {
-    super(props);
-    this.service = new ContaEstudanteApiService();
-    console.log(props);
-    
-  }
+  const  service = new ContaEstudanteApiService();
 
-  state = {
-    nome: "",
-    matricula: 0,
-    email: "",
-    campus: "",
-    curso: "",
-    contasEstudante: [],
+  // const [contasEtudante, setContasEstudante] = useState([]);
+  // const [nome, setNome] = useState('');
+  // const [matricula, setMatricula] = useState(0);
+  // const [email, setEmail] = useState('');
+  // const [campus, setCampus] = useState('');
+  // const [curso, setCurso] = useState('');
+  const [contasEstudanteList, setContasEstudanteList] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
+  
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...filters };
+    _filters['global'].value = value;
+
+    setFilters(_filters);
   };
 
-  componentDidMount() {
-    this.findAll();
-  }
+  const renderHeader = () => {
+    const value = filters['global'] ? filters['global'].value : '';
 
-  delete = (contaId) => {
-    this.service
+    return (
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+          <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+      </span>
+    );
+  };
+
+  const header = renderHeader();
+
+  const actionBodyTemplate = (rowData) => {
+    
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => edit(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined style={{ marginLeft: '6px' }} severity="danger" onClick={() => deleteConta(rowData.id)} />
+      </React.Fragment>
+    );
+  };
+  
+  useEffect(() => {
+    
+    const loadContasEstudante = async () => {
+      const response = await service.getAll('/buscarTodos')
+      setContasEstudanteList(response.data);
+    };
+    loadContasEstudante(); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+  }, []
+  );
+
+
+  const deleteConta = (contaId) => {
+    service
       .delete(contaId)
       .then((response) => {
-        this.find();
-        this.props.history.push(`/listarContasEstudante`);
+        props.history.push(`/listarContasEstudante`);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  edit = (id) => {
-    this.props.history.push(`/atualizarContaEstudante/${id}`);
+  const edit = (id) => {
+    props.history.push(`/atualizarContaEstudante/${id}`);
   };
 
-  createContaEstudante = () => {
-    this.props.history.push(`/cadastrarContaEstudante`);
+  const create = () => {
+    props.history.push(`/cadastrarContaEstudante`);
   };
 
-  // findById = (id) => {
-  //   // this.service.find(id);
-  //   var params = "?";
 
-  //   if (this.state.id !== 0) {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}id=${this.state.id}`;
-  //   }
-
-  //   if (this.state.nome !== "") {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}nome=${this.state.nome}`;
-  //   }
-    
-  //   if (this.state.matricula !== 0) {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}matricula=${this.state.matricula}`;
-  //   }
-
-  //   if (this.state.email !== "") {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}email=${this.state.email}`;
-  //   }
-
-
-  //   this.service.get(`/${id}`)
-  //     .then((response) => {
-  //       const contasEstudante = response.data;
-  //       this.setState({ contasEstudante: contasEstudante });
-  //       console.log('Contas Estudante:', contasEstudante);
-  //     })
-  //     .catch(error => {
-  //       console.log(error.response);
-  //     });
-  // };
-
-  findAll = () => {
-    this.service
+  const findAll = () => {
+    service
       .get("/buscarTodos")
       .then((response) => {
         const contasEstudante = response.data;
-        this.setState({ contasEstudante });
-        console.log(contasEstudante);
+        contasEstudante({ contasEstudante: contasEstudante });
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  // importarDadosEdital = () => {
-  //   this.props.history.push("/importarBeneficiarios");
-  // };
-
-
-  render() {
-    return (
+  return (
       <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
@@ -126,7 +117,7 @@ class ListarContasEstudante extends Component {
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4">
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{this.props.currentUser.email}</p>
+                <p className="text-xs">{props.currentUser.email}</p>
             </div>
             <div className="flex flex-row-reverse pr-6">
               <p className="text-lg font-semibold">Administrador</p>
@@ -151,76 +142,15 @@ class ListarContasEstudante extends Component {
                     {/* Begin Card */}
                     {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                     <div className="bg-white px-4 py-5 sm:p-6">
-                      <div className="grid grid-cols-6 gap-6">
-
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label 
-                                for="nome" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por nome
-                              </label>
-                              <input 
-                                type="text" 
-                                name="filterNome" id="idFilterNome"  
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.nome} 
-                                onChange={(e) => { this.setState({ nome: e.target.value }) }}
-                              />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label 
-                                for="matricula" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por matricula
-                              </label>
-                              <input 
-                                type="number" 
-                                name="filterMatricula" 
-                                id="idFilterMatricula" 
-                                autocomplete="filterMatricula" 
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.matricula} 
-                                onChange={(e) => { this.setState({ matricula: e.target.value }) }}
-                              />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label 
-                                for="email" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por e-mail
-                              </label>
-                              <input 
-                                type="email" 
-                                name="filterEmail" 
-                                id="idFilterEmail" 
-                                autocomplete="filterMatricula" 
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.email} 
-                                onChange={(e) => { this.setState({ email: e.target.value }) }}
-                              />
-                            </div>
-
-                      </div>
+                      
                     </div>
 
                     <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      {/* <div className="col ml-2">
-                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
-                                </div>  */}
+                    
                       <div className="col mr-2">
-                        <button
-                          onClick={this.createContaEstudante}
-                          type="submit"
-                          className=" btn-save inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVA CONTA
-                        </button>
+                        <div className="col mr-2">
+                        <Button id="btnNew" label="NOVO ESTUDANTE" severity="sucess" raised onClick={create} />
+                      </div>
                       </div>
                     </div>
 
@@ -232,23 +162,24 @@ class ListarContasEstudante extends Component {
                   </form>
 
                   <div className="row">
-                    {/* <div className="col-span-6">
-                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
-                                    <i className="pi pi-plus"></i> 
-                                    CADASTRAR USUÁRIO
-                                </button>
-                            </div> */}
+                   
                   </div>
                   <br />
                   <div className="row">
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
-                        <ContasEstudanteTable
-                          contasEstudante={this.state.contasEstudante}
-                          delete={this.delete}
-                          edit={this.edit}
-                          id="idEdit"
-                        />
+                        <div className="card">
+                            <DataTable value={contasEstudanteList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                              stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Conta estudante não encontrada!" tableStyle={{ minWidth: '50rem' }}>
+                              <Column className="text-sm" field="nome" header="Nome" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="email" header="E-mail" sortable sortField="email" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="matricula" header="Matrícula" sortable sortField="matricula" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="campus" header="Campus" sortable sortField="campus" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="curso" header="Curso" sortable sortField="curso" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                            </DataTable>
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -260,7 +191,6 @@ class ListarContasEstudante extends Component {
 
       </div>
     );
-  }
 }
 
-export default ListarContasEstudante;
+export default memo(ListarContasEstudante);

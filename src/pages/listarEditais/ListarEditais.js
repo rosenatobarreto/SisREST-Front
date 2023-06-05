@@ -1,102 +1,119 @@
-import React, { Component} from "react";
+import React, {  useEffect, useState, useRef, memo } from "react";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import EditalApiService from "../../services/EditalApiService";
 import EditaisTable from "../../components/EditaisTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
-class ListarEditais extends Component {
+const ListarEditais = (props) => {
 
-  constructor(props) {
-    super(props);
-    this.service = new EditalApiService();    
-  }
+ const service = new EditalApiService();
 
-  state = {
-    numero: 0,
-    ano: 0,
-    nome: "",
-    link: "",
-    vigenteInicio: "",
-    vigenteFinal: "",
-    editais: [],
+  const [id, setId] = useState(0);
+  // const [numero, setNumero] = useState(0);
+  // const [ano, setAno] = useState(0);
+  // const [nome, setNome] = useState('');
+  // const [link, setLink] = useState('');
+  // const [vigenteInicio, setVigenteInicio] = useState('');
+  // const [vigenteFinal, setVigenteFinal] = useState('');
+  const [editais, setEditais] = useState([]);
+  const [editaisList, setEditaisList] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
+  
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...filters };
+    _filters['global'].value = value;
+
+    setFilters(_filters);
   };
 
+  const renderHeader = () => {
+    const value = filters['global'] ? filters['global'].value : '';
+
+    return (
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+          <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+      </span>
+    );
+  };
+
+  const header = renderHeader();
+
+  const actionBodyTemplate = (rowData) => {
+    
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editEdital(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined style={{ marginLeft: '6px' }} severity="danger" onClick={() => deleteEdital(rowData.id)} />
+      </React.Fragment>
+    );
+  };
   
-  componentDidMount() {
-    this.findAll();
-  }
+  useEffect(() => {
+    
+    const loadEditais = async () => {
+      const response = await service.getAll('/buscarTodos')
+      setEditaisList(response.data);
+    };
+    loadEditais(); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+  }, []
+  );
 
 
-  delete = (editalId) => {
-    this.service
+  const deleteEdital = (editalId) => {
+    service
       .delete(editalId)
       .then((response) => {
-        this.find();
-        this.props.history.push(`/listarEditais`);
+        props.history.push(`/listarEditais`);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  edit = (editalId) => {
-    this.props.history.push(`/atualizarEdital/${editalId}`);
+  const editEdital = (editalId) => {
+    props.history.push(`/atualizarEdital/${editalId}`);
   };
 
-  createEdital = () => {
-    this.props.history.push(`/cadastrarEdital`);
+  const createEdital = () => {
+    props.history.push(`/cadastrarEdital`);
   };
 
-  find = (id) => {
-    // this.service.findAll('')
-    var params = '?';
-
-    if (this.state.id !== 0) {
-      if (params !== '?') {
-        params = `${params}&`;
-      }
-
-      params = `${params}id=${this.state.id}`;
-    }
-
-    if (this.state.nome !== '') {
-      if (params !== '?') {
-        params = `${params}&`;
-      }
-      params = `${params}nome=${this.state.nome}`;
-    }
-
-    if (this.state.vigenteInicio !== Date) {
-      if (params !== '?') {
-        params = `${params}&`;
-      }
-      params = `${params}vigenteInicio=${this.state.vigenteInicio}`;
-    }
-
-    if (this.state.vigenteFinal !== Date) {
-      if (params !== '?') {
-        params = `${params}&`;
-      }
-      params = `${params}vigenteFinal=${this.state.vigenteFinal}`;
-    }
-
-    this.service.get(`/${id}`)
-      .then(response => {
-        const editais = response.data;
-        this.setState({ editais: editais });
-        console.log("editais:", editais);
-      }
-    ).catch(error => {
+  const find = (id) => {
+        
+    service
+      .get(`/buscarPorID/${id}`)
+      .then((response) => {
+        const edital = response.data;
+        const id = edital.id;
+ 
+        setId(id);
+      })
+      .catch((error) => {
         console.log(error.response);
       });
   }
 
-  findAll = () => {
-    this.service
+  const findAll = () => {
+    service
       .get("/buscarTodos")
       .then((response) => {
         const editais = response.data;
-        this.setState({ editais });
+        setEditais({ editais: editais });
         console.log(editais);
       })
       .catch((error) => {
@@ -104,17 +121,21 @@ class ListarEditais extends Component {
       });
   };
 
-  // componentWillUnmount() {
-  //     this.clear();
-  // }
+  const formatDate = (value) => {
+        return value.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+        });
+    };
 
-  //  importarDadosEdital = () => {
-    //   this.props.history.push("/importarBeneficiarios");
-  // };
+  const dateBodyTemplate = (rowData) => {
+        return formatDate(rowData.date);
+    };
 
-  render() {
+
     return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
@@ -125,7 +146,7 @@ class ListarEditais extends Component {
           {/* Header */}
           <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{this.props.currentUser.email}</p>
+                <p className="text-xs">{props.currentUser.email}</p>
             </div>
             <div className="flex flex-row-reverse pr-6">
               <p className="text-lg font-semibold">Administrador</p>
@@ -151,100 +172,40 @@ class ListarEditais extends Component {
                     {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                     <div className="bg-white px-4 py-5 sm:p-6">
                       <div className="grid grid-cols-6 gap-6">
-                        {/* <div className="col-span-6 sm:col-span-3">
-                              <label for="edital" className="block text-sm font-medium text-gray-700">Edital</label>
-                              <select id="edital" name="edital" autocomplete="edital-name" className="mt-1 block w-full rounded-md border border-green-300 bg-white py-2 px-3 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm">
-                                <option>Edital 2022</option>
-                                <option>Edital 2021</option>
-                                <option>Edital 2020</option>
-                              </select>
-                            </div> */}
 
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label htmlFor="nome" className="block text-sm font-medium text-gray-700">Filtrar por nome</label>
-                              <input type="text" name="nome" id="idFilterNome"  className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }}/>
-                            </div>
 
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label htmlFor="vigenteInicio" className="block text-sm font-medium text-gray-700">Filtrar por início da vigência</label>
-                              <input type="text" name="vigenteInicio" id="idVigenteIniciofilterEdital" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.vigenteInicio} onChange={(e) => { this.setState({ vigenteInicio: e.target.value }) }}/>
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label htmlFor="vigenteFinal" className="block text-sm font-medium text-gray-700">Filtrar por final da vigência</label>
-                              <input type="text" name="vigenteFinal" id="idfilterVigenteFinal" className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                              value={this.state.vigenteFinal} onChange={(e) => { this.setState({ vigenteFinal: e.target.value }) }}/>
-                            </div>
                       </div>
                     </div>
-
-                    {/* <button onClick={this.find} type="button" id="btn-search" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                      <i className="pi pi-search"></i> PESQUISAR
-                    </button> */}
-
-
-
                     <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      {/* <div className="col ml-2">
-                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
-                                </div>  */}
                       <div className="col mr-2">
-                        <button
-                          onClick={this.createEdital}
-                          type="submit"
-                          className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVO EDITAL
-                        </button>
+                        <Button id="btnNew" label="NOVO EDITAL" severity="sucess" raised onClick={createEdital} />
                       </div>
                     </div>
 
                     <div className="">
-                      {/* <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.create} type="submit" className=" btn-save inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CADASTRAR</button>
-          </div>
-          <div className="col-span-6 bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button onClick={this.cancel} type="submit" className=" btn-cancel inline-flex justify-center 
-            rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-            font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-            focus:ring-2 focus:ring-green-500 focus:ring-offset-2">CANCELAR</button>
-          </div> */}
+                      
                     </div>
                     {/* </div> */}
                     {/* End Card */}
                   </form>
-
-                  {/* <div className="row">
-                    <div className="col-span-6">
-                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
-                                    <i className="pi pi-plus"></i> 
-                                    CADASTRAR USUÁRIO
-                                </button>
-                            </div>
-                  </div> */}
                   <br />
                   <div className="row">
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
-                        <EditaisTable
-                          editais={this.state.editais}
-                          delete={this.delete}
-                          edit={this.edit}
-                          id="idEdit"
-                        />
+                        <div className="card">
+                            <DataTable value={editaisList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                              stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Edital não encontrado!" tableStyle={{ minWidth: '50rem' }}>
+                              <Column className="text-sm" field="numero" header="Número" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="ano" header="Ano" sortable sortField="ano" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="nome" header="Título" sortable sortField="nome" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="vigenteInicio" 
+                              // dataType="date" body={dateBodyTemplate} 
+                              header="Início da Vigência" sortable sortField="vigenteInicio" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="vigenteFinal" header="Fim da Vigência" sortable sortField="vigenteFinal" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                            </DataTable>
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -256,7 +217,7 @@ class ListarEditais extends Component {
 
       </div>
     );
-  }
+  
 }
 
-export default ListarEditais;
+export default memo(ListarEditais);

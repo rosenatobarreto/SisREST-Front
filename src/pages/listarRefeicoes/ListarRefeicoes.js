@@ -46,6 +46,15 @@ const ListarRefeicoes = (props) => {
     { name: 'CEIA', key: 'Ceia' }
   ];
 
+    const restricoesList = [
+    { name: 'DIABETES', key: 'Diabetes' },
+    { name: 'INTOLERANCIA_LACTOSE', key: 'Intolerância à Lactose' },
+    { name: 'INTOLERANCIA_GLUTEN', key: 'Intolerância à Glúten' },
+    { name: 'ALERGIAS', key: 'Alergias' },
+    { name: 'HIPERTENSO', key: 'Hipertenso' },
+    { name: 'VEGANO', key: 'Vegano' }
+  ];
+    
   // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);
 
   //   const accept = () => {
@@ -164,7 +173,7 @@ const ListarRefeicoes = (props) => {
   // let restriction;
   // const refeicoesConvertidas = () => {
   //     return {
-  //       if (refeicoesList === 'DIABETES'){
+  //       if (restricoesList === 'DIABETES'){
   //         tipo = "Diabetes";
   //       }
   //     }

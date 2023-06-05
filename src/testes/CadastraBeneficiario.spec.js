@@ -118,6 +118,7 @@
 
 import React from "react";
 import { CadastrarBeneficiario } from "../pages/cadastrarBeneficiario/CadastrarBeneficiario";
+// const CadastrarBeneficiario = require("../pages/cadastrarBeneficiario/CadastrarBeneficiario");
 
 describe("CadastrarBeneficiario", () => {
   test("deve exibir o título 'Cadastrar Beneficiário'", () => {

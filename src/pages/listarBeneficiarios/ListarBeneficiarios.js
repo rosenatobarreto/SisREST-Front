@@ -84,8 +84,8 @@ const ListarBeneficiarios = (props) => {
     return (
       <React.Fragment>
         <Button icon="pi pi-eye" rounded outlined className="mr-2" onClick={() => detailsBeneficiario(rowData.id)} />
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editBeneficiario(rowData.id)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteBeneficiario(rowData.id)} />
+        <Button icon="pi pi-pencil" rounded outlined style={{ marginLeft: '6px' }} className="mr-2" onClick={() => editBeneficiario(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined  style={{ marginLeft: '6px' }} className="" severity="danger" onClick={() => deleteBeneficiario(rowData.id)} />
       </React.Fragment>
     );
   };
@@ -278,7 +278,7 @@ const ListarBeneficiarios = (props) => {
                               <Column className="text-sm" field="contaEstudante.email" header="E-mail" 
                               // body={statusBodyTemplate} sortable filter filterElement={statusFilterTemplate} 
                               filterMenuStyle={{ width: '14rem' }} style={{ width: '25%' }}></Column>
-                              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                             </DataTable>
                           </div>
                         

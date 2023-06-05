@@ -6,11 +6,12 @@ import EditalApiService from "../../services/EditalApiService";
 import SelectEdital from "../../components/SelectEdital";
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { AutoComplete } from 'primereact/autocomplete';
+import { FileUpload } from 'primereact/fileupload';
 
 const ImportarBeneficiarios = (props) => {
 
   const [arquivoBeneficiariosSuap, setArquivoBeneficiariosSuap] = useState(null);
-  const [arquivoEstudanteSuap, setArquivoEstudanteSuap] = useState(null);
+  const [arquivoEstudantesSuap, setArquivoEstudantesSuap] = useState(null);
   const [listEditais, setListEditais] = useState([]);
   const [editais, setEditais] = useState([]);
   const [idEdital, setIdEdital] = useState(0);
@@ -20,7 +21,6 @@ const ImportarBeneficiarios = (props) => {
   const [selectedEditais, setSelectedEditais] = useState(null);
   const [filteredEditais, setFilteredEditais] = useState(null);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
-
 
   const service = new UploadCsvApiService();
   const serviceEdital = new EditalApiService();
@@ -74,56 +74,22 @@ const ImportarBeneficiarios = (props) => {
     })
   }
 
-  //Upload begin
+  // const handleUploadFile = (e: any) => setCardFile(e.target.files[0]);
+  // const handleUploadFile = (e: any) => setCardFile(e.target.files[0]);
 
+  const upload = () => {
 
-  //Upload end
-
-  const validate = () => {
-    const errors = [];
-    return errors;
-  };
-
-  const create = () => {
-    const errors = validate();
-
-    if (errors.length > 0) {
-      errors.forEach((message, index) => {
-        showErrorMessage(message);
-      });
-      return false;
-    }
+    // if (errors.length > 0) {
+    //   errors.forEach((message, index) => {
+    //     showErrorMessage(message);
+    //   });
+    //   return false;
+    // }
 
     service
-      .upload({
+      .processar({
+        arquivoEstudantesSuap,
         arquivoBeneficiariosSuap,
-        arquivoEstudanteSuap,
-        // idEdital
-      })
-      .then((response) => {
-        showSuccessMessage("Dados inseridos com sucesso!");
-      })
-      .catch((error) => {
-        console.log(error.response);
-        showErrorMessage("Os dados não pode ser salvos!");
-      });
-    console.log("request finished");
-  };
-
-    const processar = () => {
-    const errors = validate();
-
-    if (errors.length > 0) {
-      errors.forEach((message, index) => {
-        showErrorMessage(message);
-      });
-      return false;
-    }
-
-    service
-      .create({
-        arquivoBeneficiariosSuap,
-        arquivoEstudanteSuap,
         idEdital
       })
       .then((response) => {
@@ -135,6 +101,32 @@ const ImportarBeneficiarios = (props) => {
       });
     console.log("request finished");
   };
+
+  //   const processar = () => {
+  //   const errors = validate();
+
+  //   if (errors.length > 0) {
+  //     errors.forEach((message, index) => {
+  //       showErrorMessage(message);
+  //     });
+  //     return false;
+  //   }
+
+  //   service
+  //     .processar({
+  //       arquivoBeneficiariosSuap,
+  //       arquivoEstudantesSuap,
+  //       idEdital
+  //     })
+  //     .then((response) => {
+  //       showSuccessMessage("Dados inseridos com sucesso!");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //       showErrorMessage("Os dados não pode ser salvos!");
+  //     });
+  //   console.log("request finished");
+  // };
 
   // setTimeout(() => {
   //   create();
@@ -231,7 +223,7 @@ const ImportarBeneficiarios = (props) => {
             <p className="text-lg font-semibold">Administrador</p>
           </div>
           <div className="flex flex-row pl-6">
-            <p className="text-xl font-semibold">Cadastrar Beneficiário</p>
+            <p className="text-xl font-semibold">Cadastrar Beneficiário em lote</p>
           </div>
         </div>
 
@@ -240,10 +232,8 @@ const ImportarBeneficiarios = (props) => {
           <div className="mt-0 sm:mt-0">
             <div className="md:grid md:grid-cols-1 md:gap-6">
               <div className="md:col-span-1">
-                <div className="px-4 sm:px-0">
-                  {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
-                  {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
-                </div>
+                {/* <div className="px-4 sm:px-0">
+                </div> */}
               </div>
               <div className="mt-5 md:col-span-8 md:mt-0">
                 <form>
@@ -251,7 +241,7 @@ const ImportarBeneficiarios = (props) => {
                   {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                   <div className="bg-white px-4 py-5 sm:p-6">
                     <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-6 sm:col-span-6">
+                      {/* <div className="col-span-6 sm:col-span-6">
                         <label
                           for="formFileMultiple"
                           className="block text-sm font-medium text-gray-700"
@@ -269,7 +259,7 @@ const ImportarBeneficiarios = (props) => {
                           onChange={handleChange(setArquivoBeneficiariosSuap)}
 
                         />
-                      </div>
+                      </div> */}
 
                       <div className="col-span-6 sm:col-span-6">
                         <label
@@ -281,14 +271,36 @@ const ImportarBeneficiarios = (props) => {
                         </label>
                         <input
                           type="file"
-                          name="edital"
+                          name="estudantes"
                           id="formFile2"
                           className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm
                              focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                          value={arquivoEstudanteSuap}
-                          onChange={handleChange(setArquivoEstudanteSuap)}
+                          value={arquivoEstudantesSuap}
+                          onChange={(e) => setArquivoEstudantesSuap(e.target.value)}
 
                         />
+
+                        <input
+                          type="file"
+                          name="beneficiarios"
+                          id="formFile2"
+                          className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm
+                             focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                          value={arquivoBeneficiariosSuap}
+                          onChange={(e) => setArquivoBeneficiariosSuap(e.target.value)}
+
+                        />
+
+
+                        {/* <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" 
+                        for="multiple_files">Upload multiple files</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer
+                         bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 
+                         dark:placeholder-gray-400" 
+                    id="multiple_files" type="file" multiple/>*/}
+
+
+
                       </div>
 
                       <div className="col-span-6 sm:col-span-10 lg:col-span-12">
@@ -334,7 +346,7 @@ const ImportarBeneficiarios = (props) => {
                     </div>
                     <div className="col mr-2">
                       <button
-                        onClick={create}
+                        onClick={upload}
                         type="submit"
                         className=" btn-save inline-flex justify-center 
                                     rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 

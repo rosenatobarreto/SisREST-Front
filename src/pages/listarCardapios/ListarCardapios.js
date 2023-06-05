@@ -80,7 +80,7 @@ const ListarCardapios = (props) => {
     return (
       <React.Fragment>
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editCardapio(rowData.id)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteCardapio(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined style={{ marginLeft: '6px' }} severity="danger" onClick={() => deleteCardapio(rowData.id)} />
       </React.Fragment>
     );
   };

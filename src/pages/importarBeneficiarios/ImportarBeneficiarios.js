@@ -10,8 +10,8 @@ import { FileUpload } from 'primereact/fileupload';
 
 const ImportarBeneficiarios = (props) => {
 
-  const [arquivoBeneficiariosSuap, setArquivoBeneficiariosSuap] = useState(null);
-  const [arquivoEstudantesSuap, setArquivoEstudantesSuap] = useState(null);
+  const [arquivoBeneficiariosSuap, setArquivoBeneficiariosSuap] = useState('');
+  const [arquivoEstudantesSuap, setArquivoEstudantesSuap] = useState('');
   const [listEditais, setListEditais] = useState([]);
   const [editais, setEditais] = useState([]);
   const [idEdital, setIdEdital] = useState(0);
@@ -151,56 +151,6 @@ const ImportarBeneficiarios = (props) => {
   };
 
 
-  // const create = () => {
-  //     const errors = this.validate();
-  //     //this.service.create(this.state)
-  //     if (errors.length > 0) {
-  //       errors.forEach((message, index) => {
-  //         showErrorMessage(message);
-  //       });
-  //       return false;
-  //     }
-
-  //     this.service
-  //       .create({
-  //         // nome: this.state.nome,
-  //         // matricula: this.state.matricula,
-  //         // email: this.state.email,
-  //         // CPF: this.state.CPF,
-  //         // curso: this.state.curso,
-  //         // programa: this.state.programa,
-  //         // modalidade: this.state.modalidade,
-  //         // situacao: this.state.situacao,
-  //         // classificacao: this.state.classificacao,
-  //         // pontuacao: this.state.pontuacao,
-  //         // renda: this.state.renda,
-  //         // quantidade: this.state.quantidade,
-  //         // percapta: this.state.percapta,
-  //         // cota: this.state.cota,
-  //         // Nascimento: this.state.Nascimento,
-  //         // valor: this.state.valor,
-  //         // editalId: this.state.editalId
-  //       })
-  //       .then((response) => {
-  //         console.log(response);
-  //         console.log(this.state);
-  //         showSuccessMessage("Dados inseridos com sucesso!");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error.response);
-  //         console.log(this.state);
-  //         showErrorMessage("Os dados não podem ser salvos!");
-  //       });
-
-  //   console.log("request finished");
-  // };
-
-
-  // const inputSelectEdital = (e) => {
-  //   this.setState({ editalId: e.target.value }, () => {
-  //     console.log("Id do Edital: ", this.state.editalId);
-  //   });
-  // };
 
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -263,7 +213,7 @@ const ImportarBeneficiarios = (props) => {
 
                       <div className="col-span-6 sm:col-span-6">
                         <label
-                          for="formFileMultiple"
+                          htmlFor="formFileMultiple"
                           className="block text-sm font-medium text-gray-700"
                         >
 
@@ -308,6 +258,8 @@ const ImportarBeneficiarios = (props) => {
                           Edital selecionado:
                         </label>
                         <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p>
+                        <p>{arquivoEstudantesSuap}</p>
+                        <p>{arquivoBeneficiariosSuap}</p>
 
                       </div>
 
@@ -373,3 +325,39 @@ const ImportarBeneficiarios = (props) => {
 
 
 export default memo(ImportarBeneficiarios);
+
+
+
+// Você pode fazer algo assim:
+
+// <FileUpload name="invoice"
+//     accept="image/*"
+//     customUpload={true}
+//     uploadHandler={invoiceUploadHandler}
+//     mode="basic"
+//     auto={true}
+//     chooseLabel="Upload invoice"/>
+
+
+// const invoiceUploadHandler = ({files}) => {
+//     const [file] = files;
+//     const fileReader = new FileReader();
+//     fileReader.onload = (e) => {
+//         uploadInvoice(e.target.result);
+//     };
+//     fileReader.readAsDataURL(file);
+// };
+// Envie sua solicitação assim
+
+// const uploadInvoice = async (invoiceFile) => {
+//     let formData = new FormData();
+//     formData.append('invoiceFile', invoiceFile);
+
+//     const response = await fetch(`orders/${orderId}/uploadInvoiceFile`,
+//         {
+//             method: 'POST',
+//             body: formData
+//         },
+//     );
+// };
+// Importante: Não defina nenhum cabeçalho! Isso será feito automaticamente.Content-Type

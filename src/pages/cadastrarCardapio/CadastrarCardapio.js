@@ -1,6 +1,8 @@
 import React, { useEffect, useState, memo } from "react";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import RefeicaoApiService from "../../services/RefeicaoApiService";
+import EditalApiService from "../../services/EditalApiService";
+import CardapioSemanalApiService from "../../services/CardapioSemanalApiService";
 import MenuNutricionista from "../../components/MenuNutricionista";
 
 import { AutoComplete } from 'primereact/autocomplete';
@@ -13,28 +15,33 @@ import { Editor } from 'primereact/editor';
 
 const CadastrarCardapio = (props) => {
 
-  const service = new RefeicaoApiService();
+  const serviceRefeicao = new RefeicaoApiService();
+  const serviceEdital = new EditalApiService();
+  const service = new CardapioSemanalApiService();
 
-  const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
-  const [sequencia, setSequencia] = useState('');
-  const [diaRefeicao, setDiaRefeicao] = useState('');
+  const [sequenciaSemanal, setSequenciaSemanal] = useState('');
+
+  const [edital, setEdital] = useState(0);
+  const [numero, setNumero] = useState(0);
+  const [ano, setAno] = useState(0);
+  const [tituloEdital, setTituloEdital] = useState('');
+
+  const [itensCardapioDia, setItensCardapioDia] = useState([]);
+  const [diaDaSemana, setDiaDaSemana] = useState('');
+  const [refeicoes, setRefeicoes] = useState([]);
+
+  const [refeicao, setRefeicao] = useState('');
   const [tipoRefeicao, setTipoRefeicao] = useState('');
-  // const [situacao, setSituacao] = useState('Deferido');
-  // const [contaEstudante, setContaEstudante] = useState(0);
-  // const [nomeEstudante, setNomeEstudante] = useState('');
-  // const [matriculaEstudante, setMatriculaEstudante] = useState(0);
-  // const [emailEstudante, setEmailEstudante] = useState('');
-  // const [listEditais, setListEditais] = useState([]);
-  // const [selectedEstudantes, setSelectedEstudantes] = useState('');
-  // const [editais, setEditais] = useState([]);
-  // const [contasEstudante, setContasEstudante] = useState([]);
-  // const [editalId, setEditalId] = useState(0);
-  // const [numero, setNumero] = useState(0);
-  // const [ano, setAno] = useState(0);
-  // const [tituloEdital, setTituloEdital] = useState('');
-  // const [selectedEditais, setSelectedEditais] = useState(null);
-  // const [filteredEditais, setFilteredEditais] = useState(null);
-  // const [filteredEstudantes, setFilteredEstudantes] = useState(null);
+  const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
+  const [restricoes, setRestricoes] = useState([]);
+  const [selectedRefeicoes, setSelectedRefeicoes] = useState(null);
+
+  const [cardapioSemanal, setCardapioSemanal] = useState(0);
+  const [editais, setEditais] = useState([]);
+
+  const [selectedEditais, setSelectedEditais] = useState(null);
+  const [filteredEditais, setFilteredEditais] = useState(null);
+  const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
   const validate = () => {
@@ -54,20 +61,19 @@ const CadastrarCardapio = (props) => {
 
     service
       .create({
-        descricaoRefeicao,
-        sequencia,
-        tipoRefeicao,
-        diaRefeicao,
+        sequenciaSemanal,
+        edital,
+        itensCardapioDia,
       })
       .then((response) => {
         console.log(response);
         console.log('Entrou no then');
-        showSuccessMessage("Refeição cadastrada com sucesso!");
+        showSuccessMessage("Cardápio cadastrado com sucesso!");
         props.history.push("/listarRefeicoes");
       })
       .catch((error) => {
         console.log(error.response);
-        showErrorMessage("A refeição não pode ser cadastrada!");
+        showErrorMessage("O cardápio não pode ser cadastrado!");
       });
     console.log("request finished");
   };
@@ -103,95 +109,104 @@ const CadastrarCardapio = (props) => {
 
 
 
-  // const searchEdital = (event) => {
-  //   setTimeout(() => {
-  //     let _filteredEditais;
+  const searchEdital = (event) => {
+    setTimeout(() => {
+      let _filteredEditais;
 
-  //     if (!event.query.trim().length) {
-  //       _filteredEditais = [...editais];
-  //     } else {
-  //       _filteredEditais = editais.filter((edital) => {
-  //         return edital.nome.toLowerCase().startsWith(event.query.toLowerCase())
-  //       });
-  //     }
-  //     setFilteredEditais(_filteredEditais);
-  //   }, 250);
-  // }
+      if (!event.query.trim().length) {
+        _filteredEditais = [...editais];
+      } else {
+        _filteredEditais = editais.filter((edital) => {
+          return edital.nome.toLowerCase().startsWith(event.query.toLowerCase())
+        });
+      }
+      setFilteredEditais(_filteredEditais);
+    }, 250);
+  }
 
-  // const selectOneEdital = (props) => {
-  //   props.map(edital => {
-  //     setEditalId(edital.id);
-  //     setTituloEdital(edital.nome);
-  //     setNumero(edital.numero);
-  //     setAno(edital.ano);
-  //     console.log('edital:', edital);
-  //   })
-  // }
+  const selectOneEdital = (props) => {
+    props.map(edital => {
+      setEdital(edital.id);
+      setTituloEdital(edital.nome);
+      setNumero(edital.numero);
+      setAno(edital.ano);
+      console.log('edital:', edital);
+    })
+  }
 
-  // const searchEstudante = (event) => {
-  //   setTimeout(() => {
-  //     let _filteredEstudantes;
+  const searchRefeicao = (event) => {
+    setTimeout(() => {
+      let _filteredRefeicoes;
 
-  //     if (!event.query.trim().length) {
-  //       _filteredEstudantes = [...contasEstudante];
-  //     } else {
-  //       _filteredEstudantes = contasEstudante.filter((estudante) => {
-  //         return estudante.nome.toLowerCase().startsWith(event.query.toLowerCase())
-  //       });
-  //     }
-  //     setFilteredEstudantes(_filteredEstudantes);
+      if (!event.query.trim().length) {
+        _filteredRefeicoes = [...refeicoes];
+      } else {
+        _filteredRefeicoes = refeicoes.filter((refeicao) => {
+          return refeicao.descricao.toLowerCase().startsWith(event.query.toLowerCase())
+        });
+      }
+      setFilteredRefeicoes(_filteredRefeicoes);
 
-  //   }, 250);
-  // }
+    }, 250);
+  }
 
-  // const selectOneContaEstudante = (props) => {
-  //   props.map(estudante => {
-  //     setContaEstudante(estudante.id);
-  //     setNomeEstudante(estudante.nome);
-  //     setMatriculaEstudante(estudante.matricula);
-  //     setEmailEstudante(estudante.email);
-  //     console.log('estudante:', estudante);
-  //   })
-  // }
+  const selectOneRefeicao = (props) => {
+    props.map(refeicao => {
+      setRefeicao(refeicao.id);
+      setTipoRefeicao(refeicao.tipoDeRefeicao);
+      setDescricaoRefeicao(refeicao.descricao);
+      setRestricoes(refeicao.restricoes);
+      console.log('refeicao:', refeicao);
+    })
+  }
+
+  const addItemCardapioDia = () => {  
+    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
+    itensCardapioDia.push(elementosDoCardapioDia);
+  }
 
   useEffect(() => {
 
-    // let dataVigente;
-    // let dataAtual = new Date();
-    // const editaisSelecionados = [];
-    // const estudantesSelecionados = [];
+    let dataVigente;
+    let dataAtual = new Date();
+    const editaisSelecionados = [];
+    const refeicoesSelecionadas = [];
 
-    // const loadEditais = async () => {
+    const loadEditais = async () => {
 
-    //   const response = await serviceEdital.get('/buscarTodos');
-    //   const editaisSelected = response.data.map(edital => {
+      const response = await serviceEdital.get('/buscarTodos');
+      const editaisSelected = response.data.map(edital => {
 
-    //     dataVigente = new Date(edital.vigenteFinal)
+        dataVigente = new Date(edital.vigenteFinal)
 
-    //     if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
-    //       editaisSelecionados.push(edital);
-    //     }
-    //   })
-    //   setEditais(editaisSelecionados);
-    // };
-    // loadEditais();
+        if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
+          editaisSelecionados.push(edital);
+        }
+      })
+      setEditais(editaisSelecionados);
+    };
+    loadEditais();
 
-    // const loadEstudantes = async () => {
+    const loadRefeicoes = async () => {
 
-    //   const response = await serviceContaEstudante.get('/buscarTodos');//.then((data) => setEditais(data));
-    //   const estudanteSelected = response.data.map(estudante => {
+      const response = await serviceRefeicao.get('/buscarTodos');
+      const refeicaoSelected = response.data.map(refeicao => {
+        refeicoesSelecionadas.push(refeicao);
+      })
+      setRefeicoes(refeicoesSelecionadas);
+    };
+    loadRefeicoes();
+    addItemCardapioDia();
 
-    //     estudantesSelecionados.push(estudante);
-    //   })
-    //   setContasEstudante(estudantesSelecionados);
-    // };
-    // loadEstudantes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []
   );
 
+  console.log('sequenciaSemanal',sequenciaSemanal)
+  console.log('edital',edital)
+  console.log('itensCardapioDia',itensCardapioDia)
 
-  return (
+        return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
       {/*Col left  */}
       <div className="w-[220px] flex-shrink flex-grow-0 px-0">
@@ -225,34 +240,19 @@ const CadastrarCardapio = (props) => {
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <form action="">
                   <div className="bg-white px-4 py-5 sm:p-6">
-                    {/* <div className="grid grid-cols-6 gap-6">
-                    </div> */}
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      {/* <label className="block text-sm font-medium text-gray-700">
-                        Edital selecionado:
+                      <label className="block text-sm font-medium text-gray-700">
+                        Edital selecionado: {numero}-{ano} - {tituloEdital}<br />
+                        Sequência semanal: {sequenciaSemanal}<br />
+                        Itens do cardápio: {itensCardapioDia}<br />
                       </label>
-                      <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
-
+                      {/* <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
                     </div>
-
-                    {/* <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      <label className="block text-sm font-medium text-gray-700 mt-6">
-                        Estudante selecionado:
-                      </label>
-                      <p className="block text-sm font-medium ml-4" id="labelEstudante">
-                        Nome: {nomeEstudante}<br />
-                        CPF: {cpf}<br />
-                        Matrícula: {matriculaEstudante}<br />
-                        Email: {emailEstudante}<br />
-                        Programa: {descricaoRefeicao}<br /></p>
-                    </div> */}
-
-
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                       <div className="row flex justify-content gap-10 mt-6 ">
                         <div className="">
-                          {/* <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o edital</p>
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione um edital</p>
                           <div className="card flex justify-content-center">
                             <AutoComplete
                               className="w-full"
@@ -262,103 +262,86 @@ const CadastrarCardapio = (props) => {
                               completeMethod={searchEdital}
                               onChange={(e) => selectOneEdital(e.target.value)}
                             />
-                          </div> */}
+                          </div>
 
                         </div>
-                        <div className="row">
-                          {/* <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o estudante</p> */}
-                          {/* <div className="card flex justify-content-center">
+                      </div>
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                      <label
+                        htmlFor="diaRefeicao"
+                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
+                        Refeições disponíveis
+                      </label>
+                      <div className="row flex justify-content gap-10 mt-6 ">
+                        <div className="">
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione uma refeição</p>
+                          <div className="card flex justify-content-center">
                             <AutoComplete
                               className="w-full"
-                              field="nome"
-                              multiple value={selectedEstudantes}
-                              suggestions={filteredEstudantes}
-                              completeMethod={searchEstudante}
-                              onChange={(e) => selectOneContaEstudante(e.target.value)}
+                              field="refeicao"
+                              multiple value={selectedRefeicoes}
+                              suggestions={filteredRefeicoes}
+                              completeMethod={searchRefeicao}
+                              onChange={(e) => selectOneRefeicao(e.target.value)}
                             />
-                          </div> */}
+                          </div>
+
                         </div>
                       </div>
                     </div>
-
-
-                    {/* <div className="col-span-3 lg:col-span-2">
-                      <div className="row flex justify-content-center gap-6 mt-6">
-                        <label className="mb-1 text-sm font-semibold text-gray-700">
-                          Ativo no Sistema?
-                        </label>
-                        <div className="card flex justify-content-center">
-                          <RadioButton checked disabled>
-                          </RadioButton>
-                          <label htmlFor="sim" className="ml-2">Sim</label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-3 lg:col-span-2">
-                      <div className="row flex justify-content-center gap-6 mt-6">
-                        <label className="mb-1 text-sm font-semibold text-gray-700">
-                          Situação?
-                        </label>
-                        <div className="card flex justify-content-center">
-                          <RadioButton checked disabled>
-                          </RadioButton>
-                          <label htmlFor="deferido" className="ml-2">Deferido</label>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div className="col-span-6 sm:col-span-3 lg:col-span-6 gap-6 mt-6">
-                      <label
-                        htmlFor="cpf"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        CPF
-                      </label>
-
-                      <InputMask
-                        value={cpf}
-                        onChange={handleChange(setCpf)} mask="99999999999" placeholder="99999999999" />
-                    </div> */}
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
                         htmlFor="sequencia"
                         className="block text-sm font-medium text-gray-700 mb-3">
-                        Tipo de Refeição
+                        Sequência Semanal
                       </label>
                       <div className="card flex justify-content-center">
                         <div className="flex flex-wrap gap-3">
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia1" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 1'} />
+                          {/* <div className="flex align-items-center">
+                            <RadioButton inputId="sequencia1" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 1'} />
                             <label htmlFor="sequencia1" className="ml-2">Semana 1</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia2" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 2'} />
+                            <RadioButton inputId="sequencia2" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 2'} />
                             <label htmlFor="sequencia2" className="ml-2">Semana 2</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia3" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 3'} />
+                            <RadioButton inputId="sequencia3" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 3'} />
                             <label htmlFor="sequencia3" className="ml-2">Semana 3</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia4" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 4'} />
+                            <RadioButton inputId="sequencia4" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 4'} />
                             <label htmlFor="sequencia4" className="ml-2">Semana 4</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia5" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 5'} />
+                            <RadioButton inputId="sequencia5" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 5'} />
                             <label htmlFor="sequencia5" className="ml-2">Semana 5</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="sequencia6" name="sequencia" value="sequencia" onChange={handleChange(setSequencia)} checked={sequencia === 'Semana 6'} />
+                            <RadioButton inputId="sequencia6" name="sequencia" value="sequencia" onChange={handleChange(setSequenciaSemanal)} checked={sequenciaSemanal === 'Semana 6'} />
                             <label htmlFor="sequencia6" className="ml-2">Semana 6</label>
-                          </div>
+                          </div> */}
+
+                          <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
+                            id="selectSequencia" value={sequenciaSemanal} 
+                            onChange={handleChange(setSequenciaSemanal)}>
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="1">Semana 1</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="2">Semana 2</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="3">Semana 3</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="4">Semana 4</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="5">Semana 5</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="6">Semana 6</option>
+                          </select>
                         </div>
                       </div>
                     </div>
 
-                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                    {/* <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
                         htmlFor="tipoRefeicao"
                         className="block text-sm font-medium text-gray-700 mb-3">
@@ -392,7 +375,7 @@ const CadastrarCardapio = (props) => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
@@ -402,42 +385,45 @@ const CadastrarCardapio = (props) => {
                       </label>
                       <div className="card flex justify-content-center">
                         <div className="flex flex-wrap gap-3">
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao1" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Segunda-feira'} />
+                          {/* <div className="flex align-items-center">
+                            <RadioButton inputId="diaRefeicao1" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Segunda-feira'} />
                             <label htmlFor="diaRefeicao1" className="ml-2">Segunda-feira</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao2" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Terça-feira'} />
+                            <RadioButton inputId="diaRefeicao2" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Terça-feira'} />
                             <label htmlFor="diaRefeicao2" className="ml-2">Terça-feira</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao3" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Quarta-feira'} />
+                            <RadioButton inputId="diaRefeicao3" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quarta-feira'} />
                             <label htmlFor="diaRefeicao3" className="ml-2">Quarta-feira</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao4" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Quinta-feira'} />
+                            <RadioButton inputId="diaRefeicao4" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quinta-feira'} />
                             <label htmlFor="diaRefeicao4" className="ml-2">Quinta-feira</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao5" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Sexta-feira'} />
+                            <RadioButton inputId="diaRefeicao5" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sexta-feira'} />
                             <label htmlFor="diaRefeicao5" className="ml-2">Sexta-feira</label>
                           </div>
                           <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao6" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaRefeicao)} checked={diaRefeicao === 'Sábado'} />
+                            <RadioButton inputId="diaRefeicao6" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sábado'} />
                             <label htmlFor="diaRefeicao6" className="ml-2">Sábado</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                          </div> */}
 
-                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
-                      <label
-                        htmlFor="diaRefeicao"
-                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
-                        Refeições disponíveis
-                      </label>
-                      <div className="card flex justify-content-center">
-                        {/* <Editor value={descricaoRefeicao} onTextChange={(e) => setDescricaoRefeicao(e.htmlValue)} style={{ width: '100%', height: '320px' }} /> */}
+                          <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
+                            id="selectDia" value={diaDaSemana} 
+                            onChange={handleChange(setDiaDaSemana)}>
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEGUNDA">Segunda-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="TERCA">Terça-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUARTA">Quarta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUINTA">Quinta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEXTA">Sexta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SABADO">Sábado</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="DOMINGO">Domingo</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
 

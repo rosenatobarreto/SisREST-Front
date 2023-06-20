@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import PedidoAcessoApiService from "../../services/PedidoAcessoApiService";
 import AcessoDiaRefeicaoApiService from "../../services/AcessoDiaRefeicaoApiService";
@@ -8,24 +8,26 @@ import MenuVazio from "../../components/MenuVazio";
 import { DadosServiceRefeicao } from "../../components/dados/DadosServiceRefeicao";
 
 import { AutoComplete } from 'primereact/autocomplete';
-import { InputMask } from 'primereact/inputmask';
-import { RadioButton } from "primereact/radiobutton";
-import { InputText } from "primereact/inputtext";
-import { Button } from 'primereact/button';
 import { Checkbox } from "primereact/checkbox";
 import { Editor } from 'primereact/editor';
 import { TreeTable } from 'primereact/treetable';
 import { Column } from 'primereact/column';
+import { ListBox } from 'primereact/listbox';
+import { RadioButton } from "primereact/radiobutton";
+import { Button } from 'primereact/button';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputTextarea } from "primereact/inputtextarea";
 import { Divider } from 'primereact/divider';
-import { ListBox } from 'primereact/listbox';
+import { Toast } from 'primereact/toast';
+import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';
+import { MultiSelect } from 'primereact/multiselect';
 
 
 const PedirAcesso = (props) => {
 
-  const[currentUserEmail, setCurrentUserEmail] = useState('');
-  const [currentUserName, setCurrentUserName] = useState(props.currentUser.name);
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
+  const [currentUserName, setCurrentUserName] = useState('');
 
   const servicePedidoAcesso = new PedidoAcessoApiService();
   const serviceAcessoDiaRefeicao = new AcessoDiaRefeicaoApiService();
@@ -33,18 +35,22 @@ const PedirAcesso = (props) => {
   const serviceBeneficiario = new BeneficiarioApiService();
 
 
-  const [solicitadoEm, setSolicitadoEm] = useState(new Date());
+  const [solicitadoEm, setSolicitadoEm] = useState(null);
   const [justificativaAnalise, setJustificativaAnalise] = useState('');
   const [beneficiario, setBeneficiario] = useState(0);
+
   const [diasAcessoRefeicao, setDiasAcessoRefeicao] = useState([]);
+  const [diaDaSemana, setDiaDaSemana] = useState('');
+  const [tipoDeRefeicao, setTipoDeRefeicao] = useState('');
+
+
   const [restricaoAlimentar, setRestricaoAlimentar] = useState([]);
   const [observacoes, setObservacoes] = useState('');
+  const [tipoDeRestricaoAlimentar, setTipoDeRestricaoAlimentar] = useState('');
+  const [anexo, setAnexo] = useState(null);
   
-  const [diaDaSemana, setDiaDaSemana] = useState(null);
-  const [tipoDeRefeicao, setTipoDeRefeicao] = useState([]);
-  
-  const [selectedDiaKeys, setSelectedDiaKeys] = useState(null);
-  const [selectedRefeicaoKeys, setSelectedRefeicaoKeys] = useState(null);
+  const [selectedDiaTipo, setSelectedDiaTipo] = useState([]);
+  const [selectedRestricao, setSelectedRestricao] = useState([]);
   
   const [beneficiarios, setBeneficiarios] = useState([]);
   const [filteredBeneficiarios, setFilteredBeneficiarios] = useState(null);
@@ -53,58 +59,45 @@ const PedirAcesso = (props) => {
   const [emailBeneficiario, setEmailBeneficiario] = useState('');
   const [selectedBeneficiarios, setSelectedBeneficiarios] = useState('');
 
-  const [tipoDeRestricaoAlimentar, setTipoDeRestricaoAlimentar] = useState([]);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
-  const items = [
-    { name: 'Diabetes', value: 'DIABETES' },
-    { name: 'Intolerância à Lactose', value: 'INTOLERANCIA_LACTOSE' },
-    { name: 'Intolerância à Glúten', value: 'INTOLERANCIA_GLUTEN' },
-    { name: 'Alergias', value: 'ALERGIAS' },
-    { name: 'Hipertenso(a)', value: 'HIPERTENSO' },
-    { name: 'Vegano(a)', value: 'VEGANO' },
-  ];
+  // const itemsRestricoes = [
+  //   { nomeRestricao: 'Diabetes', value: 'DIABETES' },
+  //   { nomeRestricao: 'Intolerância à Lactose', value: 'INTOLERANCIA_LACTOSE' },
+  //   { nomeRestricao: 'Intolerância à Glúten', value: 'INTOLERANCIA_GLUTEN' },
+  //   { nomeRestricao: 'Alergias', value: 'ALERGIAS' },
+  //   { nomeRestricao: 'Hipertenso(a)', value: 'HIPERTENSO' },
+  //   { nomeRestricao: 'Vegano(a)', value: 'VEGANO' },
+  // ];
 
-  const itemsDias = [
-    { dia: 'Segunda-feira', value: 'SEGUNDA' },
-    { dia: 'Terça-feira', value: 'TERCA' },
-    { dia: 'Quarta-feira', value: 'QUARTA' },
-    { dia: 'Quinta-feira', value: 'QUINTA' },
-    { dia: 'Sexta-feira', value: 'SEXTA' },
-    { dia: 'Sábado', value: 'SABADO' },
-    { dia: 'Domingo', value: 'DOMINGO' },
-  ];
+  // const itemsDias = [
+  //   { dia: 'Segunda-feira', value: 'SEGUNDA' },
+  //   { dia: 'Terça-feira', value: 'TERCA' },
+  //   { dia: 'Quarta-feira', value: 'QUARTA' },
+  //   { dia: 'Quinta-feira', value: 'QUINTA' },
+  //   { dia: 'Sexta-feira', value: 'SEXTA' },
+  //   { dia: 'Sábado', value: 'SABADO' },
+  //   { dia: 'Domingo', value: 'DOMINGO' },
+  // ];
 
-  const itemsRefeicoes0 = [
-    { key: '0-1', refeicao0: 'Café da manhã', value: 'CAFE_MANHA' },
-    { key: '0-2', refeicao0: 'Lanche da manhã', value: 'LANCHE_MANHA' },
-    { key: '0-3', refeicao0: 'Almoço', value: 'ALMOCO' },
-    { key: '0-4', refeicao0: 'Lanche da tarde', value: 'LANCHE_TARDE' },
-    { key: '0-5', refeicao0: 'Janta', value: 'JANTA' },
-    { key: '0-6', refeicao0: 'Ceia', value: 'CEIA' },
-  ];
+  // const itemsRefeicoes = [
+  //   { key: '0-1', refeicao: 'Café da manhã', value: 'CAFE_MANHA' },
+  //   { key: '0-2', refeicao: 'Lanche da manhã', value: 'LANCHE_MANHA' },
+  //   { key: '0-3', refeicao: 'Almoço', value: 'ALMOCO' },
+  //   { key: '0-4', refeicao: 'Lanche da tarde', value: 'LANCHE_TARDE' },
+  //   { key: '0-5', refeicao: 'Janta', value: 'JANTA' },
+  //   { key: '0-6', refeicao: 'Ceia', value: 'CEIA' },
+  // ];
 
-  const objectDiaRefeicoes = [
-    {
-      diaDaSemana,
-      tipoDeRefeicao
+  const toast = useRef(null);
+
+    const showSuccess = () => {
+        toast.current.show({severity:'success', summary: 'Success', detail:'Pedido cadastrado com sucesso!', life: 3000});
     }
-  ];
 
-  const objectRestricaoAlimentar = [
-    {
-      observacoes,
-      tipoDeRestricaoAlimentar
+    const showError = () => {
+        toast.current.show({severity:'error', summary: 'Error', detail:'O pedido não pôde ser cadastrado!', life: 3000});
     }
-  ];
-  console.log('Obj Dia-Refeicoes ',objectDiaRefeicoes)
-  // console.log('Dias Acesso Refeicoes',diasAcessoRefeicao)
-  // diasAcessoRefeicao.push(diaDaSemana,tipoDeRefeicao);
-  // const [teste, setTeste] = useState([]);
-  // teste.push(itemsRefeicoes,itemsDias)
-
-  // console.log('Dias acesso refeicao: ', teste)
-  // console.log('Restricao: ',restricaoAlimentar)
 
 
   const validate = () => {
@@ -112,7 +105,8 @@ const PedirAcesso = (props) => {
     return errors;
   };
 
-  const create = () => {
+  const create = (event) => {
+    event.preventDefault();
     const errors = validate();
 
     if (errors.length > 0) {
@@ -128,7 +122,7 @@ const PedirAcesso = (props) => {
         justificativaAnalise,
         beneficiario,
         diasAcessoRefeicao,
-        restricaoAlimentar,
+        restricaoAlimentar
       })
       .then((response) => {
         console.log(response);
@@ -146,21 +140,6 @@ const PedirAcesso = (props) => {
   const cancel = () => {
     props.history.push("/");
   };
-
-  // const findAllDiasRefeicao = () => {
-  //   serviceAcessoDiaRefeicao
-  //     .get("/buscarTodos")
-  //     .then((response) => {
-  //       const diasAcesso = response.data;
-  //       setDiasAcessoRefeicao(diasAcesso);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //     });
-  // };
-
-
-
   
   // const selectDiasAcesso = (props) => {
   //   props.map(diasAcesso => {
@@ -176,17 +155,17 @@ const PedirAcesso = (props) => {
   //   })
   // }
   
-  console.log('Mostra dias Acesso: ', diasAcessoRefeicao);
-  console.log('Mostra restrições: ', restricaoAlimentar);
   
   const addDiasTiposRefeicaoHandler = (event) => {
-      event.preventDefault();
-      diasAcessoRefeicao.push(objectDiaRefeicoes);
+    event.preventDefault();
+    const diaAcessoRefeicao = { diaDaSemana, tipoDeRefeicao };
+    diasAcessoRefeicao.push(diaAcessoRefeicao);
   }
   
   const addRestricoesHandler = (event) => {
-      event.preventDefault();
-      restricaoAlimentar.push(objectRestricaoAlimentar);
+    event.preventDefault();
+    const restricoes = {observacoes, tipoDeRestricaoAlimentar, anexo};
+    restricaoAlimentar.push(restricoes);
   }
 
   const searchBeneficiario = (event) => {
@@ -205,18 +184,19 @@ const PedirAcesso = (props) => {
     }, 250);
   }
   
-  const selectOneBeneficiario = (props) => {
-    props.map(beneficiario => {
-      if (currentUserEmail === beneficiario.contaEstudante.email){
-        setBeneficiario(beneficiario.id);
-        setNomeBeneficiario(beneficiario.contaEstudante.nome);
-        setMatriculaBeneficiario(beneficiario.contaEstudante.matricula);
-        setEmailBeneficiario(beneficiario.contaEstudante.email);
-      }
-      console.log('Beneficiario:', beneficiario);
-      })
-  }
-
+  // const selectOneBeneficiario = (props) => {
+  //   props.map(beneficiario => {
+  //     if (props.currentUser.Email === beneficiario.contaEstudante.email){
+    //       setBeneficiario(beneficiario.id);
+    //       setNomeBeneficiario(beneficiario.contaEstudante.nome);
+  //       setMatriculaBeneficiario(beneficiario.contaEstudante.matricula);
+  //       setEmailBeneficiario(beneficiario.contaEstudante.email);
+  //     }
+  //     console.log('selectOneBeneficiario:', beneficiario);
+  
+  //   })
+  // }
+  
   useEffect(() => {
     // addDiaRefeicoes();
     // DadosServiceRefeicao.getTreeTableDiasData().then((data) => setDiaDaSemana(data));
@@ -224,23 +204,38 @@ const PedirAcesso = (props) => {
     const beneficiariosSelecionados = [];
     
     const loadBeneficiarios = async () => {
-
+      
       const response = await serviceBeneficiario.get('/buscarTodos');
-      const beneficiarioSelected = response.data.map(beneficiario => {
-        if(beneficiario.contaEstudante.nome === currentUserName){
-          beneficiariosSelecionados.push(beneficiario);
-          console.log('beneficiario load', beneficiario.contaEstudante.nome)
-
+      const beneficiarioSelected = response.data.map(oneBeneficiario => {
+        if(oneBeneficiario.contaEstudante.email === props.currentUser.email){
+          beneficiariosSelecionados.push(oneBeneficiario);
+          setBeneficiario(oneBeneficiario.id);
+          // console.log('beneficiario load', beneficiario.contaEstudante.nome)
+          
         }
       })
       setBeneficiarios(beneficiariosSelecionados);
     };
     loadBeneficiarios();
-
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
+  
+  console.log('Beneficiario id: ', beneficiario)
+  // console.log('Dia-Refeicoes ',objectDiaRefeicoes)
+  // console.log('Retricoes ',objectDiaRefeicoes)
+  // diasAcessoRefeicao.push(diaDaSemana,tipoDeRefeicao);
+  // const [teste, setTeste] = useState([]);
+  // teste.push(itemsRefeicoes,itemsDias)
+  console.log('Mostra dias Acesso: ', diasAcessoRefeicao);
+  console.log('Mostra restrições: ', restricaoAlimentar);
 
-
+  // console.log('Restricao: ',restricaoAlimentar)
+  
+  // setCurrentUserEmail(props.currentUser.email);
+  // console.log('Current Nome',props.currentUser.nome);
+  
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
       {/*Col left  */}
@@ -267,172 +262,94 @@ const PedirAcesso = (props) => {
         <div className="pt-4 pl-8 pr-8 mb-4">
           <div className="mt-0 sm:mt-0">
             <div className="md:grid md:grid-cols-1 md:gap-6">
-              {/* <div className="md:col-span-1">
-                <div className="px-4 sm:px-0">
-
-                </div>
-              </div> */}
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <form action="">
                   <div className="bg-white px-4 py-5 sm:p-6">
-                    {/* <div className="grid grid-cols-6 gap-6">
-                    </div> */}
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      <div className="row flex justify-content gap-10 mt-6 ">
-                        
-                        <div className="row">
-                          <p className="mb-1 text-sm font-semibold text-gray-700">Estudante:</p>
-                          <div className="card flex justify-content-center">
-                            <AutoComplete
-                              className="w-full"
-                              field="nome"
-                              multiple value={selectedBeneficiarios}
-                              suggestions={filteredBeneficiarios}
-                              completeMethod={searchBeneficiario}
-                              onChange={(e) => selectOneBeneficiario(e.target.value)}
-                            />
-                            {/* <p className="mt-2 text-lg">{currentUserName}</p> */}
-                          </div>
-                            <Divider className="border-2"/>
-                        </div>
-                      </div>
+                      <label
+                        htmlFor="restricoes"
+                        className="block text-md font-medium text-gray-700 mt-6 mb-2">
+                        Selecione o dia da refeição</label>
+                      <div className="card flex justify-content-center">
+                        {/* <Dropdown id="diaDaSemana" value={diaDaSemana} onChange={(e) => setDiaDaSemana(e.value)} options={itemsDias} optionLabel="dia" 
+                          placeholder="Selecione um dia" className="w-full md:w-10rem" /> */}
+                        {/* <MultiSelect value={diaDaSemana} 
+                          onChange={(e) => setDiaDaSemana(e.value)} options={itemsDias} optionLabel="dia" 
+                          placeholder="Selecione um dia" maxSelectedLabels={1} className="w-full md:w-20rem" /> */}
+                          
+                          <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
+                            id="selectDia" value={diaDaSemana} 
+                            onChange={handleChange(setDiaDaSemana)}>
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEGUNDA">Segunda-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="TERCA">Terça-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUARTA">Quarta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUINTA">Quinta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEXTA">Sexta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SABADO">Sábado</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="DOMINGO">Domingo</option>
+                          </select>
+                      </div>                      
                     </div>
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      {/* <label className="block text-sm font-medium text-gray-700">
-                        Edital:
-                        
-                      </label>
-                      <div className="card">
-                        <TreeTable value={diaDaSemana} selectionMode="checkbox" selectionKeys={selectedDiaKeys}
-                          onSelectionChange={(e) => setSelectedDiaKeys(e.value)} tableStyle={{ minWidth: '30rem' }}>
-                          <Column field="dia" header="Selecione o dia" expander></Column>
-                        </TreeTable>
-
-                      </div>
-                      <div className="card">
-                        <TreeTable value={tipoDeRefeicao} selectionMode="checkbox" selectionKeys={selectedRefeicaoKeys}
-                          onSelectionChange={(e) => setSelectedRefeicaoKeys(e.value)} tableStyle={{ minWidth: '30rem' }}>
-                          <Column field="refeicao" header="Selecione a refeição" expander></Column>
-                        </TreeTable>
-
-                      </div> */}
-                      <div className="flex flex-row">
-                        <div className="col">
-                          <label
-                            htmlFor="restricoes"
-                            className="block text-md font-medium text-gray-700 mt-6 mb-2">
-                            Opções de dias e tipos de refeições</label>
-                          <label
-                            htmlFor="diaDaSemana"
-                            className="block text-md font-medium text-gray-700 mt-6 mb-2">
-                            Selecione o dia</label>
-                          <div className="card flex justify-content-center"> 
-                            <SelectButton value={diaDaSemana} 
-                            onChange={(e) => setDiaDaSemana(e.value)} 
-                            // onChange={handleChange(setDiaDaSemana)}
-                            severity="secondary" optionLabel="dia" options={itemsDias} multiple/>
-                          </div>
-{/* 
-              <div className="flex flex-wrap gap-3">
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia1" name="dia" value="SEGUNDA" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Segunda-feira'} />
-                    <label htmlFor="dia1" className="ml-2">Segunda-feira</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia2" name="dia" value="TERCA" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Terça-feira'} />
-                    <label htmlFor="dia2" className="ml-2">Terça-feira</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia3" name="dia" value="QUARTA" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Quarta-feira'} />
-                    <label htmlFor="dia3" className="ml-2">Quarta-feira</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia4" name="dia" value="QUINTA" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Quinta-feira'} />
-                    <label htmlFor="dia4" className="ml-2">Quinta-feira</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia5" name="dia" value="SEXTA" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Sexta-feira'} />
-                    <label htmlFor="dia5" className="ml-2">Sexta-feira</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia5" name="dia" value="SABADO" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Sábado'} />
-                    <label htmlFor="dia5" className="ml-2">Sábado</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="dia4" name="dia" value="DOMIGO" onChange={(e) => setDiaDaSemana(e.value)} checked={diaDaSemana === 'Domingo'} />
-                    <label htmlFor="dia5" className="ml-2">Domingo</label>
-                </div>
-            </div> */}
-
-
-
-                          <label
+                      <label
                             htmlFor="restricoes"
                             className="block text-md font-medium text-gray-700 mt-6 mb-2">
                             Selecione o tipo de refeição</label>
                           <div className="card flex justify-content-center">
-                            <SelectButton id="refeicaoBtn" className="text-xs"
-                              value={tipoDeRefeicao} 
-                              onChange={(e) => setTipoDeRefeicao(e.value)}
-                              // onChange={handleChange(setTipoDeRefeicao)}
-                              optionLabel="refeicao0" options={itemsRefeicoes0} multiple />
-                          </div>
-                        </div>
-                      </div>
+                          {/* <MultiSelect value={tipoDeRefeicao} 
+                          onChange={(e) => setTipoDeRefeicao(e.value)} options={itemsRefeicoes} optionLabel="refeicao" 
+                          placeholder="Selecione a refeição" maxSelectedLabels={1} className="w-full md:w-20rem" /> */}
+                          <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
+                            id="selectDia" value={tipoDeRefeicao} 
+                            onChange={handleChange(setTipoDeRefeicao)}>
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="CAFE">Café da manhã</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="LANCHE_MANHA">Lanche da manhã</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="ALMOCO">Almoço</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="LANCHE_TARDE">Lanche da tarde</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="JANTAR">Jantar</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="CEIA">Ceia</option>
+                          </select>
+                          </div>                      
+                    </div>
 
-                      <div className="col mt-6 mr-2">
-                        <div className="card flex justify-content-rigth flex-row-reverse">
+                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                      <div className="col mt-8 mb-6">
+                        <div className="card flex justify-content-rigth">
                           <Button id="btnCreate" label="ADICIONAR REFEIÇÕES" severity="sucess" 
                           icon="pi pi-check" size="small" onClick={addDiasTiposRefeicaoHandler} />
                         </div>                        
                       </div>
-                      <Divider className="border-1 border-slate-900"/>
-
+                      <Divider className="border-2 border-x-green-950"/>
                     </div>
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-
-                      {/* <label
-                        htmlFor="restricoes"
-                        className="block text-md font-medium text-gray-700 mt-6 mb-2">
-                        Opções de dias e tipos de refeições</label>
-                      <div className="card flex justify-content-center">
-                        <SelectButton id="selectDiasBtn" className="text-xs"
-                          value={diaDaSemana} onChange={(e) => setDiaDaSemana(e.value)}
-                          optionLabel="dia" options={itemsDias} multiple />
-                      </div> */}
-                        {/* <div className="col pl-4 pr-4">
-                          <label
-                            htmlFor="restricoes"
-                            className="block text-md font-medium text-gray-700 mt-6 mb-2">
-                            Selecione o tipo de refeição</label>
-                          <div className="card flex justify-content-center">
-                            <ListBox value={tipoDeRefeicao} onChange={(e) => setTipoDeRefeicao(e.value)} 
-                            options={itemsRefeicoes0} optionLabel="refeicao0" className="w-120 md:w-14rem" multiple/>
-                          </div>
-                        </div>
-                        <div className="card flex justify-content-center">
-                          <SelectButton id="refeicaoBtn" className="text-xs"
-                            value={tipoDeRefeicao} onChange={(e) => setTipoDeRefeicao(e.value)}
-                            optionLabel="refeicao1" options={itemsRefeicoes1} multiple />
-                        </div> */}
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-
                       <label
                         htmlFor="restricoes"
                         className="block text-md font-medium text-gray-700 mt-6 mb-2">
                         Informe as Restrições Alimentares
                       </label>
                       <div className="card flex justify-content-center">
-                        <SelectButton id="selectRefeicoesBtn" className="text-xs"
-                          value={restricaoAlimentar} 
-                          // onChange={(e) => setRestricaoAlimentar(e.value)}
-                          onChange={handleChange(setRestricaoAlimentar)}
-                          optionLabel="name" options={items} multiple />
+                          {/* <MultiSelect value={tipoDeRestricaoAlimentar} 
+                          onChange={(e) => setTipoDeRestricaoAlimentar(e.value)} options={itemsRestricoes} optionLabel="nomeRestricao" 
+                          placeholder="Selecione a restrição" maxSelectedLabels={1} className="w-full md:w-20rem" /> */}
+                        <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
+                            id="selectDia" value={tipoDeRestricaoAlimentar} 
+                            onChange={handleChange(setTipoDeRestricaoAlimentar)}>
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="DIABETES">Diabetes</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="INTOLERANCIA_LACTOSE">Intolerância à Lactose</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="INTOLERANCIA_GLUTEN">Intolerância à Glúten</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="ALERGIAS">Alergias</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="HIPERTENSO">Hipertenso(a)</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="VEGANO">Vegano</option>                          
+                          </select>
                       </div>
                     </div>
 
@@ -446,19 +363,19 @@ const PedirAcesso = (props) => {
                       <div className="card flex justify-content-center">
                         <InputTextarea id="observacao" autoResize placeholder="Detalhe sua restrição alimentar"
                           value={observacoes} 
-                          // onChange={(e) => setObservacoes(e.target.value)}
-                          onChange={handleChange(setObservacoes)}
+                          onChange={(e) => setObservacoes(e.target.value)}
+                          // onChange={handleChange(setObservacoes)}
                           rows={5} cols={60} />
                       </div>
                     </div>
 
-                    <div className="col mr-2">
-                        <div className="card flex justify-content-rigth flex-row-reverse">
+                    <div className="col mt-8 mb-6">
+                        <div className="card flex justify-content-rigth">
                           <Button id="btnCreate" label="ADICIONAR RESTRIÇÃO" severity="sucess" 
                           icon="pi pi-check" size="small" onClick={addRestricoesHandler} />
                         </div>                        
                       </div>
-                      <Divider className="border-1 border-slate-900"/>
+                      <Divider className="border-2 border-x-green-950"/>
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                         <label
@@ -470,8 +387,8 @@ const PedirAcesso = (props) => {
                       <div className="card flex justify-content-center">
                         <InputTextarea id="descricao" autoResize placeholder="Justifique suas restrições alimentares"
                           value={justificativaAnalise} 
-                          // onChange={(e) => setJustificativaAnalise(e.target.value)} 
-                          onChange={handleChange(setJustificativaAnalise)}
+                          onChange={(e) => setJustificativaAnalise(e.target.value)} 
+                          // onChange={handleChange(setJustificativaAnalise)}
                           rows={5} cols={60} />
                       </div>
                     </div>
@@ -488,6 +405,20 @@ const PedirAcesso = (props) => {
                       </div>
                     </div>
 
+                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                        <label
+                          htmlFor="justificativa"
+                          className="block text-md font-medium text-gray-700 mb-2">
+                          Data da solicitação
+                        </label>
+                        
+                      <div className="card flex justify-content-center">
+                        <Calendar value={solicitadoEm} id="solicitadoEm" 
+                          onChange={handleChange(setSolicitadoEm)} 
+                          dateFormat="yy/mm/dd" />
+                      </div>
+                    </div>
+
                     <div className="row flex flex-row-reverse align-middle mt-6">
                       <div className="col ml-2">
                         <div className="card flex justify-content-center">
@@ -497,6 +428,7 @@ const PedirAcesso = (props) => {
                       </div>
                       <div className="col mr-2">
                         <div className="card flex justify-content-center">
+                          <Toast ref={toast} />
                           <Button id="btnCreate" label="CADASTRAR" severity="sucess" raised onClick={create} />
                         </div>
                         <br />

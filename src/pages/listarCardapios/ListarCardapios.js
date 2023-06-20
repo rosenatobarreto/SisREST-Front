@@ -1,6 +1,6 @@
 import React, {  useEffect, useState, useRef, memo } from "react";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import CardapioApiService from "../../services/CardapioApiService";
+import CardapioSemanalApiService from "../../services/CardapioSemanalApiService";
 import MenuNutricionista from "../../components/MenuNutricionista";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -17,7 +17,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const ListarCardapios = (props) => {
   
-  const service = new CardapioApiService();
+  const service = new CardapioSemanalApiService();
   const [cardapios, setCardapios] = useState([]);
   const [id, setId] = useState(0);
   // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);

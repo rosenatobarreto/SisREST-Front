@@ -1,8 +1,8 @@
 import ApiService from './ApiService';
 
-export default class CardapioApiService extends ApiService{
+export default class CardapioSemanalApiService extends ApiService{
     constructor(){
-        super('/cardapio');
+        super('/cardapioSemanal');
     }
     create(object){
         return this.post('/criar', object);

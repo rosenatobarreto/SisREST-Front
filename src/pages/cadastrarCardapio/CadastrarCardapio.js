@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import RefeicaoApiService from "../../services/RefeicaoApiService";
 import EditalApiService from "../../services/EditalApiService";
@@ -12,6 +12,12 @@ import { InputText } from "primereact/inputtext";
 import { Button } from 'primereact/button';
 import { Checkbox } from "primereact/checkbox";
 import { Editor } from 'primereact/editor';
+import { Divider } from 'primereact/divider';
+import { Toast } from 'primereact/toast';
+import { Messages } from 'primereact/messages';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
 const CadastrarCardapio = (props) => {
 
@@ -29,12 +35,14 @@ const CadastrarCardapio = (props) => {
   const [itensCardapioDia, setItensCardapioDia] = useState([]);
   const [diaDaSemana, setDiaDaSemana] = useState('');
   const [refeicoes, setRefeicoes] = useState([]);
+  const [refeicaoId, setRefeicaoId] = useState(0);
 
   const [refeicao, setRefeicao] = useState('');
   const [tipoRefeicao, setTipoRefeicao] = useState('');
   const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
   const [restricoes, setRestricoes] = useState([]);
   const [selectedRefeicoes, setSelectedRefeicoes] = useState(null);
+  const [refeicoesList, setRefeicoesList] = useState([]);
 
   const [cardapioSemanal, setCardapioSemanal] = useState(0);
   const [editais, setEditais] = useState([]);
@@ -44,12 +52,66 @@ const CadastrarCardapio = (props) => {
   const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
+  const toast = useRef(null);
+  const msgs = useRef(null);
+
+  const showSuccess = () => {
+    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido cadastrado com sucesso!', life: 3000 });
+  }
+
+  const showError = () => {
+    toast.current.show({ severity: 'error', summary: 'Error', detail: 'O pedido não pôde ser cadastrado!', life: 3000 });
+  }
+
+  const addMessages = () => {
+    msgs.current.show([
+      { severity: 'success', summary: 'Success', detail: 'Sequência Semanal e Dia da refeição adicionados ao Cardápio!', sticky: true, closable: false },
+      // { severity: 'info', summary: 'Info', detail: 'Message Content', sticky: true, closable: false },
+      // { severity: 'warn', summary: 'Warning', detail: 'Message Content', sticky: true, closable: false },
+      { severity: 'error', summary: 'Error', detail: 'Itens não adicionados ao Cardápio!', sticky: true, closable: false }
+    ]);
+  };
+
+  const clearMessages = () => {
+    msgs.current.clear();
+  };
+
   const validate = () => {
     const errors = [];
     return errors;
   };
 
-  const create = () => {
+  const addRefeicoes = (id, event) => {
+
+    console.log('Id em addRefeicoes ', id)
+
+    event.preventDefault();
+    setRefeicaoId(id);
+    refeicoes.push(id);
+    // event.preventDefault();
+    console.log('addRefeicoes ', refeicoes);
+
+    // const diaAcessoRefeicao = { diaDaSemana, tipoDeRefeicao };
+    // diasAcessoRefeicao.push(diaAcessoRefeicao);
+  }
+
+  const addItemCardapioDia = (event) => {
+    event.preventDefault()
+    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
+    itensCardapioDia.push(elementosDoCardapioDia);
+    // setItensCardapioDia(diaDaSemana)
+    // setItensCardapioDia(refeicoes)
+    console.log('Itens Cardapio Dia: ++', itensCardapioDia);
+  }
+
+  // const confirmCreateObject = (event) => {
+  //       sequenciaSemanal,
+  //       edital,
+  //       itensCardapioDia,
+  //     }
+
+  const create = (event) => {
+    event.preventDefault();
     const errors = validate();
 
     if (errors.length > 0) {
@@ -69,7 +131,7 @@ const CadastrarCardapio = (props) => {
         console.log(response);
         console.log('Entrou no then');
         showSuccessMessage("Cardápio cadastrado com sucesso!");
-        props.history.push("/listarRefeicoes");
+        // props.history.push("/listarRefeicoes");
       })
       .catch((error) => {
         console.log(error.response);
@@ -95,17 +157,17 @@ const CadastrarCardapio = (props) => {
   //     });
   // };
 
-  // const findAllContasEstudantes = () => {
-  //   serviceContaEstudante
-  //     .get("/buscarTodos")
-  //     .then((response) => {
-  //       const contasEstudante = response.data;
-  //       setContasEstudante(contasEstudante);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //     });
-  // };
+  const findAllRefeicoes = () => {
+    serviceRefeicao
+      .get("/buscarTodos")
+      .then((response) => {
+        const refeicoes = response.data;
+        setRefeicoesList(refeicoes);
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
 
 
 
@@ -134,21 +196,21 @@ const CadastrarCardapio = (props) => {
     })
   }
 
-  const searchRefeicao = (event) => {
-    setTimeout(() => {
-      let _filteredRefeicoes;
+  // const searchRefeicao = (event) => {
+  //   setTimeout(() => {
+  //     let _filteredRefeicoes;
 
-      if (!event.query.trim().length) {
-        _filteredRefeicoes = [...refeicoes];
-      } else {
-        _filteredRefeicoes = refeicoes.filter((refeicao) => {
-          return refeicao.descricao.toLowerCase().startsWith(event.query.toLowerCase())
-        });
-      }
-      setFilteredRefeicoes(_filteredRefeicoes);
+  //     if (!event.query.trim().length) {
+  //       _filteredRefeicoes = [...refeicoes];
+  //     } else {
+  //       _filteredRefeicoes = refeicoes.filter((refeicao) => {
+  //         return refeicao.descricao.toLowerCase().startsWith(event.query.toLowerCase())
+  //       });
+  //     }
+  //     setFilteredRefeicoes(_filteredRefeicoes);
 
-    }, 250);
-  }
+  //   }, 250);
+  // }
 
   const selectOneRefeicao = (props) => {
     props.map(refeicao => {
@@ -160,10 +222,6 @@ const CadastrarCardapio = (props) => {
     })
   }
 
-  const addItemCardapioDia = () => {  
-    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
-    itensCardapioDia.push(elementosDoCardapioDia);
-  }
 
   useEffect(() => {
 
@@ -187,26 +245,95 @@ const CadastrarCardapio = (props) => {
     };
     loadEditais();
 
-    const loadRefeicoes = async () => {
+    findAllRefeicoes()
+    // const loadRefeicoes = async () => {
 
-      const response = await serviceRefeicao.get('/buscarTodos');
-      const refeicaoSelected = response.data.map(refeicao => {
-        refeicoesSelecionadas.push(refeicao);
-      })
-      setRefeicoes(refeicoesSelecionadas);
-    };
-    loadRefeicoes();
-    addItemCardapioDia();
+    //   const response = await serviceRefeicao.get('/buscarTodos');
+    //   const refeicaoSelected = response.data.map(refeicao => {
+    //     refeicoesSelecionadas.push(refeicao);
+    //   })
+    //   setRefeicoes(refeicoesSelecionadas);
+    // };
+    // loadRefeicoes();
+
+    // const loadRefeicoesList = async () => {
+    //   const response = await serviceRefeicao.getAll('/buscarTodos')
+    //   setRefeicoesList(response.data);
+    // };
+    // loadRefeicoesList();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []
   );
 
-  console.log('sequenciaSemanal',sequenciaSemanal)
-  console.log('edital',edital)
-  console.log('itensCardapioDia',itensCardapioDia)
+  console.log('sequenciaSemanal', sequenciaSemanal)
+  console.log('edital', edital)
+  console.log('itensCardapioDia', itensCardapioDia)
+  
 
-        return (
+
+  //   {
+  //     "sequenciaSemanal": 1,
+  //     "edital" : 1,
+  //     "itensCardapioDia":[
+  //         {
+  //         "diaDaSemana":"SEGUNDA",
+  //         "refeicoes": [1, 2]   
+  //        },
+  //        {
+  //        "diaDaSemana":"SEXTA",
+  //         "refeicoes": [3, 4] 
+  //        }] 
+  // }
+
+  //Refeições
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
+
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...filters };
+
+    _filters['global'].value = value;
+
+    setFilters(_filters);
+  };
+
+  const renderHeader = () => {
+    const value = filters['global'] ? filters['global'].value : '';
+
+    return (
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+      </span>
+    );
+  };
+
+  const header = renderHeader();
+
+  const actionBodyTemplate = (rowData) => {
+
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-check" rounded outlined className="mr-2" onClick={(event) => addRefeicoes(rowData.id, event)} />
+      </React.Fragment>
+    );
+  };
+
+  const editRefeicao = (id) => {
+    props.history.push(`/atualizarRefeicao/${id}`);
+  };
+
+  return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
       {/*Col left  */}
       <div className="w-[220px] flex-shrink flex-grow-0 px-0">
@@ -245,53 +372,12 @@ const CadastrarCardapio = (props) => {
                       <label className="block text-sm font-medium text-gray-700">
                         Edital selecionado: {numero}-{ano} - {tituloEdital}<br />
                         Sequência semanal: {sequenciaSemanal}<br />
-                        Itens do cardápio: {itensCardapioDia}<br />
+                        Itens do cardápio: {itensCardapioDia.diaDaSemana}<br />
                       </label>
                       {/* <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
                     </div>
-                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      <div className="row flex justify-content gap-10 mt-6 ">
-                        <div className="">
-                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione um edital</p>
-                          <div className="card flex justify-content-center">
-                            <AutoComplete
-                              className="w-full"
-                              field="nome"
-                              multiple value={selectedEditais}
-                              suggestions={filteredEditais}
-                              completeMethod={searchEdital}
-                              onChange={(e) => selectOneEdital(e.target.value)}
-                            />
-                          </div>
 
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      <label
-                        htmlFor="diaRefeicao"
-                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
-                        Refeições disponíveis
-                      </label>
-                      <div className="row flex justify-content gap-10 mt-6 ">
-                        <div className="">
-                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione uma refeição</p>
-                          <div className="card flex justify-content-center">
-                            <AutoComplete
-                              className="w-full"
-                              field="refeicao"
-                              multiple value={selectedRefeicoes}
-                              suggestions={filteredRefeicoes}
-                              completeMethod={searchRefeicao}
-                              onChange={(e) => selectOneRefeicao(e.target.value)}
-                            />
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-
+                    {/* Sequencia semanal */}
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
                         htmlFor="sequencia"
@@ -326,9 +412,11 @@ const CadastrarCardapio = (props) => {
                           </div> */}
 
                           <select className="rounded-md border border-gray-300 
-                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
-                            id="selectSequencia" value={sequenciaSemanal} 
-                            onChange={handleChange(setSequenciaSemanal)}>
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem"
+                            id="selectSequencia" value={sequenciaSemanal}
+                            // onChange={handleChange(setSequenciaSemanal)}
+                            onChange={(e) => setSequenciaSemanal(e.target.value)}
+                          >
                             <option>Selecione uma opção</option>
                             <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="1">Semana 1</option>
                             <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="2">Semana 2</option>
@@ -341,10 +429,232 @@ const CadastrarCardapio = (props) => {
                       </div>
                     </div>
 
-                    {/* <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                    {/* .......... */}
+                    <div className="col-span-12 sm:col-span-10 lg:col-span-12">
+                      <div className="row flex justify-content gap-10 mt-6 ">
+                        <div className="">
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione um edital</p>
+                          <div className="card flex justify-content-center">
+                            <AutoComplete
+                              className="w-full"
+                              field="nome"
+                              placeholder="Pesquisar..."
+                              multiple value={selectedEditais}
+                              suggestions={filteredEditais}
+                              completeMethod={searchEdital}
+                              onChange={(e) => selectOneEdital(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Divider className="border-2 border-x-green-950" />
+
+                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
-                        htmlFor="tipoRefeicao"
-                        className="block text-sm font-medium text-gray-700 mb-3">
+                        htmlFor="diaRefeicao"
+                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
+                        Dia da Refeição
+                      </label>
+                      <div className="card flex justify-content-center">
+                        <div className="flex flex-wrap gap-3">
+
+                          <select className="rounded-md border border-gray-300 
+                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem"
+                            id="selectDia" value={diaDaSemana}
+                            // onChange={handleChange(setDiaDaSemana)}
+                            onChange={(e) => setDiaDaSemana(e.target.value)}
+                          >
+                            <option>Selecione uma opção</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEGUNDA">Segunda-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="TERCA">Terça-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUARTA">Quarta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUINTA">Quinta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEXTA">Sexta-feira</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SABADO">Sábado</option>
+                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="DOMINGO">Domingo</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Selecionar refeição */}
+                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                      {/* <label
+                        htmlFor="diaRefeicao"
+                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
+                        Refeições disponíveis
+                      </label> */}
+                      <div className="row flex justify-content gap-10 mt-6 ">
+                        <div className="">
+                          <p className="mb-1 text-sm font-semibold text-gray-700">Selecione as refeições</p>
+                          {/* <div className="card flex justify-content-center">
+                            <AutoComplete
+                              className="w-full"
+                              field="refeicao"
+                              multiple value={selectedRefeicoes}
+                              suggestions={filteredRefeicoes}
+                              completeMethod={searchRefeicao}
+                              onChange={(e) => selectOneRefeicao(e.target.value)}
+                            />
+                          </div> */}
+                          <div className="card">
+                            <DataTable value={refeicoesList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                              stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}
+                              >
+                              <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '20%' }}></Column>
+                              <Column className="text-sm" field="descricao" header="Descrição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '75%' }}></Column>
+                              {/* <Column className="text-sm" field="restricoes" header="Restrições da Refeição" sortable sortField="restricoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
+                              <Column header="Selecione" body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
+                            </DataTable>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div className="col-span-6 sm:col-span-10 lg:col-span-12">
+                      <div className="col mt-8 mb-6">
+                        <div className="card flex justify-content-rigth">
+                          <Button id="btnCreate" label="ADICIONAR DIA/REFEIÇÕES" severity="sucess"
+                            icon="pi pi-check" size="small" onClick={(event) => addItemCardapioDia(event)} />
+                          {/* <Button type="button" onClick={addMessages} label="Show" className="mr-2" />
+                          <Button type="button" onClick={clearMessages} label="Clear" className="p-button-secondary" /> */}
+
+                          <Messages ref={msgs} />
+
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* <div className="row flex flex-row-reverse align-middle mt-6">
+                      <div className="col ml-2">
+                        <div className="card flex justify-content-center">
+                          <br />
+                          <Button id="btnConfirme" label="CONFIRMAR DADOS" severity="secondary" raised onClick={cancel} />
+                        </div>
+                      </div>
+                      <div className="col mr-2">
+                        <div className="card flex justify-content-center">
+                          <Button id="btnCreate" label="ADICIONAR DIA/REFEIÇÕES" severity="sucess" 
+                          icon="pi pi-check" size="small" onClick={addRefeicoes} />
+                        </div>
+                        <br />
+                        <br />
+                      </div>
+                      <br />
+                    </div> */}
+                    <Divider className="border-2 border-x-green-950" />
+
+                    <div className="row flex flex-row-reverse align-middle mt-6">
+                      <div className="col ml-2">
+                        <div className="card flex justify-content-center">
+                          <br />
+                          <Button id="btnCancel" label="CANCELAR" severity="sucess" raised outlined onClick={cancel} />
+                        </div>
+                      </div>
+                      <div className="col mr-2">
+                        <div className="card flex justify-content-center">
+                          <Toast ref={toast} />
+                          <Button id="btnCreate" label="CADASTRAR" severity="sucess" raised onClick={create} />
+                        </div>
+                        <br />
+                        <br />
+                      </div>
+                      <br />
+                    </div>
+
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div >
+    </div>
+  );
+}
+
+export default memo(CadastrarCardapio);
+
+
+// "{
+// "sequenciaSemanal":"2",
+// "edital":1,
+// "itensCardapioDia":[{
+// 	"diaDaSemana":"SEGUNDA",
+// 	"refeicoes":[{
+// 			"id":1,
+// 			"descricao":"Feijão preto, arroz refogado, farofa, carne de sol, salada de legumes, salada crua.",
+// 			"tipoDeRefeicao":"ALMOCO",
+// 			"restricoes":["DIABETES"]},1]}]
+// }"
+
+
+// "{
+// "sequenciaSemanal": "2",
+//   "edital": 1,
+//     "itensCardapioDia": [
+//       {
+//         \"diaDaSemana\":\"QUINTA\",
+//         \"refeicoes\":[{
+//         \"id\":1,
+//         \"descricao\":\"Feijão preto, arroz refogado, farofa, carne de sol, salada de legumes, salada crua.\",
+//         \"tipoDeRefeicao\":\"ALMOCO\",
+//         \"restricoes\":[\"DIABETES\"]
+// 						}, 1, 1]
+// 				},
+// {
+//   \"diaDaSemana\":\"SEXTA\",
+//   \"refeicoes\":[{
+//   \"id\":1,
+//   \"descricao\":\"Feijão preto, arroz refogado, farofa, carne de sol, salada de                                                                      legumes, salada crua.\",		
+//   \"tipoDeRefeicao\":\"ALMOCO\",
+//   \"restricoes\":[\"DIABETES\"]},1,1]}
+// 	]
+// } "
+
+
+
+
+
+
+
+
+
+{/* <div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao1" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Segunda-feira'} />
+  <label htmlFor="diaRefeicao1" className="ml-2">Segunda-feira</label>
+</div>
+<div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao2" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Terça-feira'} />
+  <label htmlFor="diaRefeicao2" className="ml-2">Terça-feira</label>
+</div>
+<div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao3" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quarta-feira'} />
+  <label htmlFor="diaRefeicao3" className="ml-2">Quarta-feira</label>
+</div>
+<div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao4" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quinta-feira'} />
+  <label htmlFor="diaRefeicao4" className="ml-2">Quinta-feira</label>
+</div>
+<div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao5" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sexta-feira'} />
+  <label htmlFor="diaRefeicao5" className="ml-2">Sexta-feira</label>
+</div>
+<div className="flex align-items-center">
+  <RadioButton inputId="diaRefeicao6" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sábado'} />
+  <label htmlFor="diaRefeicao6" className="ml-2">Sábado</label>
+</div> */}
+{/* <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                      <label
+                      htmlFor="tipoRefeicao"
+                      className="block text-sm font-medium text-gray-700 mb-3">
                         Tipo de Refeição
                       </label>
                       <div className="card flex justify-content-center">
@@ -376,84 +686,3 @@ const CadastrarCardapio = (props) => {
                         </div>
                       </div>
                     </div> */}
-
-                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
-                      <label
-                        htmlFor="diaRefeicao"
-                        className="block text-sm font-medium text-gray-700 mt-2 mb-3">
-                        Dia da Refeição
-                      </label>
-                      <div className="card flex justify-content-center">
-                        <div className="flex flex-wrap gap-3">
-                          {/* <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao1" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Segunda-feira'} />
-                            <label htmlFor="diaRefeicao1" className="ml-2">Segunda-feira</label>
-                          </div>
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao2" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Terça-feira'} />
-                            <label htmlFor="diaRefeicao2" className="ml-2">Terça-feira</label>
-                          </div>
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao3" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quarta-feira'} />
-                            <label htmlFor="diaRefeicao3" className="ml-2">Quarta-feira</label>
-                          </div>
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao4" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Quinta-feira'} />
-                            <label htmlFor="diaRefeicao4" className="ml-2">Quinta-feira</label>
-                          </div>
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao5" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sexta-feira'} />
-                            <label htmlFor="diaRefeicao5" className="ml-2">Sexta-feira</label>
-                          </div>
-                          <div className="flex align-items-center">
-                            <RadioButton inputId="diaRefeicao6" name="diaRefeicao" value="diaRefeicao" onChange={handleChange(setDiaDaSemana)} checked={diaDaSemana === 'Sábado'} />
-                            <label htmlFor="diaRefeicao6" className="ml-2">Sábado</label>
-                          </div> */}
-
-                          <select className="rounded-md border border-gray-300 
-                            py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm md:w-10rem" 
-                            id="selectDia" value={diaDaSemana} 
-                            onChange={handleChange(setDiaDaSemana)}>
-                            <option>Selecione uma opção</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEGUNDA">Segunda-feira</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="TERCA">Terça-feira</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUARTA">Quarta-feira</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUINTA">Quinta-feira</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEXTA">Sexta-feira</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SABADO">Sábado</option>
-                            <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="DOMINGO">Domingo</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="row flex flex-row-reverse align-middle mt-6">
-                      <div className="col ml-2">
-                        <div className="card flex justify-content-center">
-                          <br />
-                          <Button id="btnCancel" label="CANCELAR" severity="sucess" raised outlined onClick={cancel} />
-                        </div>
-                      </div>
-                      <div className="col mr-2">
-                        <div className="card flex justify-content-center">
-                          <Button id="btnCreate" label="CADASTRAR" severity="sucess" raised onClick={create} />
-                        </div>
-                        <br />
-                        <br />
-                      </div>
-                      <br />
-                    </div>
-                  </div>
-                </form>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div >
-    </div>
-  );
-}
-
-export default memo(CadastrarCardapio);

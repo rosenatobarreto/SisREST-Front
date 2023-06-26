@@ -20,6 +20,6 @@ export default class BeneficiarioApiService extends ApiService{
         return this.get(`/buscarPorID/${id}`)
     }
     findAll(){
-        return this.getAll('/buscarTodos');
+        return this.get('/buscarTodos');
     }
 }

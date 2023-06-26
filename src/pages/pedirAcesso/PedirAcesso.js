@@ -154,7 +154,18 @@ const PedirAcesso = (props) => {
   //     setTipoDeRestricaoAlimentar(restricao.name);
   //   })
   // }
-  
+
+  //   const findAllBeneficiarios = () => {
+  //   serviceBeneficiario
+  //     .get("/buscarTodos")
+  //     .then((response) => {
+  //       const beneficiario = response.data;
+  //       setBeneficiarios(beneficiario);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //     });
+  // };  
   
   const addDiasTiposRefeicaoHandler = (event) => {
     event.preventDefault();
@@ -223,18 +234,8 @@ const PedirAcesso = (props) => {
   
   
   console.log('Beneficiario id: ', beneficiario)
-  // console.log('Dia-Refeicoes ',objectDiaRefeicoes)
-  // console.log('Retricoes ',objectDiaRefeicoes)
-  // diasAcessoRefeicao.push(diaDaSemana,tipoDeRefeicao);
-  // const [teste, setTeste] = useState([]);
-  // teste.push(itemsRefeicoes,itemsDias)
   console.log('Mostra dias Acesso: ', diasAcessoRefeicao);
   console.log('Mostra restrições: ', restricaoAlimentar);
-
-  // console.log('Restricao: ',restricaoAlimentar)
-  
-  // setCurrentUserEmail(props.currentUser.email);
-  // console.log('Current Nome',props.currentUser.nome);
   
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">

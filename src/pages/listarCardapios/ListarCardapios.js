@@ -199,9 +199,9 @@ const ListarCardapios = (props) => {
                             <DataTable value={CardapiosList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column className="text-sm" field="cardapio.tipoRefeicao" header="Tipo" sortable style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="diaRefeicao" header="Dia da Refeição" sortable style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="cardapio.descricao" header="Descrição da Refeição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="sequenciaSemanal" header="Sequencia Semanal" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="itensCardapioDia.diaDaSemana" header="Dia da Refeição" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="itensCardapioDia.refeicoes" header="Refeições" sortable sortField="itensCardapioDia.refeicoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
                               <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                             </DataTable>
                           </div>

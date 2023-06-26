@@ -99,7 +99,7 @@ const ListarBeneficiarios = (props) => {
   useEffect(() => {
     
             const loadBeneficiarios = async () => {
-            const response = await service.getAll('/buscarTodos')
+            const response = await service.get('/buscarTodos')
             setBeneficiariosList(response.data);
         };
         loadBeneficiarios(); 
@@ -159,7 +159,7 @@ const ListarBeneficiarios = (props) => {
     
   const findAll = () => {
       service
-      .getAll("/buscarTodos")
+      .get("/buscarTodos")
       .then((response) => {
         const beneficiarios = response.data;
         setBeneficiarios({ beneficiarios });

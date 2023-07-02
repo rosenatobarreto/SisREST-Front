@@ -86,10 +86,16 @@ const CadastrarCardapio = (props) => {
     console.log('Id em addRefeicoes ', id)
 
     event.preventDefault();
+    for (let i=0; i<=refeicoes.length; i++){
+      if (refeicaoId!==id){
+        console.log('teste refeicao id ',refeicoes[i])
+      }
+    } 
     setRefeicaoId(id);
     refeicoes.push(id);
+
     // event.preventDefault();
-    console.log('addRefeicoes ', refeicoes);
+    // console.log('addRefeicoes ', refeicoes);
 
     // const diaAcessoRefeicao = { diaDaSemana, tipoDeRefeicao };
     // diasAcessoRefeicao.push(diaAcessoRefeicao);
@@ -97,12 +103,17 @@ const CadastrarCardapio = (props) => {
 
   const addItemCardapioDia = (event) => {
     event.preventDefault()
+    console.log('refeicoes',refeicoes)
     const elementosDoCardapioDia = { diaDaSemana, refeicoes };
+    console.log(elementosDoCardapioDia.diaDaSemana);
+    console.log(elementosDoCardapioDia.refeicoes);
     itensCardapioDia.push(elementosDoCardapioDia);
+    console.log(itensCardapioDia);
+    console.log(itensCardapioDia);
     // setItensCardapioDia(diaDaSemana)
     // setItensCardapioDia(refeicoes)
-    console.log('Itens Cardapio Dia: ++', itensCardapioDia);
   }
+  console.log('Itens Cardapio Dia: ++', itensCardapioDia);
 
   // const confirmCreateObject = (event) => {
   //       sequenciaSemanal,

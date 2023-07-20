@@ -50,7 +50,7 @@ const CadastrarRefeicao = (props) => {
       })
       .then((response) => {
         console.log(response);
-        console.log('Entrou no then');
+        // console.log('Entrou no then');
         showSuccessMessage("Refeição cadastrada com sucesso!");
         props.history.push("/listarRefeicoes");
       })

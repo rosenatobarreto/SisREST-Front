@@ -18,6 +18,7 @@ import { Messages } from 'primereact/messages';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { InputSwitch } from 'primereact/inputswitch';
 
 const CadastrarCardapio = (props) => {
 
@@ -41,15 +42,17 @@ const CadastrarCardapio = (props) => {
   const [tipoRefeicao, setTipoRefeicao] = useState('');
   const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
   const [restricoes, setRestricoes] = useState([]);
-  const [selectedRefeicoes, setSelectedRefeicoes] = useState(null);
+  const [selectedRefeicoes, setSelectedRefeicoes] = useState([]);
   const [refeicoesList, setRefeicoesList] = useState([]);
-
+  const [refeicoesEscolhidas, setRefeicoesEscolhidas] = useState([]);
   const [cardapioSemanal, setCardapioSemanal] = useState(0);
   const [editais, setEditais] = useState([]);
 
   const [selectedEditais, setSelectedEditais] = useState(null);
   const [filteredEditais, setFilteredEditais] = useState(null);
   const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
+  const [metaKey, setMetaKey] = useState(false);
+  const [rowClick, setRowClick] = useState(true);
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
   const toast = useRef(null);
@@ -61,6 +64,10 @@ const CadastrarCardapio = (props) => {
 
   const showError = () => {
     toast.current.show({ severity: 'error', summary: 'Error', detail: 'O pedido não pôde ser cadastrado!', life: 3000 });
+  }
+
+  const showSuccessAddRefeicao = () => {
+    toast.current.show({ severity: 'success', summary: 'Success', detail: 'Refeições adicionadas!', life: 3000 });
   }
 
   const addMessages = () => {
@@ -76,50 +83,44 @@ const CadastrarCardapio = (props) => {
     msgs.current.clear();
   };
 
+  const captureIdRefeicoes = () => {
+    // eslint-disable-next-line array-callback-return
+    refeicoes.forEach((refeicao, index) => {
+      refeicoesEscolhidas.push(refeicao.id)      
+    });
+  }
+
+  const addItemCardapioDia = () => {
+
+    const elementosDoCardapioDia = { diaDaSemana, refeicoesEscolhidas };
+    itensCardapioDia.push(elementosDoCardapioDia);
+  }
+
+
+  const buttonAddItemCardapioDia = (event) => {
+    event.preventDefault();
+    addItemCardapioDia();
+  }
+
+
+  // const addRefeicoesSelecionadas = (id, event) => {
+  //   setRefeicoesSelecionadas(id);
+  //   event.preventDefault();
+
+
+  //   window.alert("Item adicionado!")
+
+  //   // addRefeicoes();
+
+  // }
+
+
+
+
   const validate = () => {
     const errors = [];
     return errors;
   };
-
-  const addRefeicoes = (id, event) => {
-
-    console.log('Id em addRefeicoes ', id)
-
-    event.preventDefault();
-    for (let i=0; i<=refeicoes.length; i++){
-      if (refeicaoId!==id){
-        console.log('teste refeicao id ',refeicoes[i])
-      }
-    } 
-    setRefeicaoId(id);
-    refeicoes.push(id);
-
-    // event.preventDefault();
-    // console.log('addRefeicoes ', refeicoes);
-
-    // const diaAcessoRefeicao = { diaDaSemana, tipoDeRefeicao };
-    // diasAcessoRefeicao.push(diaAcessoRefeicao);
-  }
-
-  const addItemCardapioDia = (event) => {
-    event.preventDefault()
-    console.log('refeicoes',refeicoes)
-    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
-    console.log(elementosDoCardapioDia.diaDaSemana);
-    console.log(elementosDoCardapioDia.refeicoes);
-    itensCardapioDia.push(elementosDoCardapioDia);
-    console.log(itensCardapioDia);
-    console.log(itensCardapioDia);
-    // setItensCardapioDia(diaDaSemana)
-    // setItensCardapioDia(refeicoes)
-  }
-  console.log('Itens Cardapio Dia: ++', itensCardapioDia);
-
-  // const confirmCreateObject = (event) => {
-  //       sequenciaSemanal,
-  //       edital,
-  //       itensCardapioDia,
-  //     }
 
   const create = (event) => {
     event.preventDefault();
@@ -256,6 +257,9 @@ const CadastrarCardapio = (props) => {
     };
     loadEditais();
 
+    console.log(refeicoesSelecionadas)
+
+    captureIdRefeicoes()
     findAllRefeicoes()
     // const loadRefeicoes = async () => {
 
@@ -277,10 +281,14 @@ const CadastrarCardapio = (props) => {
   }, []
   );
 
+  console.log('>>Seleção')
   console.log('sequenciaSemanal', sequenciaSemanal)
   console.log('edital', edital)
   console.log('itensCardapioDia', itensCardapioDia)
-  
+  console.log('<<Seleção')
+  console.log('selectedRefeicoes', selectedRefeicoes)
+  console.log('Refeicoes: ', refeicoes)
+
 
 
   //   {
@@ -335,7 +343,11 @@ const CadastrarCardapio = (props) => {
 
     return (
       <React.Fragment>
-        <Button icon="pi pi-check" rounded outlined className="mr-2" onClick={(event) => addRefeicoes(rowData.id, event)} />
+        <Button icon="pi pi-check" rounded outlined className="mr-2" onClick={(event) =>
+          // addRefeicoesSelecionadas(rowData.id, event)
+          captureIdRefeicoes()
+
+        } />
       </React.Fragment>
     );
   };
@@ -511,14 +523,40 @@ const CadastrarCardapio = (props) => {
                             />
                           </div> */}
                           <div className="card">
+                            <div className="flex justify-content-center align-items-center mb-4 gap-2">
+                              <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} />
+                              <label htmlFor="input-rowclick">Row Click</label>
+                            </div>
                             <DataTable value={refeicoesList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
-                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="multiple" dataKey="id"
+                              // metaKeySelection={metaKey} dragSelection
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}
-                              >
+                            >
+                              <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                               <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '20%' }}></Column>
                               <Column className="text-sm" field="descricao" header="Descrição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '75%' }}></Column>
                               {/* <Column className="text-sm" field="restricoes" header="Restrições da Refeição" sortable sortField="restricoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
-                              <Column header="Selecione" body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
+                              {/* <Column header="Selecione" body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column> */}
+                            </DataTable>
+
+                            {/* <DataTable value={products} selectionMode={rowClick ? null : 'checkbox'} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
+                              <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
+                              <Column field="code" header="Code"></Column>
+                              <Column field="name" header="Name"></Column>
+                              <Column field="category" header="Category"></Column>
+                              <Column field="quantity" header="Quantity"></Column>
+                            </DataTable> */}
+                          </div>
+
+                          <div className="card">
+                            <div className="flex justify-content-center align-items-center mb-4 gap-2">
+                              <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} />
+                              {/* <label htmlFor="input-rowclick">Row Click</label> */}
+                            </div>
+                            <DataTable value={refeicoesList} selectionMode={rowClick ? null : 'checkbox'} selection={refeicoes} onSelectionChange={(e) => setRefeicoes(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
+                              <Column selectionMode="multiple" body={actionBodyTemplate} headerStyle={{ width: '3rem' }}></Column>
+                              <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '20%' }}></Column>
+                              <Column className="text-sm" field="descricao" header="Descrição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '75%' }}></Column>
                             </DataTable>
                           </div>
 
@@ -526,12 +564,25 @@ const CadastrarCardapio = (props) => {
                       </div>
                     </div>
 
+                    {/* <div className="card">
+                      <div className="flex justify-content-center align-items-center mb-4 gap-2">
+                        <InputSwitch inputId="input-metakey" checked={metaKey} onChange={(e) => setMetaKey(e.value)} />
+                        <label htmlFor="input-metakey">MetaKey</label>
+                      </div>
+                      <DataTable value={refeicoesList} selectionMode="multiple" selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)}
+                        dataKey="id" metaKeySelection={metaKey} dragSelection tableStyle={{ minWidth: '50rem' }}>
+                        <Column field="tipoDeRefeicao" header="Tipo de Refeição"></Column>
+                        <Column field="descricao" header="Descrição"></Column>
+                        <Column field="category" header="Category"></Column>
+                        <Column field="quantity" header="Quantity"></Column>
+                      </DataTable>
+                    </div> */}
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                       <div className="col mt-8 mb-6">
                         <div className="card flex justify-content-rigth">
                           <Button id="btnCreate" label="ADICIONAR DIA/REFEIÇÕES" severity="sucess"
-                            icon="pi pi-check" size="small" onClick={(event) => addItemCardapioDia(event)} />
+                            icon="pi pi-check" size="small" onClick={(event) => buttonAddItemCardapioDia(event)} />
                           {/* <Button type="button" onClick={addMessages} label="Show" className="mr-2" />
                           <Button type="button" onClick={clearMessages} label="Clear" className="p-button-secondary" /> */}
 
@@ -540,6 +591,8 @@ const CadastrarCardapio = (props) => {
                         </div>
                       </div>
                     </div>
+
+
 
                     {/* <div className="row flex flex-row-reverse align-middle mt-6">
                       <div className="col ml-2">

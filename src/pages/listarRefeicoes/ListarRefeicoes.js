@@ -103,7 +103,7 @@ const ListarRefeicoes = (props) => {
     return (
       <React.Fragment>
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editRefeicao(rowData.id)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteRefeicao(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" style={{ marginLeft: '6px' }} onClick={() => deleteRefeicao(rowData.id)} />
       </React.Fragment>
     );
   };

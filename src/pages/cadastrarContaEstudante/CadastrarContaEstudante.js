@@ -98,7 +98,7 @@ class CadastrarContaEstudante extends Component {
 
   render() {
     return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
@@ -153,7 +153,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
 
-                        <div clasName="col-span-6 sm:col-span-6 lg:col-span-8">
+                        <div clasName="col-span-10 sm:col-span-10 lg:col-span-10">
                           <label
                             for="matricula"
                             className="block text-sm font-medium text-gray-700"
@@ -170,7 +170,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
                         
-                        <div className="col-span-8 sm:col-span-6 lg:col-span-8">
+                        <div className="col-span-10 sm:col-span-10 lg:col-span-10">
                           <label
                             for="email"
                             className="block text-sm font-medium text-gray-700"
@@ -188,7 +188,7 @@ class CadastrarContaEstudante extends Component {
                           />
                         </div>
 
-                        <div className="col-span-10 sm:col-span-6 lg:col-span-6">
+                        <div className="col-span-10 sm:col-span-10 lg:col-span-10">
                           <label
                             for="campus"
                             className="block text-sm font-medium text-gray-700"

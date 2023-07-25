@@ -26,7 +26,7 @@ const CadastrarCardapio = (props) => {
   const serviceEdital = new EditalApiService();
   const service = new CardapioSemanalApiService();
 
-  const [sequenciaSemanal, setSequenciaSemanal] = useState('');
+  const [sequenciaSemanal, setSequenciaSemanal] = useState(0);
 
   const [edital, setEdital] = useState(0);
   const [numero, setNumero] = useState(0);
@@ -53,6 +53,7 @@ const CadastrarCardapio = (props) => {
   const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
   const [metaKey, setMetaKey] = useState(false);
   const [rowClick, setRowClick] = useState(true);
+
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
   const toast = useRef(null);
@@ -79,28 +80,45 @@ const CadastrarCardapio = (props) => {
     ]);
   };
 
-  const clearMessages = () => {
-    msgs.current.clear();
-  };
+  // const clearMessages = () => {
+  //   msgs.current.clear();
+  // };
+
+const onRowSelect = (event) => {
+  captureIdRefeicoes()
+  toast.current.show({ severity: 'info', summary: 'Refeição selecionada!', detail: `${''}`, life: 3000 });
+};
+
+// const onRowUnselect = (event) => {
+//     toast.current.show({ severity: 'warn', summary: 'Refeição não selecionada', detail: `Name: ${event.data.name}`, life: 3000 });
+// };
 
   const captureIdRefeicoes = () => {
     // eslint-disable-next-line array-callback-return
-    refeicoes.forEach((refeicao, index) => {
-      refeicoesEscolhidas.push(refeicao.id)      
-    });
+    // refeicoes.forEach((refeicao, index) => {
+    //   refeicoesEscolhidas.push(refeicao.id)
+      
+    // });
   }
 
-  const addItemCardapioDia = () => {
-
-    const elementosDoCardapioDia = { diaDaSemana, refeicoesEscolhidas };
-    itensCardapioDia.push(elementosDoCardapioDia);
-  }
-
-
-  const buttonAddItemCardapioDia = (event) => {
+  const addItemCardapioDia = (event) => {
     event.preventDefault();
-    addItemCardapioDia();
+    const refeicoes = [];
+    refeicoesEscolhidas.forEach((refeicao, index) => {
+      refeicoes.push(refeicao.id)
+      
+    });
+    
+    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
+    itensCardapioDia.push({ diaDaSemana, refeicoes });
+    setRefeicoesEscolhidas(null);
   }
+console.log('itensCardapioDia.push', itensCardapioDia);
+
+  // const buttonAddItemCardapioDia = (event) => {
+  //   event.preventDefault();
+  //   addItemCardapioDia();
+  // }
 
 
   // const addRefeicoesSelecionadas = (id, event) => {
@@ -142,6 +160,7 @@ const CadastrarCardapio = (props) => {
       .then((response) => {
         console.log(response);
         console.log('Entrou no then');
+        console.log('itensCardapioDia create', itensCardapioDia);
         showSuccessMessage("Cardápio cadastrado com sucesso!");
         // props.history.push("/listarRefeicoes");
       })
@@ -395,7 +414,9 @@ const CadastrarCardapio = (props) => {
                       <label className="block text-sm font-medium text-gray-700">
                         Edital selecionado: {numero}-{ano} - {tituloEdital}<br />
                         Sequência semanal: {sequenciaSemanal}<br />
-                        Itens do cardápio: {itensCardapioDia.diaDaSemana}<br />
+                        Itens do cardápio - Dia da Semana: {diaDaSemana} <br />
+                        <br />
+                        
                       </label>
                       {/* <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
                     </div>
@@ -478,7 +499,7 @@ const CadastrarCardapio = (props) => {
                       <label
                         htmlFor="diaRefeicao"
                         className="block text-sm font-medium text-gray-700 mt-2 mb-3">
-                        Dia da Refeição
+                        Dia da Refeição (Escolha um dia)
                       </label>
                       <div className="card flex justify-content-center">
                         <div className="flex flex-wrap gap-3">
@@ -489,7 +510,7 @@ const CadastrarCardapio = (props) => {
                             // onChange={handleChange(setDiaDaSemana)}
                             onChange={(e) => setDiaDaSemana(e.target.value)}
                           >
-                            <option>Selecione uma opção</option>
+                            <option>Selecionar o dia</option>
                             <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="SEGUNDA">Segunda-feira</option>
                             <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="TERCA">Terça-feira</option>
                             <option className="cursor-pointer hover:bg-green-200 text-sm font-medium text-gray-700" value="QUARTA">Quarta-feira</option>
@@ -524,13 +545,21 @@ const CadastrarCardapio = (props) => {
                           </div> */}
                           <div className="card">
                             <div className="flex justify-content-center align-items-center mb-4 gap-2">
-                              <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} />
-                              <label htmlFor="input-rowclick">Row Click</label>
+                              {/* <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} />
+                              <label htmlFor="input-rowclick">Row Click</label> */}
                             </div>
-                            <DataTable value={refeicoesList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
-                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="multiple" dataKey="id"
+                            <DataTable 
+                            // value={refeicoesList} selectionMode="multiple"
+                            // selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)}  dataKey="id"
+                            
+                            paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               // metaKeySelection={metaKey} dragSelection
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}
+                            
+                              value={refeicoesList} selectionMode={rowClick ? null : 'checkbox'} 
+                            selection={refeicoesEscolhidas} onSelectionChange={(e) => setRefeicoesEscolhidas(e.value)} 
+                            dataKey="id" onRowSelect={onRowSelect} 
+                            
                             >
                               <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                               <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '20%' }}></Column>
@@ -550,14 +579,17 @@ const CadastrarCardapio = (props) => {
 
                           <div className="card">
                             <div className="flex justify-content-center align-items-center mb-4 gap-2">
-                              <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} />
+                              {/* <InputSwitch inputId="input-rowclick" checked={rowClick} onChange={(e) => setRowClick(e.value)} /> */}
                               {/* <label htmlFor="input-rowclick">Row Click</label> */}
                             </div>
-                            <DataTable value={refeicoesList} selectionMode={rowClick ? null : 'checkbox'} selection={refeicoes} onSelectionChange={(e) => setRefeicoes(e.value)} dataKey="id" tableStyle={{ minWidth: '50rem' }}>
-                              <Column selectionMode="multiple" body={actionBodyTemplate} headerStyle={{ width: '3rem' }}></Column>
+{/*                             
+                            <DataTable value={refeicoesList} selectionMode={rowClick ? null : 'checkbox'} 
+                            selection={refeicoesEscolhidas} onSelectionChange={(e) => setRefeicoesEscolhidas(e.value)} 
+                            dataKey="id" onRowSelect={onRowSelect} tableStyle={{ minWidth: '50rem' }}>
+                              <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                               <Column className="text-sm" field="tipoDeRefeicao" header="Tipo de Refeição" sortable style={{ width: '20%' }}></Column>
                               <Column className="text-sm" field="descricao" header="Descrição" sortable sortField="descricao" filterPlaceholder="Search" style={{ width: '75%' }}></Column>
-                            </DataTable>
+                            </DataTable> */}
                           </div>
 
                         </div>
@@ -582,7 +614,7 @@ const CadastrarCardapio = (props) => {
                       <div className="col mt-8 mb-6">
                         <div className="card flex justify-content-rigth">
                           <Button id="btnCreate" label="ADICIONAR DIA/REFEIÇÕES" severity="sucess"
-                            icon="pi pi-check" size="small" onClick={(event) => buttonAddItemCardapioDia(event)} />
+                            icon="pi pi-check" size="small" onClick={(event) => addItemCardapioDia(event)} />
                           {/* <Button type="button" onClick={addMessages} label="Show" className="mr-2" />
                           <Button type="button" onClick={clearMessages} label="Clear" className="p-button-secondary" /> */}
 

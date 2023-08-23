@@ -1,6 +1,6 @@
-import React, {  useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import CardapioSemanalApiService from "../../services/CardapioSemanalApiService";
+import ItemCardapioDiaApiService from "../../services/ItemCardapioDiaApiService";
 import MenuNutricionista from "../../components/MenuNutricionista";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -16,23 +16,23 @@ import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const ListarCardapios = (props) => {
-  
-  const service = new CardapioSemanalApiService();
+
+  const service = new ItemCardapioDiaApiService();
   const [cardapios, setCardapios] = useState([]);
   const [id, setId] = useState(0);
   // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);
   const toast = useRef(null);
-  
-  const [CardapiosList, setCardapiosList] = useState(null);
+  const [refeicoes, setRefeicoes] = useState(null);
+  const [itemCardapioDia, setItemCardapioDia] = useState(null);
   const [filters, setFilters] = useState({
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-        representative: { value: null, matchMode: FilterMatchMode.IN },
-        status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
-    });
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
 
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   //   const accept = () => {
   //       toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'Confirma a exclusão?', life: 3000 });
@@ -41,7 +41,7 @@ const ListarCardapios = (props) => {
   //   const reject = () => {
   //       toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'Exclusão rejeitada!', life: 3000 });
   //   }
-  
+
   // const confirm1 = () => {
   //     confirmDialog({
   //       message: 'Confirma a exclusão?',
@@ -51,16 +51,16 @@ const ListarCardapios = (props) => {
   //       reject
   //     });
   // };
-    
 
-    const onGlobalFilterChange = (event) => {
-        const value = event.target.value;
-        let _filters = { ...filters };
 
-        _filters['global'].value = value;
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...filters };
 
-        setFilters(_filters);
-    };
+    _filters['global'].value = value;
+
+    setFilters(_filters);
+  };
 
   const renderHeader = () => {
     const value = filters['global'] ? filters['global'].value : '';
@@ -68,7 +68,7 @@ const ListarCardapios = (props) => {
     return (
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-          <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+        <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
       </span>
     );
   };
@@ -76,7 +76,7 @@ const ListarCardapios = (props) => {
   const header = renderHeader();
 
   const actionBodyTemplate = (rowData) => {
-    
+
     return (
       <React.Fragment>
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editCardapio(rowData.id)} />
@@ -86,17 +86,18 @@ const ListarCardapios = (props) => {
   };
 
   useEffect(() => {
-    
-            const loadCardapios = async () => {
-            const response = await service.getAll('/buscarTodos')
-            setCardapiosList(response.data);
-        };
-        loadCardapios(); 
+
+    const loadCardapios = async () => {
+      const response = await service.getAll('/buscarTodos')
+      setItemCardapioDia(response.data);
+      setRefeicoes(itemCardapioDia);
+
+    };
+    loadCardapios();
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   }, []
   );
-  
-  
+
   const deleteCardapio = (id) => {
     service
       .delete(id)
@@ -106,7 +107,7 @@ const ListarCardapios = (props) => {
       .catch((error) => {
         console.log(error.response);
       });
-      props.history.push('/listarCardapios')
+    props.history.push('/listarCardapios')
   };
 
   const editCardapio = (id) => {
@@ -116,26 +117,26 @@ const ListarCardapios = (props) => {
   const createCardapio = () => {
     props.history.push(`/cadastrarCardapio`);
   };
-  
+
 
 
   const find = (id) => {
-        
+
     service
       .get(`/buscarPorID/${id}`)
       .then((response) => {
-        const cardapio = response.data;
-        const id = cardapio.id;
- 
+        const itemCardapioDia = response.data;
+        const id = itemCardapioDia.id;
+
         setId(id);
       })
       .catch((error) => {
         console.log(error.response);
       });
   }
-    
+
   const findAll = () => {
-      service
+    service
       .getAll("/buscarTodos")
       .then((response) => {
         const cardapios = response.data;
@@ -149,66 +150,84 @@ const ListarCardapios = (props) => {
 
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
-        {/*Col left  */}
-        <div className="w-[220px] flex-shrink flex-grow-0 px-0">
-          {/* Side Menu */}
-          <MenuNutricionista /> 
-        </div>
-        {/* Col right */}
-        <div className="w-full">
-          {/* Header */}
-          <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
-            <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{props.currentUser.email}</p>
-            </div>
-            <div className="flex flex-row-reverse pr-6">
-              <p className="text-lg font-semibold">Nutricionista</p>
-            </div>
-            <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Cardápios</p>
-            </div>
+      {/*Col left  */}
+      <div className="w-[220px] flex-shrink flex-grow-0 px-0">
+        {/* Side Menu */}
+        <MenuNutricionista />
+      </div>
+      {/* Col right */}
+      <div className="w-full">
+        {/* Header */}
+        <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4 ">
+          <div className="flex flex-row-reverse pr-6">
+            <p className="text-xs">{props.currentUser.email}</p>
           </div>
+          <div className="flex flex-row-reverse pr-6">
+            <p className="text-lg font-semibold">Nutricionista</p>
+          </div>
+          <div className="flex flex-row pl-6">
+            <p className="text-xl font-semibold">Gerenciar Cardápios</p>
+          </div>
+        </div>
 
-          {/* Content two */}
-          <div className="pt-4 pl-8 pr-8 mb-4">
-            <div className="mt-0 sm:mt-0">
-              <div className="md:grid md:grid-cols-1 md:gap-6">
-                <div className="md:col-span-1">
-                  <div className="px-4 sm:px-0">
-                    {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
-                    {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
-                  </div>
+        {/* Content two */}
+        <div className="pt-4 pl-8 pr-8 mb-4">
+          <div className="mt-0 sm:mt-0">
+            <div className="md:grid md:grid-cols-1 md:gap-6">
+              <div className="md:col-span-1">
+                <div className="px-4 sm:px-0">
+                  {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
+                  {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
                 </div>
-                <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="#" >
-                    <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      <div className="col mr-2">
-                        <Button id="btnNew" label="NOVO CARDÁPIO" severity="sucess" raised onClick={createCardapio} />
-                      </div>
+              </div>
+              <div className="mt-5 md:col-span-2 md:mt-0">
+                <form action="#" >
+                  <div className="row flex flex-row-reverse align-middle px-4 mt-1">
+                    <div className="col mr-2">
+                      <Button id="btnNew" label="NOVO CARDÁPIO" severity="sucess" raised onClick={createCardapio} />
                     </div>
-                  </form>
-
-                  <div className="row">
-                    
                   </div>
-                  <br />
-                  <div className="row">
-                    <div className="">
-                      <div className="pt-4 pl-8 pr-8 mb-4">
-                          <div className="card">
-                            <DataTable value={CardapiosList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
-                              selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
-                              stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column className="text-sm" field="sequenciaSemanal" header="Sequencia Semanal" sortable style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="edital.nome" header="Edital" sortable style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="itensCardapioDia.diaDaSemana" header="Refeições" sortable sortField="itensCardapioDia.refeicoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="itensCardapioDia.refeicoes.tipo" header="Tipo" sortable sortField="itensCardapioDia.refeicoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="itensCardapioDia.refeicoes.descricao" header="Descrição" sortable sortField="itensCardapioDia.refeicoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-                            </DataTable>
-                          </div>
-                        
+                </form>
+
+                <div className="row">
+
+                </div>
+                <br />
+                <div className="row">
+                  <div className="">
+                    <div className="pt-4 pl-8 pr-8 mb-4">
+                      <div className="card">
+                        <DataTable value={itemCardapioDia} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                          selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                          stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Refeição não encontrada!" tableStyle={{ minWidth: '50rem' }}>
+                          <Column className="text-sm" field="cardapioSemanal.sequenciaSemanal" header="Sequência Semanal" sortable ></Column>
+                          <Column className="text-sm" field="diaDaSemana" header="Dia da Semana" sortable style={{ width: '20%' }}></Column>
+                          {/* <Column className="text-sm" body={rowData => rowData.refeicoes.map(refeicao => refeicao.descricao).join(', ')} header="Descrição" sortable sortField="" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
+                          <Column className="text-sm" body={rowData => (
+                            <div>
+                              {rowData.refeicoes.map(refeicao => (
+                                <div key={refeicao.id}>
+                                  {refeicao.tipoDeRefeicao}:<br /> {refeicao.descricao}<br /><br /></div>
+                              ))}
+                            <div></div>
+                            </div>
+                          )} header="Tipo/Descrição" sortable sortField="" filterPlaceholder="Search" style={{ width: '40%' }}></Column>
+                          <Column className="text-sm" body={rowData => (
+                            <div>
+                              {rowData.refeicoes.map(refeicao => (
+                                <div key={refeicao.id}>
+                                  {refeicao.restricoes}
+                                </div>
+                              ))}
+                            </div>
+                          )} header="Restrições da Refeição" sortable sortField="" filterPlaceholder="Search" style={{ width: '30%' }}></Column>
+                          <Column className="text-sm" field="cardapioSemanal.edital.nome" header="Edital" sortable sortField="edital" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          {/* <Column className="text-sm" field="refeicoes.restricoes.tipoDeRestricaoAlimentar" header="Tipo" sortable sortField="Tipo" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="refeicoes.restricoes.tipoDeRestricaoAlimentar" header="Restrição Alimentar" sortable sortField="itensCardapioDia.refeicoes" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
+                          <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                        </DataTable>
                       </div>
+
                     </div>
                   </div>
                 </div>
@@ -216,9 +235,10 @@ const ListarCardapios = (props) => {
             </div>
           </div>
         </div>
-
       </div>
-    );
+
+    </div>
+  );
 }
 
 export default memo(ListarCardapios);

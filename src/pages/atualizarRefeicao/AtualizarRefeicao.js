@@ -129,22 +129,11 @@ const AtualizarRefeicao = (props) => {
         <div className="pt-4 pl-8 pr-8 mb-4">
           <div className="mt-0 sm:mt-0">
             <div className="md:grid md:grid-cols-1 md:gap-6">
-              {/* <div className="md:col-span-1">
-                <div className="px-4 sm:px-0">
-
-                </div>
-              </div> */}
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <form action="">
                   <div className="bg-white px-4 py-5 sm:p-6">
-                    {/* <div className="grid grid-cols-6 gap-6">
-                    </div> */}
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      {/* <label className="block text-sm font-medium text-gray-700">
-                        Edital selecionado:
-                      </label>
-                      <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
 
                     </div>
 
@@ -157,6 +146,18 @@ const AtualizarRefeicao = (props) => {
                         Descrição: {descricao}<br />
                         Restrições: {restricoes}<br />
                         </p>
+                    </div>
+
+                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
+                      <label
+                        htmlFor="restricoes"
+                        className="block text-md font-medium text-gray-700 mt-2 mb-3">
+                        Restrições Alimentares da Refeição
+                      </label>
+
+                      <SelectButton id="selectRefeicoesBtn" className="text-xs"
+                        value={restricoes} onChange={(e) => setRestricoes(e.value)}
+                        optionLabel="name" options={items} multiple />
                     </div>
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
@@ -190,62 +191,11 @@ const AtualizarRefeicao = (props) => {
                           <div className="flex align-items-center">
                             <RadioButton inputId="tipoRefeicao6" name="tipoDeRefeicao" value="CEIA" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Ceia'} />
                             <label htmlFor="tipoDeRefeicao6" className="ml-2">Ceia</label>
-                          </div>
-                          {/* <label htmlFor="selectRefeicao" class="mt-4">Tipo de Refeição</label> */}
-                          {/* <select className="" id="selectRefeicao" 
-                            value={tipoDeRefeicao} onChange={e => setTipoDeRefeicao(e.target.value)}>
-                            <option value="CAFE_MANHA">1</option>
-                            <option value="LANCHE_MANHA">2</option>
-                            <option value="ALMOCO">3</option>
-                            <option value="LANCHE_TARDE">4</option>
-                            <option value="JANTAR">5</option>
-                            <option value="CEIA">6</option>
-                          </select> */}
-                          
+                          </div>                        
 
                         </div>
 
                       </div>
-                    </div>
-
-                    <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
-                      <label
-                        htmlFor="restricoes"
-                        className="block text-md font-medium text-gray-700 mt-2 mb-3">
-                        Restrições Alimentares da Refeição
-                      </label>
-                      {/* <div className="card flex flex-wrap justify-content-center gap-3">
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes1" name="restricao" value="DIABETES" onChange={onRestricoesChange} checked={restricoes.includes('Diabetes')} />
-                          <label htmlFor="restricoes1" className="ml-2">Diabetes</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes2" name="restricao" value="INTOLERANCIA_LACTOSE" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Lactose')} />
-                          <label htmlFor="restricoes2" className="ml-2">Intolerância à Lactose</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes3" name="restricao" value="INTOLERANCIA_GLUTEN" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Glúten')} />
-                          <label htmlFor="restricoes3" className="ml-2">Intolerância à Glúten</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes4" name="restricao" value="ALERGIAS" onChange={onRestricoesChange} checked={restricoes.includes('Alergias')} />
-                          <label htmlFor="restricoes4" className="ml-2">Alergias</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes5" name="restricao" value="HIPERTENSO" onChange={onRestricoesChange} checked={restricoes.includes('Hipertensão')} />
-                          <label htmlFor="restricoes5" className="ml-2">Hipertensão</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes6" name="restricao" value="VEGANO" onChange={onRestricoesChange} checked={restricoes.includes('Vegano(a)')} />
-                          <label htmlFor="restricoes6" className="ml-2">Vegano(a)</label>
-                        </div>
-                      </div> */}
-
-                      <SelectButton id="selectRefeicoesBtn" className="text-xs"
-                        value={restricoes} onChange={(e) => setRestricoes(e.value)}
-                        optionLabel="name" options={items} multiple />
-
-
                     </div>
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-8">

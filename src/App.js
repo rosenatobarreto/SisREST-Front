@@ -58,6 +58,7 @@ import ListarCardapios from "./pages/listarCardapios/ListarCardapios";
 import AtualizarCardapio from "./pages/atualizarCardapio/AtualizarCardapio";
 
 import PedirAcesso from "./pages/pedirAcesso/PedirAcesso";
+import PedirAcessoValidar from "./pages/pedirAcessoValidar/PedirAcessoValidar";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -250,6 +251,11 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={PedirAcesso}/>
+            <PrivateRoute 
+              path="/pedirAcessoValidar" 
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={PedirAcessoValidar}/>
 
             <PrivateRoute
               path="/boasVindas"

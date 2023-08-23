@@ -35,22 +35,22 @@ const CadastrarCardapio = (props) => {
 
   const [itensCardapioDia, setItensCardapioDia] = useState([]);
   const [diaDaSemana, setDiaDaSemana] = useState('');
-  const [refeicoes, setRefeicoes] = useState([]);
-  const [refeicaoId, setRefeicaoId] = useState(0);
+  // const [refeicoes, setRefeicoes] = useState([]);
+  // const [refeicaoId, setRefeicaoId] = useState(0);
 
   const [refeicao, setRefeicao] = useState('');
   const [tipoRefeicao, setTipoRefeicao] = useState('');
   const [descricaoRefeicao, setDescricaoRefeicao] = useState('');
   const [restricoes, setRestricoes] = useState([]);
-  const [selectedRefeicoes, setSelectedRefeicoes] = useState([]);
+  // const [selectedRefeicoes, setSelectedRefeicoes] = useState([]);
   const [refeicoesList, setRefeicoesList] = useState([]);
   const [refeicoesEscolhidas, setRefeicoesEscolhidas] = useState([]);
-  const [cardapioSemanal, setCardapioSemanal] = useState(0);
+  // const [cardapioSemanal, setCardapioSemanal] = useState(0);
   const [editais, setEditais] = useState([]);
 
   const [selectedEditais, setSelectedEditais] = useState(null);
   const [filteredEditais, setFilteredEditais] = useState(null);
-  const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
+  // const [filteredRefeicoes, setFilteredRefeicoes] = useState(null);
   const [metaKey, setMetaKey] = useState(false);
   const [rowClick, setRowClick] = useState(true);
 
@@ -108,13 +108,18 @@ const onRowSelect = (event) => {
       refeicoes.push(refeicao.id)
       
     });
+    // console.log("Refeicoes - addItemCardapio", refeicoes)
     
-    const elementosDoCardapioDia = { diaDaSemana, refeicoes };
-    itensCardapioDia.push({ diaDaSemana, refeicoes });
+    // const elementosDoCardapioDia = { diaDaSemana, refeicoes };
+    const cardapioDia = [];
+    // itensCardapioDia.push({ diaDaSemana, refeicoes });
+    cardapioDia.push({ diaDaSemana, refeicoes });
+    
     setRefeicoesEscolhidas(null);
+    setItensCardapioDia(cardapioDia)
+    // console.log('CardapioDia', cardapioDia)
   }
-console.log('itensCardapioDia.push', itensCardapioDia);
-
+// console.log('itensCardapioDia.push', itensCardapioDia);
   // const buttonAddItemCardapioDia = (event) => {
   //   event.preventDefault();
   //   addItemCardapioDia();
@@ -155,7 +160,7 @@ console.log('itensCardapioDia.push', itensCardapioDia);
       .create({
         sequenciaSemanal,
         edital,
-        itensCardapioDia,
+        itensCardapioDia
       })
       .then((response) => {
         console.log(response);
@@ -300,13 +305,13 @@ console.log('itensCardapioDia.push', itensCardapioDia);
   }, []
   );
 
-  console.log('>>Seleção')
-  console.log('sequenciaSemanal', sequenciaSemanal)
-  console.log('edital', edital)
-  console.log('itensCardapioDia', itensCardapioDia)
-  console.log('<<Seleção')
-  console.log('selectedRefeicoes', selectedRefeicoes)
-  console.log('Refeicoes: ', refeicoes)
+  // console.log('>>Seleção')
+  // console.log('sequenciaSemanal', sequenciaSemanal)
+  // console.log('edital', edital)
+  // console.log('itensCardapioDia', itensCardapioDia)
+  // console.log('<<Seleção')
+  // console.log('selectedRefeicoes', selectedRefeicoes)
+  // console.log('Refeicoes: ', refeicoes)
 
 
 

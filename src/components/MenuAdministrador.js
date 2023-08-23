@@ -21,7 +21,7 @@ class MenuAdministrador extends Component {
         
         <ul className="flex sm:flex-col overflow-hidden content-center justify-center divide-y divide-gray-600">
           <li className="py-2 hover:bg-gray-300">
-            <a className="truncate" href="/">
+            <a className="truncate" href="/pedirAcessoValidar">
                 <span className="hidden sm:inline text-sm">Pedidos de Refeição</span>
             </a>
           </li>

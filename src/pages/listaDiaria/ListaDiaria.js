@@ -1,7 +1,6 @@
 import React, {  useEffect, useState, useRef, memo } from "react";
 // import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import EditalApiService from "../../services/EditalApiService";
-import EditaisTable from "../../components/EditaisTable";
+import ListaDiariaApiService from "../../services/ListaDiariaApiService";
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -9,18 +8,16 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
-const ListarEditais = (props) => {
+const ListaDiaria = (props) => {
 
- const service = new EditalApiService();
+ const service = new ListaDiariaApiService();
 
   const [id, setId] = useState(0);
-  // const [numero, setNumero] = useState(0);
-  // const [ano, setAno] = useState(0);
-  // const [nome, setNome] = useState('');
-  // const [link, setLink] = useState('');
-  // const [vigenteInicio, setVigenteInicio] = useState('');
-  // const [vigenteFinal, setVigenteFinal] = useState('');
-  const [editais, setEditais] = useState([]);
+  const [beneficiario, setBeneficiario] = useState(0);
+  const [listaDiaria, setListaDiaria] = useState(0);
+  const [confirmadoEm, setConfirmadoEm] = useState('');
+  const [compareceuEm, setCompareceuEm] = useState('');
+  const [listaPresenca, setListaPresenca] = useState([]);
   const [editaisList, setEditaisList] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [filters, setFilters] = useState({
@@ -64,11 +61,11 @@ const ListarEditais = (props) => {
   
   useEffect(() => {
     
-    const loadEditais = async () => {
+    const loadPresencas = async () => {
       const response = await service.getAll('/buscarTodos')
-      setEditaisList(response.data);
+      setListaPresenca(response.data);
     };
-    loadEditais(); 
+    loadPresencas(); 
     // eslint-disable-next-line react-hooks/exhaustive-deps  
   }, []
   );
@@ -78,7 +75,7 @@ const ListarEditais = (props) => {
     service
       .delete(editalId)
       .then((response) => {
-        props.history.push(`/listarEditais`);
+        // props.history.push(`/listarEditais`);
       })
       .catch((error) => {
         console.log(error.response);
@@ -86,11 +83,11 @@ const ListarEditais = (props) => {
   };
 
   const editEdital = (editalId) => {
-    props.history.push(`/atualizarEdital/${editalId}`);
+    // props.history.push(`/atualizarEdital/${editalId}`);
   };
 
   const createEdital = () => {
-    props.history.push(`/cadastrarEdital`);
+    // props.history.push(`/cadastrarEdital`);
   };
 
   const find = (id) => {
@@ -112,9 +109,9 @@ const ListarEditais = (props) => {
     service
       .get("/buscarTodos")
       .then((response) => {
-        const editais = response.data;
-        setEditais({ editais: editais });
-        console.log(editais);
+        const presencas = response.data;
+        setListaPresenca({ presencas: presencas });
+        console.log(presencas);
       })
       .catch((error) => {
         console.log(error.response);
@@ -152,7 +149,7 @@ const ListarEditais = (props) => {
               <p className="text-lg font-semibold">Administrador</p>
             </div>
             <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Editais</p>
+              <p className="text-xl font-semibold">Gerenciar Lista Diária</p>
             </div>
           </div>
 
@@ -176,11 +173,11 @@ const ListarEditais = (props) => {
 
                       </div>
                     </div>
-                    <div className="row flex flex-row-reverse align-middle px-4 mt-1">
+                    {/* <div className="row flex flex-row-reverse align-middle px-4 mt-1">
                       <div className="col mr-2">
                         <Button id="btnNew" label="NOVO EDITAL" severity="sucess" raised onClick={createEdital} />
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="">
                       
@@ -193,16 +190,15 @@ const ListarEditais = (props) => {
                     <div className="">
                       <div className="pt-4 pl-8 pr-8 mb-4">
                         <div className="card">
-                            <DataTable value={editaisList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                            <DataTable value={listaPresenca} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Edital não encontrado!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column className="text-sm" field="numero" header="Número" sortable style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="ano" header="Ano" sortable sortField="ano" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="nome" header="Título" sortable sortField="nome" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="vigenteInicio" 
-                              // dataType="date" body={dateBodyTemplate} 
-                              header="Início da Vigência" sortable sortField="vigenteInicio" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="vigenteFinal" header="Fim da Vigência" sortable sortField="vigenteFinal" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="beneficiario.contaEstudante.nome" header="Estudante" sortable sortField="nome" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="beneficiario.contaEstudante.matricula" header="Matrícula" sortable sortField="nome" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="confirmadoEm" header="Confirmado em" dataType="date" sortable style={{ width: '25%' }}></Column>
+                              <Column className="text-sm" field="compareceuEm" header="Compareceu em" dataType="date" sortable sortField="ano" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                              {/* <Column className="text-sm" field="listaDiaria" header="Início da VigênciaLista diária" sortable sortField="vigenteInicio" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
+                              {/* <Column className="text-sm" field="vigenteFinal" header="Fim da Vigência" sortable sortField="vigenteFinal" filterPlaceholder="Search" style={{ width: '25%' }}></Column> */}
                               <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                             </DataTable>
                           </div>
@@ -220,4 +216,4 @@ const ListarEditais = (props) => {
   
 }
 
-export default memo(ListarEditais);
+export default memo(ListaDiaria);

@@ -2,21 +2,13 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
 import "primereact/resources/themes/saga-green/theme.css"
-import "primereact/resources/primereact.min.css";                                       
+import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
 import "toastr/build/toastr.min.js";
 import "toastr/build/toastr.css";
-// import AppRoutes from './main/AppRoutes';
-import Footer from "./components/Footer";
-// import SessionProvider from './main/SessionProvider';
-// import LoginButton from "./components/Login";
-// import LogoutButton from "./components/Logout";
-// import { useEffect } from 'react';
-// import { gapi } from 'gapi-script';
 import { showSuccessMessage } from "./components/Toastr";
 
-import TemplateDemo from "./pages/login/templateDemo";
 import Login from "./pages/login/Login";
 import Signup from "./components/signup/Signup";
 import Profile from "./components/profile/Profile";
@@ -26,11 +18,6 @@ import LoadingIndicator from "./components/common/LoadingIndicator";
 import { getCurrentUser } from "./util/APIUtils";
 import { ACCESS_TOKEN } from "./services/constants/Constants";
 import PrivateRoute from "./main/PrivateRoute";
-// import AppHeader from "./components/common/AppHeader";
-// import Alert from 'react-s-alert';
-// import 'react-s-alert/dist/s-alert-default.css';
-// import 'react-s-alert/dist/s-alert-css-effects/slide.css';
-// import Home from "./home/Home";
 import CadastrarContaEstudante from "./pages/cadastrarContaEstudante/CadastrarContaEstudante";
 import ListarContasEstudante from "./pages/listarContasEstudante/ListarContasEstudante";
 import AtualizarContaEstudante from "./pages/atualizarContaEstudante/AtualizarContaEstudante";
@@ -58,7 +45,10 @@ import ListarCardapios from "./pages/listarCardapios/ListarCardapios";
 import AtualizarCardapio from "./pages/atualizarCardapio/AtualizarCardapio";
 
 import PedirAcesso from "./pages/pedirAcesso/PedirAcesso";
-import PedirAcessoValidar from "./pages/pedirAcessoValidar/PedirAcessoValidar";
+import ValidarPedidoAcesso from "./pages/validarPedidoAcesso/ValidarPedidoAcesso";
+import ListarPedidosAcesso from "./pages/listarPedidosAcesso/ListarPedidosAcesso";
+import ParticiparListaDiaria from "./pages/confirmarPresenca/ConfirmarPresenca";
+import ListaDiaria from "./pages/listaDiaria/ListaDiaria";
 
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
@@ -121,155 +111,191 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={Login}></Route>
             {/* <Route path="/templateDemo" component={TemplateDemo}></Route> */}
+            
             <PrivateRoute
               path="/header"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={Header}/>
+              component={Header} />
+            
             <PrivateRoute
               path="/profile"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={Profile}/>
+              component={Profile} />
+            
             <Route
               path="/signup"
               render={(props) => (
                 <Signup authenticated={this.state.authenticated} {...props} />
               )}
             />
-            <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}/>
+            <Route path="/oauth2/redirect" component={OAuth2RedirectHandler} />
 
             <PrivateRoute
               path="/cadastrarContaEstudante"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarContaEstudante}/>
+              component={CadastrarContaEstudante} />
+            
             <PrivateRoute
               path="/listarContasEstudante"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarContasEstudante}/>
+              component={ListarContasEstudante} />
+            
             <PrivateRoute
               path="/atualizarContaEstudante/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={AtualizarContaEstudante}/>
-            
+              component={AtualizarContaEstudante} />
+
             <PrivateRoute
               path="/cadastrarBeneficiario"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarBeneficiario}/>
+              component={CadastrarBeneficiario} />
+            
             <PrivateRoute
               path="/listarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarBeneficiarios}/>
+              component={ListarBeneficiarios} />
+            
             <PrivateRoute
               path="/importarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ImportarBeneficiarios}/>
+              component={ImportarBeneficiarios} />
+            
             <PrivateRoute
               path="/atualizarBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={AtualizarBeneficiario}/>
+              component={AtualizarBeneficiario} />
+            
             <PrivateRoute
               path="/detalharBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               // render={(props) => <DetalharBeneficiario {...props} />}
-              component={DetalharBeneficiario}/>
-            
-            <PrivateRoute 
-              path="/cadastrarEdital" 
+              component={DetalharBeneficiario} />
+
+            <PrivateRoute
+              path="/cadastrarEdital"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarEdital}/>
-            <PrivateRoute 
+              component={CadastrarEdital} />
+            
+            <PrivateRoute
               path="/atualizarEdital/:id"
               authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser} 
-              component={AtualizarEdital}/>
+              currentUser={this.state.currentUser}
+              component={AtualizarEdital} />
+              
             <PrivateRoute
               path="/listarEditais"
               authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser} 
-              component={ListarEditais}/>
-            
-            <PrivateRoute 
-              path="/cadastrarContaServidor" 
+              currentUser={this.state.currentUser}
+              component={ListarEditais} />
+
+            <PrivateRoute
+              path="/cadastrarContaServidor"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarContaServidor}/>
-            <PrivateRoute 
-              path="/listarContasServidor" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={ListarContasServidor}/>
-            <PrivateRoute 
-              path="/atualizarContaServidor/:id" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={AtualizarContaServidor}/>
-            
-            <PrivateRoute 
-              path="/cadastrarRefeicao" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={CadastrarRefeicao}/>
-            <PrivateRoute 
-              path="/listarRefeicoes" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={ListarRefeicoes}/>
-            <PrivateRoute 
-              path="/atualizarRefeicao/:id" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={AtualizarRefeicao}/>
+              component={CadastrarContaServidor} />
             
             <PrivateRoute
-              path="/cadastrarCardapio" 
+              path="/listarContasServidor"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={CadastrarCardapio}/>
-            <PrivateRoute 
-              path="/listarCardapios" 
+              component={ListarContasServidor} />
+            
+            <PrivateRoute
+              path="/atualizarContaServidor/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={ListarCardapios}/>
-            <PrivateRoute 
-              path="/atualizarCardapio/:id" 
-              authenticated={this.state.authenticated}
-              currentUser={this.state.currentUser}
-              component={AtualizarCardapio}/>
+              component={AtualizarContaServidor} />
 
-            <PrivateRoute 
-              path="/pedirAcesso" 
+            <PrivateRoute
+              path="/cadastrarRefeicao"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={PedirAcesso}/>
-            <PrivateRoute 
-              path="/pedirAcessoValidar" 
+              component={CadastrarRefeicao} />
+            
+            <PrivateRoute
+              path="/listarRefeicoes"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={PedirAcessoValidar}/>
+              component={ListarRefeicoes} />
+            
+            <PrivateRoute
+              path="/atualizarRefeicao/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarRefeicao} />
+
+            <PrivateRoute
+              path="/cadastrarCardapio"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={CadastrarCardapio} />
+            
+            <PrivateRoute
+              path="/listarCardapios"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarCardapios} />
+            
+            <PrivateRoute
+              path="/atualizarCardapio/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={AtualizarCardapio} />
+
+            <PrivateRoute
+              path="/pedirAcesso"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={PedirAcesso} />
+            
+            <PrivateRoute
+              path="/validarPedidoAcesso/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ValidarPedidoAcesso} />
+            
+            <PrivateRoute
+              path="/listarPedidosAcesso"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListarPedidosAcesso} />
+            
+            <PrivateRoute
+              path="/participarListaDiaria"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ParticiparListaDiaria} />
+
+            <PrivateRoute
+              path="/listaDiaria"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ListaDiaria} />
 
             <PrivateRoute
               path="/boasVindas"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={BoasVindas}/>   
+              component={BoasVindas} />
 
-            <Route component={NotFound}/>
+            <Route component={NotFound} />
           </Switch>
         </div>
         {/* <Alert stack={{limit: 3}} 
           timeout = {3000}
           position='top-right' effect='slide' offset={65} /> */}
-          {/* <div>
+        {/* <div>
             <Footer />
           </div> */}
       </div>

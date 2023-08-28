@@ -130,7 +130,7 @@ const onRowSelect = (event) => {
     if (errors.length > 0) {
       errors.forEach((message, index) => {
         showErrorMessage(message);
-      });
+      }); 
       return false;
     }
 

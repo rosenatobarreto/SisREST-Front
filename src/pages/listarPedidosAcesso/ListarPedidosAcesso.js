@@ -15,6 +15,8 @@ import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { formatDateBr } from "../../util/FormatDate";
+
 
 const PedirAcessoValidar = (props) => {
   
@@ -129,14 +131,8 @@ const PedirAcessoValidar = (props) => {
 //   };
 
   const detalharPedido = (id) => {
-    props.history.push(`/atualizar/${id}`);
+    props.history.push(`/validarPedidoAcesso/${id}`);
   };
-
-//   const createRefeicao = () => {
-//     props.history.push(`/cadastrarRefeicao`);
-//   };
-  
-
 
   const find = (id) => {
         
@@ -153,39 +149,45 @@ const PedirAcessoValidar = (props) => {
       });
   }
     
-  const findAll = () => {
-      service
-      .getAll("/buscarTodos")
-      .then((response) => {
-        const pedidos = response.data;
-        setPedidosAcesso({ pedidos: pedidos });
-        console.log(pedidos);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+  // const findAll = () => {
+  //     service
+  //     .getAll("/buscarTodos")
+  //     .then((response) => {
+  //       const pedidos = response.data;
+  //       setPedidosAcesso({ pedidos: pedidos });
+  //       console.log(pedidos);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //     });
+  // };
+
+  const dateBodyTemplateSolicitado = (rowData) => {
+    
+    return formatDateBr(rowData.solicitadoEm);
   };
 
-  const formatDate = (value) => {
-    return value.toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
- };
+  const dateBodyTemplateAnalisado = (rowData) => {
+    const dateNull = '';
+    if (rowData.analisadoEm === null) {
+      return dateNull;
+    } else {
 
-  const dateBodyTemplate = (rowData) => {
-    return formatDate(rowData.date);
+      return formatDateBr(rowData.analisadoEm);
+    }
   };
-  // let tipo;
-  // let restriction;
-  // const refeicoesConvertidas = () => {
-  //     return {
-  //       if (restricoesList === 'DIABETES'){
-  //         tipo = "Diabetes";
-  //       }
-  //     }
-  // }
+
+  const dateBodyTemplateAprovacao = (rowData) => {
+    
+    if (rowData.aprovado === false) {
+      const naoAprovado = 'Não';
+      return naoAprovado;
+    } 
+    else if (rowData.aprovado === true) {
+      const aprovado = 'Sim';
+      return aprovado;
+    }
+  };
 
   return (
     <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
@@ -214,10 +216,7 @@ const PedirAcessoValidar = (props) => {
             <div className="mt-0 sm:mt-0">
               <div className="md:grid md:grid-cols-1 md:gap-6">
                 <div className="md:col-span-1">
-                  <div className="px-4 sm:px-0">
-                    {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
-                    {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
-                  </div>
+
                 </div>
                 <div className="mt-5 md:col-span-2 md:mt-0">
                   {/* <form action="#" >
@@ -239,13 +238,13 @@ const PedirAcessoValidar = (props) => {
                             <DataTable value={pedidosList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
                               selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
                               stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Pedido não encontrado!" tableStyle={{ minWidth: '50rem' }}>
-                              <Column className="text-sm" field="solicitadoEm" filterField="date" dataType="date" header="Data da solicitação" sortable body={dateBodyTemplate} style={{ width: '25%' }}></Column>
-                              {/* <Column className="text-sm" field="analisadoEm" header="Data da análise" sortable style={{ width: '25%' }}></Column> */}
-                              {/* <Column className="text-sm" field="justificativaAnalise" header="Justificativa" sortable style={{ width: '25%' }}></Column> */}
-                              <Column className="text-sm" field="contaEstudante.nome" header="Estudante" sortable filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="beneficiario.situacao" header="Situação" sortable sortField="situacao" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column className="text-sm" field="acessosDiaRefeicao.length" header="Quant. Refeições" sortable filterPlaceholder="Search" style={{ width: '25%' }}></Column>
-                              <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                              <Column className="text-sm" field="solicitadoEm" filterField="date" dataType="date" header="Solicitado" sortable body={dateBodyTemplateSolicitado} style={{ width: '10%' }}></Column>
+                              <Column className="text-sm" field="analisadoEm" filterField="date" dataType="date" header="Analisado" sortable body={dateBodyTemplateAnalisado} style={{ width: '10%' }}></Column>
+                              <Column className="text-sm" field="beneficiario.contaEstudante.nome" header="Estudante" sortable filterPlaceholder="Search" style={{ width: '50%' }}></Column>
+                              {/* <Column className="text-sm" field="beneficiario.situacao" header="Situação" sortable sortField="situacao" filterPlaceholder="Search" style={{ width: '10%' }}></Column> */}
+                              <Column className="text-sm" field="acessosDiaRefeicao.length" header="Quant. Refeições" sortable filterPlaceholder="Search" style={{ width: '10%' }}></Column>
+                              <Column className="text-sm" field="aprovado" header="Aprovado" sortable body={dateBodyTemplateAprovacao} style={{ width: '10%' }}></Column>
+                              <Column header="Detalhes/Validar" body={actionBodyTemplate} exportable={false} style={{ width: '10%', align: 'center' }}></Column>
                             </DataTable>
                           </div>
                         

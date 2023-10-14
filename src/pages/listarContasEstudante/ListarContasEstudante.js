@@ -1,8 +1,7 @@
-import React, {  useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import ContaEstudanteApiService from "../../services/ContaEstudanteApiService";
-import ContasEstudanteTable from "../../components/ContasEstudanteTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -12,14 +11,8 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
 const ListarContasEstudante = (props) => {
 
-  const  service = new ContaEstudanteApiService();
+  const service = new ContaEstudanteApiService();
 
-  // const [contasEtudante, setContasEstudante] = useState([]);
-  // const [nome, setNome] = useState('');
-  // const [matricula, setMatricula] = useState(0);
-  // const [email, setEmail] = useState('');
-  // const [campus, setCampus] = useState('');
-  // const [curso, setCurso] = useState('');
   const [contasEstudanteList, setContasEstudanteList] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [filters, setFilters] = useState({

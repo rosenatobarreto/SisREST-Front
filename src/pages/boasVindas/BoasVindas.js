@@ -1,11 +1,37 @@
 import React, { Component } from "react";
 import Header from "../../components/Header";
+import MenuAluno from "../../components/MenuAluno";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import MenuNutricionista from "../../components/MenuNutricionista";
+import jwt_decode from "jwt-decode";
 
 class BoasVindas extends Component {
   constructor(props) {
     super(props);
     console.log(props);
+    const titleRoleInPage = null;
+  }
+  
+  getSideMenu(){
+    const token = localStorage.accessToken;
+    const decoded = jwt_decode(token);
+    
+    if (decoded.role === "Estudante"){
+      this.titleRoleInPage = "Estudante";
+      return <MenuAluno />
+    }
+    else if (decoded.role === "Assistente Social"){
+      this.titleRoleInPage = "Administrador";
+      return <MenuAdministrador />
+    }
+    else if (decoded.role === "Admin"){
+      this.titleRoleInPage = "Administrador";
+      return <MenuAdministrador />
+    }
+    else if (decoded.role === "Nutricionista"){
+      this.titleRoleInPage = "Nutricionista";
+      return <MenuNutricionista />
+    }
   }
 
 
@@ -15,7 +41,7 @@ class BoasVindas extends Component {
         {/*Col left  */}
         <div className="w-[220px] flex-shrink flex-grow-0 px-0">
           {/* Side Menu */}
-          <MenuAdministrador />
+          {this.getSideMenu()}
         </div>
         {/* Col right */}
         <div className="w-full">
@@ -26,7 +52,7 @@ class BoasVindas extends Component {
                 <p className="text-xs">{this.props.currentUser.email}</p>
             </div>
             <div className="flex flex-row-reverse pr-6">
-                <p className="text-lg font-semibold">Administrador</p>
+                <p className="text-lg font-semibold">{this.titleRoleInPage}</p>
             </div>
             <div className="flex flex-row pl-6">
               <p className="text-xl font-semibold"></p>
@@ -49,7 +75,7 @@ class BoasVindas extends Component {
                     <p className="text-center">Bem-vindo(a) ao SisRest!</p>
                     <br />
                     <p className="text-center">
-                      Você está logado(a) como Administrador(a)
+                      Você está logado(a) como {this.titleRoleInPage}
                     </p>
                   </div>
                 </div>

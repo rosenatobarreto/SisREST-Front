@@ -1,254 +1,186 @@
-import React, { Component} from "react";
-
-import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
+import React, { useEffect, useState, memo } from "react";
 import ContaServidorApiService from "../../services/ContaServidorApiService";
-import ContasServidorTable from "../../components/ContasServidorTable";
 import MenuAdministrador from "../../components/MenuAdministrador";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 
-class ListarContasServidor extends Component {
+const ListarContasServidor = (props) => {
 
-  constructor(props) {
-    super(props);
-    this.service = new ContaServidorApiService();
-    console.log(props);
-    
-  }
+  const service = new ContaServidorApiService();
 
-  state = {
-    nome: "",
-    matricula: 0,
-    email: "",
-    campus: "",
-    isAdmin: true,
-    contasServidor: [],
+  const [contasServidorList, setContasServidorList] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    name: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    'nome': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+    representative: { value: null, matchMode: FilterMatchMode.IN },
+    status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] }
+  });
+
+  const onGlobalFilterChange = (event) => {
+    const value = event.target.value;
+    let _filters = { ...filters };
+    _filters['global'].value = value;
+
+    setFilters(_filters);
   };
 
-  componentDidMount() {
-    this.findAll();
-  }
+  const renderHeader = () => {
+    const value = filters['global'] ? filters['global'].value : '';
 
-  delete = (contaId) => {
-    this.service
+    return (
+      <span className="p-input-icon-left">
+        <i className="pi pi-search" />
+        <InputText type="search" value={value || ''} onChange={(e) => onGlobalFilterChange(e)} placeholder="Pesquise na tabela" />
+      </span>
+    );
+  };
+
+  const header = renderHeader();
+
+  const actionBodyTemplate = (rowData) => {
+
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => edit(rowData.id)} />
+        <Button icon="pi pi-trash" rounded outlined style={{ marginLeft: '6px' }} severity="danger" onClick={() => deleteConta(rowData.id)} />
+      </React.Fragment>
+    );
+  };
+
+  useEffect(() => {
+
+    const loadContasServidor = async () => {
+      const response = await service.get('/buscarTodos')
+      setContasServidorList(response.data);
+    };
+    loadContasServidor();
+    // eslint-disable-next-line react-hooks/exhaustive-deps  
+  }, []
+  );
+
+
+  const deleteConta = (contaId) => {
+    service
       .delete(contaId)
       .then((response) => {
-        this.find();
-        this.props.history.push(`/listarContasServidor`);
+        props.history.push(`/listarContasServidor`);
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  edit = (id) => {
-    this.props.history.push(`/atualizarContaServidor/${id}`);
+  const edit = (id) => {
+    props.history.push(`/atualizarContaServidor/${id}`);
   };
 
-  createContaServidor = () => {
-    this.props.history.push(`/cadastrarContaServidor`);
+  const create = () => {
+    props.history.push(`/cadastrarContaServidor`);
   };
 
-  // findById = (id) => {
-  //   // this.service.find(id);
-  //   var params = "?";
 
-  //   if (this.state.id !== 0) {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}id=${this.state.id}`;
-  //   }
-
-  //   if (this.state.nome !== "") {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}nome=${this.state.nome}`;
-  //   }
-    
-  //   if (this.state.matricula !== 0) {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}matricula=${this.state.matricula}`;
-  //   }
-
-  //   if (this.state.email !== "") {
-  //     if (params !== "?") {
-  //       params = `${params}&`;
-  //     }
-
-  //     params = `${params}email=${this.state.email}`;
-  //   }
-
-
-  //   this.service.get(`/${id}`)
-  //     .then((response) => {
-  //       const contasEstudante = response.data;
-  //       this.setState({ contasEstudante: contasEstudante });
-  //       console.log('Contas Estudante:', contasEstudante);
-  //     })
-  //     .catch(error => {
-  //       console.log(error.response);
-  //     });
-  // };
-
-  findAll = () => {
-    this.service
+  const findAll = () => {
+    service
       .get("/buscarTodos")
       .then((response) => {
         const contasServidor = response.data;
-        this.setState({ contasServidor });
-        console.log(contasServidor);
+        contasServidor({ contasServidor: contasServidor });
       })
       .catch((error) => {
         console.log(error.response);
       });
   };
 
-  // importarDadosEdital = () => {
-  //   this.props.history.push("/importarBeneficiarios");
-  // };
+  const dateBodyIsAdminFalseTrue = (rowData) => {
+    
+    if (rowData.admin === false) {
+      const isAdministrador = 'Não';
+      return isAdministrador;
+    } 
+    else if (rowData.admin === true) {
+      const isAdministrador = 'Sim';
+      return isAdministrador;
+    }
+  };
 
-
-  render() {
-    return (
-      <div className="container-fluid h-screen flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
-        {/*Col left  */}
-        <div className="w-[220px] flex-shrink flex-grow-0 px-0">
-          {/* Side Menu */}
-          <MenuAdministrador /> 
-        </div>
-        {/* Col right */}
-        <div className="w-full">
-          {/* Header */}
-          <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4">
-            <div className="flex flex-row-reverse pr-6">
-                <p className="text-xs">{this.props.currentUser.email}</p>
-            </div>
-            <div className="flex flex-row-reverse pr-6">
-              <p className="text-lg font-semibold">Administrador</p>
-            </div>
-            <div className="flex flex-row pl-6">
-              <p className="text-xl font-semibold">Gerenciar Cadastro de Servidores</p>
-            </div>
+  return (
+    <div className="container-fluid h-full flex flex-col sm:flex-row flex-wrap sm:flex-nowrap flex-grow">
+      {/*Col left  */}
+      <div className="w-[220px] flex-shrink flex-grow-0 px-0">
+        {/* Side Menu */}
+        <MenuAdministrador />
+      </div>
+      {/* Col right */}
+      <div className="w-full">
+        {/* Header */}
+        <div className="h-[100px] bg-gray-200 pt-4 pl-6 pr-6 pb-0 mb-4">
+          <div className="flex flex-row-reverse pr-6">
+            <p className="text-xs">{props.currentUser.email}</p>
           </div>
+          <div className="flex flex-row-reverse pr-6">
+            <p className="text-lg font-semibold">Administrador</p>
+          </div>
+          <div className="flex flex-row pl-6">
+            <p className="text-xl font-semibold">Gerenciar Cadastro de Servidores</p>
+          </div>
+        </div>
 
-          {/* Content two */}
-          <div className="pt-4 pl-8 pr-8 mb-4">
-            <div className="mt-0 sm:mt-0">
-              <div className="md:grid md:grid-cols-1 md:gap-6">
-                <div className="md:col-span-1">
-                  <div className="px-4 sm:px-0">
-                    {/* <h3 className="text-lg font-medium leading-6 text-gray-900">Personal Information</h3> */}
-                    {/* <p className="mt-1 text-sm text-gray-600">Use a perm</p> */}
-                  </div>
+        {/* Content two */}
+        <div className="pt-4 pl-8 pr-8 mb-4">
+          <div className="mt-0 sm:mt-0">
+            <div className="md:grid md:grid-cols-1 md:gap-6">
+              <div className="md:col-span-1">
+                <div className="px-4 sm:px-0">
                 </div>
-                <div className="mt-5 md:col-span-2 md:mt-0">
-                  <form action="" method="POST">
-                    {/* Begin Card */}
-                    {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
-                    <div className="bg-white px-4 py-5 sm:p-6">
-                      <div className="grid grid-cols-6 gap-6">
+              </div>
+              <div className="mt-5 md:col-span-2 md:mt-0">
+                <form action="" method="POST">
+                  {/* Begin Card */}
 
-                        <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                              <label 
-                                for="nome" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por nome
-                              </label>
-                              <input 
-                                type="text" 
-                                name="filterNome" id="idFilterNome"  
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.nome} 
-                                onChange={(e) => { this.setState({ nome: e.target.value }) }}
-                              />
-                            </div>
+                  <div className="bg-white px-4 py-5 sm:p-6">
 
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label 
-                                for="matricula" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por matricula
-                              </label>
-                              <input 
-                                type="number" 
-                                name="filterMatricula" 
-                                id="idFilterMatricula" 
-                                autocomplete="filterMatricula" 
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.matricula} 
-                                onChange={(e) => { this.setState({ matricula: e.target.value }) }}
-                              />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                              <label 
-                                for="email" 
-                                className="block text-sm font-medium text-gray-700">
-                                Filtrar por e-mail
-                              </label>
-                              <input 
-                                type="email" 
-                                name="filterEmail" 
-                                id="idFilterEmail" 
-                                autocomplete="filterMatricula" 
-                                className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                                value={this.state.email} 
-                                onChange={(e) => { this.setState({ email: e.target.value }) }}
-                              />
-                            </div>
-
-                      </div>
-                    </div>
-
-                    <div className="row flex flex-row-reverse align-middle px-4 mt-1">
-                      {/* <div className="col ml-2">
-                                    <button onClick={this.importarDadosEdital} type="submit" className=" btn-save inline-flex justify-center 
-                                    rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2">IMPORTAR DADOS DO EDITAL</button>
-                                </div>  */}
-                      <div className="col mr-2">
-                        <button
-                          onClick={this.createContaServidor}
-                          type="submit"
-                          className=" btn-save inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm 
-                                    font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none 
-                                    focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                        >NOVA CONTA
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="">
-
-                    </div>
-                    {/* </div> */}
-                    {/* End Card */}
-                  </form>
-
-                  <div className="row">
-                    {/* <div className="col-span-6">
-                                <button onClick={this.createBeneficiario} type="button" id="idNovoUser" className="btn-save">
-                                    <i className="pi pi-plus"></i> 
-                                    CADASTRAR USUÁRIO
-                                </button>
-                            </div> */}
                   </div>
-                  <br />
-                  <div className="row">
-                    <div className="">
-                      <div className="pt-4 pl-8 pr-8 mb-4">
-                        <ContasServidorTable
-                          contasServidor={this.state.contasServidor}
-                          delete={this.delete}
-                          edit={this.edit}
-                          id="idEdit"
-                        />
+
+                  <div className="row flex flex-row-reverse align-middle px-4 mt-1">
+
+                    <div className="col mr-2">
+                      <div className="col mr-2">
+                        <Button id="btnNew" label="NOVO SERVIDOR" severity="sucess" raised onClick={create} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="">
+
+                  </div>
+                  {/* </div> */}
+                  {/* End Card */}
+                </form>
+
+                <div className="row">
+
+                </div>
+                <br />
+                <div className="row">
+                  <div className="">
+                    <div className="pt-4 pl-8 pr-8 mb-4">
+                      <div className="card">
+                        <DataTable value={contasServidorList} paginator rows={10} header={header} filters={filters} onFilter={(e) => setFilters(e.filters)}
+                          selection={selectedCustomer} onSelectionChange={(e) => setSelectedCustomer(e.value)} selectionMode="single" dataKey="id"
+                          stateStorage="session" stateKey="dt-state-demo-local" emptyMessage="Conta servidor não encontrada!" tableStyle={{ minWidth: '50rem' }}>
+                          <Column className="text-sm" field="nome" header="Nome" sortable style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="email" header="E-mail" sortable sortField="email" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="matriculaSIAPE" header="Matrícula" sortable sortField="matriculaSIAPE" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="campus" header="Campus" sortable sortField="campus" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="role" header="Cargo" sortable sortField="cargo" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column className="text-sm" field="admin" header="Administrador" body={dateBodyIsAdminFalseTrue} sortable sortField="isAdmin" filterPlaceholder="Search" style={{ width: '25%' }}></Column>
+                          <Column header="Ações" body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                        </DataTable>
                       </div>
                     </div>
                   </div>
@@ -257,11 +189,11 @@ class ListarContasServidor extends Component {
             </div>
           </div>
         </div>
-
       </div>
-    );
-  }
+
+    </div>
+  );
 }
 
-export default ListarContasServidor;
+export default memo(ListarContasServidor);
 

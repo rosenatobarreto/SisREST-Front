@@ -1,38 +1,36 @@
 import React, { Component } from "react";
 import ContaServidorApiService from "../../services/ContaServidorApiService";
-// import Footer from "../../components/Footer";
 import MenuAdministrador from "../../components/MenuAdministrador";
-import Footer from "../../components/Footer";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
-import { InputMask } from 'primereact/inputmask';
 import { InputText } from "primereact/inputtext";
-import { InputNumber } from 'primereact/inputnumber';
-import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
 
 class CadastrarContaServidor extends Component {
-
+  
   constructor(props) {
     super(props);
     this.service = new ContaServidorApiService();
   }
-
+  
   state = {
     nome: "",
     email: "",
     matriculaSIAPE: 0,
-    isAdmin: true,
+    admin: false,
     campus: "",
+    role: "",
   };
-
+  
   validate = () => {
     const errors = [];
     return errors;
   };
-
-  create = () => {
+  
+  create = (e) => {
+    e.preventDefault();
     const errors = this.validate();
-
+    console.log(this.status);
+    
     if (errors.length > 0) {
       errors.forEach((message, index) => {
         showErrorMessage(message);
@@ -45,14 +43,15 @@ class CadastrarContaServidor extends Component {
         nome: this.state.nome,
         email: this.state.email,
         matriculaSIAPE: this.state.matriculaSIAPE,
-        isAdmin: this.state.isAdmin,
+        admin: this.state.admin,
         campus: this.state.campus,
+        role: this.state.role,
       })
       .then((response) => {
-        console.log(response);
-
+        
         showSuccessMessage("Conta criada com sucesso!");
-        this.props.history.push("/boasVindas");
+        this.props.history.push("/listarContasServidor");
+        console.log(response);
       })
       .catch((error) => {
         console.log(error.response);
@@ -107,7 +106,7 @@ class CadastrarContaServidor extends Component {
                           Nome
                         </label>
                         <div className="card flex justify-content-center gap-3 w-full">
-                          <InputText className="w-full" value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }} />
+                          <InputText autoComplete="nome" className="w-full" value={this.state.nome} onChange={(e) => { this.setState({ nome: e.target.value }) }} />
 
                         </div>
                       </div>
@@ -121,26 +120,18 @@ class CadastrarContaServidor extends Component {
                         </label>
 
                         <div className="card flex justify-content-center gap-3 w-96">
-                          <InputText className="w-96" value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }} />
+                          <InputText autoComplete="email" className="w-96" value={this.state.email} onChange={(e) => { this.setState({ email: e.target.value }) }} />
                         </div>
                       </div>
 
-                      <div className="col-span-6 sm:col-span-6 lg:col-span-6">
+                      <div className="col-span-10 sm:col-span-10 lg:col-span-12">
                         <label
-                          // htmlFor="matSiape"
+                          // htmFor="campus"
                           className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                          Administrador do Sistema?
+                          Campus
                         </label>
-
-                        <div className="card flex justify-content-center gap-3">
-                          {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
-                          <select
-                            name="isAdmin"
-                            className="w-20 h-10 md:w-20rem border-green-50"
-                            value={this.state.isAdmin} onChange={(e) => { this.setState({ isAdmin: e.target.value }) }}>
-                            <option value="true" >Sim</option>
-                            <option value="false" >Não</option>
-                          </select>
+                        <div className="card flex justify-content-center gap-3 w-96">
+                          <InputText autoComplete="campus" className="w-96" value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }} />
                         </div>
                       </div>
 
@@ -152,21 +143,52 @@ class CadastrarContaServidor extends Component {
                         </label>
 
                         <div className="card flex justify-content-center gap-3 w-auto">
-                          <InputText className="w-auto" value={this.state.matriculaSIAPE}
+                          <InputText autoComplete="matriculaSIAPE" className="w-auto" value={this.state.matriculaSIAPE}
                             onChange={(e) => { this.setState({ matriculaSIAPE: e.target.value }) }} />
                         </div>
                       </div>
 
-                      <div className="col-span-10 sm:col-span-10 lg:col-span-12">
+                      {/* //Cargo */}
+                      <div className="col-span-8 sm:col-span-8 lg:col-span-8">
                         <label
-                          // htmFor="campus"
                           className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                          Campus
+                          Cargo
                         </label>
-                        <div className="card flex justify-content-center gap-3 w-auto">
-                          <InputText className="w-auto" value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }} />
+                        <div>
+                          <div className="card flex justify-content-center gap-3">
+                            {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
+                            <select
+                              name="cargo"
+                              className="w-60 h-10 md:w-30rem border-green-50"
+                              value={this.state.role} onChange={(e) => { this.setState({ role: e.target.value }) }}>
+                              <option>Selecione uma opção</option>
+                              <option value="ASSISTENTE_SOCIAL" >Assistente Social</option>
+                              <option value="NUTRICIONISTA" >Nutricionista</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
+
+                      {/* //Admin */}
+                      <div className="col-span-6 sm:col-span-6 lg:col-span-6">
+                        <label
+                          className="block text-sm font-medium text-gray-700 pb-2 pt-4">
+                          Administrador do Sistema?
+                        </label>
+
+                        <div className="card flex justify-content-center gap-3">
+                          {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
+                          <select
+                            name="isAdmin"
+                            className="w-20 h-10 md:w-20rem border-green-50"
+                            value={this.state.admin} onChange={(e) => { this.setState({ isAdmin: e.target.value }) }}>
+                              <option>Selecione uma opção</option>
+                            <option value="true" >Sim</option>
+                            <option value="false" >Não</option>
+                          </select>
+                        </div>
+                      </div>
+
 
                     </div>
 

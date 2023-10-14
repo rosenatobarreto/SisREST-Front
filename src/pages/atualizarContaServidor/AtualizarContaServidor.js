@@ -22,8 +22,9 @@ class CadastrarContaServidor extends Component {
         nome: "",
         email: "",
         matriculaSIAPE: 0,
-        isAdmin: true,
+        admin: "",
         campus: "",
+        role: "",
     };
 
     componentDidMount() {
@@ -31,14 +32,14 @@ class CadastrarContaServidor extends Component {
         const id = params.id;
         this.find(id);
     }
-    
+
     validate = () => {
         const errors = [];
         return errors;
     };
-    
-    update = () => {
 
+    update = (e) => {
+        e.preventDefault();
         const errors = this.validate();
 
         if (errors.length > 0) {
@@ -53,8 +54,9 @@ class CadastrarContaServidor extends Component {
                 nome: this.state.nome,
                 email: this.state.email,
                 matriculaSIAPE: this.state.matriculaSIAPE,
-                isAdmin: this.state.isAdmin,
+                admin: this.state.admin,
                 campus: this.state.campus,
+                role: this.state.role,
             }
         ).then(response => {
             console.log(response);
@@ -70,39 +72,6 @@ class CadastrarContaServidor extends Component {
         console.log('request finished');
     }
 
-
-    // create = () => {
-    //     const errors = this.validate();
-
-    //     if (errors.length > 0) {
-    //         errors.forEach((message, index) => {
-    //             showErrorMessage(message);
-    //         });
-    //         return false;
-    //     }
-
-    //     this.service
-    //         .create({
-    //             nome: this.state.nome,
-    //             email: this.state.email,
-    //             matriculaSIAPE: this.state.matriculaSIAPE,
-    //             isAdmin: this.state.isAdmin,
-    //             campus: this.state.campus,
-    //         })
-    //         .then((response) => {
-    //             console.log(response);
-
-    //             showSuccessMessage("Conta criada com sucesso!");
-    //             this.props.history.push("/listarContasServidor");
-    //         })
-    //         .catch((error) => {
-    //             console.log(error.response);
-    //             showErrorMessage("A conta não pode ser criada!");
-    //         });
-
-    //     console.log("request finished");
-    // };
-
     find = (id) => {
 
         this.service.get(`/buscarPorID/${id}`)
@@ -110,11 +79,13 @@ class CadastrarContaServidor extends Component {
                 const contaServidor = response.data;
                 const id = contaServidor.id;
                 const nome = contaServidor.nome;
-                const matriculaSIAPE = contaServidor.matriculaSIAPE;
                 const email = contaServidor.email;
+                const matriculaSIAPE = contaServidor.matriculaSIAPE;
+                const admin = contaServidor.admin;
                 const campus = contaServidor.campus;
+                const role = contaServidor.role;
 
-                this.setState({ id: id, nome: nome, email: email, matriculaSIAPE: matriculaSIAPE, campus: campus });
+                this.setState({ id: id, nome: nome, email: email, matriculaSIAPE: matriculaSIAPE, campus: campus, admin: admin, role: role });
             })
             .catch((error) => {
                 console.log(error.response);
@@ -189,24 +160,57 @@ class CadastrarContaServidor extends Component {
                                                 </div>
                                             </div>
 
-                                            <div className="col-span-6 sm:col-span-6 lg:col-span-6">
+                                            <div className="col-span-10 sm:col-span-10 lg:col-span-12">
                                                 <label
-                                                    // htmlFor="matSiape"
+                                                    // htmFor="campus"
                                                     className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                                                    Administrador do Sistema?
+                                                    Campus
                                                 </label>
-
-                                                <div className="card flex justify-content-center gap-3">
-                                                    {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
-                                                    <select
-                                                        name="isAdmin"
-                                                        className="w-20 h-10 md:w-20rem border-green-50"
-                                                        value={this.state.isAdmin} onChange={(e) => { this.setState({ isAdmin: e.target.value }) }}>
-                                                        <option value="true" >Sim</option>
-                                                        <option value="false" >Não</option>
-                                                    </select>
+                                                <div className="card flex justify-content-center gap-3 w-96">
+                                                    <InputText className="w-96" value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }} />
                                                 </div>
                                             </div>
+
+                      {/* //Cargo */}
+                      <div className="col-span-8 sm:col-span-8 lg:col-span-8">
+                        <label
+                          className="block text-sm font-medium text-gray-700 pb-2 pt-4">
+                          Cargo
+                        </label>
+                        <div>
+                          <div className="card flex justify-content-center gap-3">
+                            {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
+                            <select
+                              name="cargo"
+                              className="w-60 h-10 md:w-30rem border-green-50"
+                              value={this.state.role} onChange={(e) => { this.setState({ role: e.target.value }) }}>
+                              <option>Selecione uma opção</option>
+                              <option value="ASSISTENTE_SOCIAL" >Assistente Social</option>
+                              <option value="NUTRICIONISTA" >Nutricionista</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* //Admin */}
+                      <div className="col-span-6 sm:col-span-6 lg:col-span-6">
+                        <label
+                          className="block text-sm font-medium text-gray-700 pb-2 pt-4">
+                          Administrador do Sistema?
+                        </label>
+
+                        <div className="card flex justify-content-center gap-3">
+                          {/* <InputText id="matSiapeId" className="w-auto" value={matriculaSIAPE} onChange={(e) => setMatriculaSIAPE(e.target.value)} /> */}
+                          <select
+                            name="isAdmin"
+                            className="w-20 h-10 md:w-20rem border-green-50"
+                            value={this.state.admin} onChange={(e) => { this.setState({ isAdmin: e.target.value }) }}>
+                              <option>Selecione uma opção</option>
+                            <option value="true" >Sim</option>
+                            <option value="false" >Não</option>
+                          </select>
+                        </div>
+                      </div>
 
                                             <div className="col-span-6 sm:col-span-6 lg:col-span-6">
                                                 <label
@@ -221,16 +225,7 @@ class CadastrarContaServidor extends Component {
                                                 </div>
                                             </div>
 
-                                            <div className="col-span-10 sm:col-span-10 lg:col-span-12">
-                                                <label
-                                                    // htmFor="campus"
-                                                    className="block text-sm font-medium text-gray-700 pb-2 pt-4">
-                                                    Campus
-                                                </label>
-                                                <div className="card flex justify-content-center gap-3 w-auto">
-                                                    <InputText className="w-auto" value={this.state.campus} onChange={(e) => { this.setState({ campus: e.target.value }) }} />
-                                                </div>
-                                            </div>
+
 
                                         </div>
 

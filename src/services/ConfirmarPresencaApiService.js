@@ -1,8 +1,8 @@
 import ApiService from './ApiService';
 
-export default class ListaDiariaApiService extends ApiService{
+export default class ConfirmarPresencaApiService extends ApiService{
     constructor(){
-        super('/listaDiaria');
+        super('/presenca');
     }
     create(object){
         return this.post(`/criar`, object);

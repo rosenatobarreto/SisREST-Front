@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import "primereact/resources/themes/saga-green/theme.css"
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-
+import jwt_decode from "jwt-decode";
 import "toastr/build/toastr.min.js";
 import "toastr/build/toastr.css";
 import { showSuccessMessage } from "./components/Toastr";
@@ -27,6 +27,7 @@ import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios
 import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
 import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
 import DetalharBeneficiario from "./pages/detalharBeneficiario/DetalharBeneficiario";
+import DadosBeneficiario from "./pages/detalharBeneficiario/DadosBeneficiario";
 
 import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
 import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
@@ -53,6 +54,22 @@ import ListaDiaria from "./pages/listaDiaria/ListaDiaria";
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
 
+//Dados do token: data.role
+/*
+{
+  "sub": "2",
+  "role": "Estudante",
+  "iat": 1697162081,
+  "exp": 1698026081
+}
+
+
+const token = "eyJ0eXAiO.../// jwt token";
+const decoded = jwt_decode(token);
+console.log(decoded);
+
+
+*/
 class App extends Component {
   constructor(props) {
     super(props);
@@ -60,6 +77,7 @@ class App extends Component {
       authenticated: false,
       currentUser: null,
       loading: true,
+      decodedRoleEstudante: null,
     };
 
     this.loadCurrentlyLoggedInUser = this.loadCurrentlyLoggedInUser.bind(this);
@@ -74,6 +92,7 @@ class App extends Component {
           authenticated: true,
           loading: false,
         });
+        console.log(response)
       })
       .catch((error) => {
         this.setState({
@@ -93,8 +112,9 @@ class App extends Component {
 
   componentDidMount() {
     this.loadCurrentlyLoggedInUser();
-  }
+ 
 
+  }
 
 
   render() {
@@ -109,21 +129,23 @@ class App extends Component {
         </div>
         <div className="">
           <Switch>
+
+
             <Route exact path="/" component={Login}></Route>
-            {/* <Route path="/templateDemo" component={TemplateDemo}></Route> */}
-            
+
             <PrivateRoute
               path="/header"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={Header} />
-            
+
+
             <PrivateRoute
               path="/profile"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={Profile} />
-            
+
             <Route
               path="/signup"
               render={(props) => (
@@ -137,13 +159,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarContaEstudante} />
-            
+
             <PrivateRoute
               path="/listarContasEstudante"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarContasEstudante} />
-            
+
             <PrivateRoute
               path="/atualizarContaEstudante/:id"
               authenticated={this.state.authenticated}
@@ -155,44 +177,50 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarBeneficiario} />
-            
+
             <PrivateRoute
               path="/listarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarBeneficiarios} />
-            
+
             <PrivateRoute
               path="/importarBeneficiarios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ImportarBeneficiarios} />
-            
+
             <PrivateRoute
               path="/atualizarBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={AtualizarBeneficiario} />
-            
+
             <PrivateRoute
               path="/detalharBeneficiario/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               // render={(props) => <DetalharBeneficiario {...props} />}
               component={DetalharBeneficiario} />
+            <PrivateRoute
+              path="/dadosBeneficiario/:id"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              // render={(props) => <DetalharBeneficiario {...props} />}
+              component={DadosBeneficiario} />
 
             <PrivateRoute
               path="/cadastrarEdital"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarEdital} />
-            
+
             <PrivateRoute
               path="/atualizarEdital/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={AtualizarEdital} />
-              
+
             <PrivateRoute
               path="/listarEditais"
               authenticated={this.state.authenticated}
@@ -204,13 +232,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarContaServidor} />
-            
+
             <PrivateRoute
               path="/listarContasServidor"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarContasServidor} />
-            
+
             <PrivateRoute
               path="/atualizarContaServidor/:id"
               authenticated={this.state.authenticated}
@@ -222,13 +250,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarRefeicao} />
-            
+
             <PrivateRoute
               path="/listarRefeicoes"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarRefeicoes} />
-            
+
             <PrivateRoute
               path="/atualizarRefeicao/:id"
               authenticated={this.state.authenticated}
@@ -240,13 +268,13 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={CadastrarCardapio} />
-            
+
             <PrivateRoute
               path="/listarCardapios"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarCardapios} />
-            
+
             <PrivateRoute
               path="/atualizarCardapio/:id"
               authenticated={this.state.authenticated}
@@ -258,19 +286,19 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={PedirAcesso} />
-            
+
             <PrivateRoute
               path="/validarPedidoAcesso/:id"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ValidarPedidoAcesso} />
-            
+
             <PrivateRoute
               path="/listarPedidosAcesso"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ListarPedidosAcesso} />
-            
+
             <PrivateRoute
               path="/participarListaDiaria"
               authenticated={this.state.authenticated}
@@ -287,7 +315,8 @@ class App extends Component {
               path="/boasVindas"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
-              component={BoasVindas} />
+              component={BoasVindas}
+            />
 
             <Route component={NotFound} />
           </Switch>
@@ -304,114 +333,3 @@ class App extends Component {
 }
 
 export default App;
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       authenticated: false,
-//       currentUser: null,
-//       loading: true
-//     }
-
-//     this.loadCurrentlyLoggedInUser = this.loadCurrentlyLoggedInUser.bind(this);
-//     this.handleLogout = this.handleLogout.bind(this);
-//   }
-
-//   loadCurrentlyLoggedInUser() {
-//     getCurrentUser()
-//     .then(response => {
-//       this.setState({
-//         currentUser: response,
-//         authenticated: true,
-//         loading: false
-//       });
-//     }).catch(error => {
-//       this.setState({
-//         loading: false
-//       });
-//     });
-//   }
-
-//   handleLogout() {
-//     localStorage.removeItem(ACCESS_TOKEN);
-//     this.setState({
-//       authenticated: false,
-//       currentUser: null
-//     });
-//     showSuccessMessage("Você foi desconectado com segurança!");
-//   }
-
-//   componentDidMount() {
-//     this.loadCurrentlyLoggedInUser();
-//   }
-
-//   render() {
-//     if(this.state.loading) {
-//       return <LoadingIndicator />
-//     }
-
-//     return (
-//       <div className="">
-//         <div className="">
-//           <AppHeader authenticated={this.state.authenticated} onLogout={this.handleLogout} />
-//         </div>
-//         <div className="">
-//           <Switch>
-//             <Route exact path="/" component={Home}></Route>
-//             <PrivateRoute path="/profile" authenticated={this.state.authenticated} currentUser={this.state.currentUser}
-//               component={Profile}></PrivateRoute>
-//             <Route path="/login"
-//               render={(props) => <Login authenticated={this.state.authenticated} {...props} />}></Route>
-//             <Route path="/signup"
-//               render={(props) => <Signup authenticated={this.state.authenticated} {...props} />}></Route>
-//             <Route path="/oauth2/redirect" component={OAuth2RedirectHandler}></Route>
-//             <Route component={NotFound}></Route>
-//           </Switch>
-//         </div>
-//         <Alert stack={{limit: 3}}
-//           timeout = {3000}
-//           position='top-right' effect='slide' offset={65} />
-//       </div>
-//     );
-//   }
-// }
-
-// export default App;
-
-// const clientId = "965349476239-1o9e0e1emo8nf7s9qcbpl4b5g2hm94uj.apps.googleusercontent.com";
-
-// function App() {
-
-// useEffect(() => {
-//   function start() {
-//     gapi.client.init({
-//       clientId: clientId,
-//       scope: ""
-//     })
-//   };
-//   gapi.load('client:auth2', start);
-// });
-
-// const printToken = () => {
-//   // var accessToken = gapi.auth.getToken().access_token;
-
-//   console.log(gapi.auth.getToken().access_token);
-// }
-
-// return (
-//   <div>
-// {/* <SessionProvider> */}
-// <AppRoutes />
-// {/* <LoginButton />
-// <LogoutButton /> */}
-// {/* </SessionProvider> */}
-//         <div>
-//           <Footer />
-//         </div>
-//     </div>
-//   );
-
-// }
-
-// export default App;

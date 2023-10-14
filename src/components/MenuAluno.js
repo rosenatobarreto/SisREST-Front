@@ -21,11 +21,16 @@ class MenuAdministrador extends Component {
         
         <ul className="flex sm:flex-col overflow-hidden content-center justify-center divide-y divide-gray-600">
           <li className="py-2 hover:bg-gray-300">
-            <a className="truncate" href="/">
-                <span className="hidden sm:inline text-sm">Pedidos de Refeição</span>
+            <a className="truncate" href="/dadosBeneficiario">
+                <span className="hidden sm:inline text-sm">Minhas informações</span>
             </a>
           </li>
           <li className="py-2 hover:bg-gray-300">
+            <a className="truncate" href="/participarListaDiaria">
+                <span className="hidden sm:inline text-sm">Confirmar Presença</span>
+            </a>
+          </li>
+          {/* <li className="py-2 hover:bg-gray-300">
             <a className="truncate" href="/">
               <span className="hidden sm:inline text-sm">Lista Diária</span>
             </a>
@@ -59,7 +64,7 @@ class MenuAdministrador extends Component {
             <a className="" href="/listarContasServidor">
               <span className="hidden sm:inline text-sm">Gerenciar Servidores</span>
             </a>
-          </li>
+          </li> */}
           <li className="py-2 hover:bg-gray-300">
             <a className="" href="/">
               <span className="hidden sm:inline text-sm">Sair</span>

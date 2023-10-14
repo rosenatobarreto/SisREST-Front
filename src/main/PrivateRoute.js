@@ -6,6 +6,8 @@ import {
   
   
 const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
+
+  // const PrivateRoute = ({ roles }) => roles.includes(ROLE_DO_USUARIO) ? ... : ...
     <Route
       {...rest}
       render={props =>

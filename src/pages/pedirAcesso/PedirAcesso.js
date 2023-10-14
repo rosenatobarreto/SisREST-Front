@@ -28,6 +28,8 @@ const PedirAcesso = (props) => {
   const [tipoDeRestricaoAlimentar, setTipoDeRestricaoAlimentar] = useState('');
   const [anexo, setAnexo] = useState(null);
   const [beneficiarios, setBeneficiarios] = useState([]);
+  const [isAprovado, setIsAprovado] = useState(false);
+
   const handleChange = (setState) => (event) => { setState(event.target.value) }
 
   const toast = useRef(null);
@@ -68,6 +70,7 @@ const PedirAcesso = (props) => {
       .create({
         solicitadoEm,
         justificativaAnalise,
+        isAprovado,
         beneficiario,
         diasAcessoRefeicao,
         restricaoAlimentar

@@ -1,7 +1,5 @@
-import React, {  useEffect, useState, useRef, memo } from "react";
-
+import React, { useEffect, useState, useRef, useContext, memo } from "react";
 import PedidoAcessoApiService from "../../services/PedidoAcessoApiService";
-
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -9,7 +7,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { formatDateBr } from "../../util/FormatDate";
-
+import Context from '../../Context';
 
 const PedirAcessoValidar = (props) => {
   
@@ -28,6 +26,7 @@ const PedirAcessoValidar = (props) => {
   });
   
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [armazenaPedidoAcesso, setArmazenaPedidoAcesso] = useContext(Context);
 
     
   // const [deleteBeneficiarioDialog, setDeleteBeneficiarioDialog] = useState(false);

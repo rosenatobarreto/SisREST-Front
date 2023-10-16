@@ -54,6 +54,8 @@ class DetalharBeneficiario extends Component {
     this.findById(id);
    }
 
+
+
   findById = (id) => {
         
     this.serviceBeneficiario.get(`/buscarPorID/${id}`)

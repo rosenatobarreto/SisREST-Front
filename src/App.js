@@ -25,9 +25,10 @@ import AtualizarContaEstudante from "./pages/atualizarContaEstudante/AtualizarCo
 import CadastrarBeneficiario from "./pages/cadastrarBeneficiario/CadastrarBeneficiario";
 import ListarBeneficiarios from "./pages/listarBeneficiarios/ListarBeneficiarios";
 import AtualizarBeneficiario from "./pages/atualizarBeneficiario/AtualizarBeneficiario";
-import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
 import DetalharBeneficiario from "./pages/detalharBeneficiario/DetalharBeneficiario";
 import DadosBeneficiario from "./pages/detalharBeneficiario/DadosBeneficiario";
+import ImportarBeneficiarios from "./pages/importarBeneficiarios/ImportarBeneficiarios";
+import ImportarBeneficiarios2 from "./pages/importarBeneficiarios/ImportarBeneficiarios2";
 
 import CadastrarEdital from "./pages/cadastrarEdital/CadastrarEdital";
 import AtualizarEdital from "./pages/atualizarEdital/AtualizarEdital";
@@ -189,6 +190,11 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ImportarBeneficiarios} />
+            <PrivateRoute
+              path="/importarBeneficiarios2"
+              authenticated={this.state.authenticated}
+              currentUser={this.state.currentUser}
+              component={ImportarBeneficiarios2} />
 
             <PrivateRoute
               path="/atualizarBeneficiario/:id"

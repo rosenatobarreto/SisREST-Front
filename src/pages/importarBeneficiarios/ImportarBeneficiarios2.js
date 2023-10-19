@@ -1,48 +1,45 @@
-/* eslint-disable no-undef */
-import React, { useEffect, useState, ChangeEvent, memo } from "react";
+// import React from 'react'
+// import axios, { post } from 'axios';
 
-// import axios from 'axios';
+// export default class App extends React.Component {
 
-const ImportarBeneficiarios2 = (props) => {
+//   constructor(props) {
+//     super(props);
+//     this.state ={
+//       file:null
+//     }
+//     this.onFormSubmit = this.onFormSubmit.bind(this)
+//     this.onChange = this.onChange.bind(this)
+//     this.fileUpload = this.fileUpload.bind(this)
+//   }
 
-  const [arquivos, setArquivos] = useState([]);
-  const [idEdital, setIdEdital] = useState(0);
+//   onFormSubmit(e){
+//     e.preventDefault()
+//     const url = 'http://localhost:8080/api/csv/processar';
+//     const formData = new FormData();
+//     formData.append('file', this.state.file);
+//     const config = {
+//       headers: {
+//         'content-type': 'multipart/form-data'
+//       }
+//     }
+//     post(url, formData, config)
+//       .then((response) => {
+//         console.log(response.data);
+//       })
+//   }
 
-  // Crie um objeto FormData
-const formData = new FormData();
+//   onChange(e) {
+//     this.setState({ file: e.target.files[0 ]})
+//   }
 
-// Suponha que 'arquivos' é um array de arquivos
-for (let i = 0; i < arquivos.length; i++) {
-  formData.append(`arquivos[${i}]`, arquivos[i]);
-}
-
-
-
-// // Adicione o id do edital ao formData
-// formData.append('idEdital', idEdital);
-
-// Fazendo a requisição POST com fetch
-fetch('http://localhost:8080/api/csv/processar', {
-  method: 'POST',
-  body: formData
-},idEdital)
-.then(response => response.json())
-.then(result => {
-  console.log('Success:', result);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-
-  return(
-    
-      <form onSubmit={onFormSubmit}>
-        <h1>File Upload</h1>
-        <input type="file" onChange={onChange} />
-        <button type="submit">Upload</button>
-      </form>
-   
-  )
-}
-
-export default memo(ImportarBeneficiarios2);
+//   render() {
+//     return (
+//       <form onSubmit={this.onFormSubmit}>
+//         <h1>File Upload</h1>
+//         <input type="file" onChange={this.onChange} />
+//         <button type="submit">Upload</button>
+//       </form>
+//    )
+//   }
+// }

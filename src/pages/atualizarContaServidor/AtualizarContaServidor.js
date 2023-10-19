@@ -10,7 +10,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
 
-class CadastrarContaServidor extends Component {
+class AtualizarContaServidor extends Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +22,7 @@ class CadastrarContaServidor extends Component {
         nome: "",
         email: "",
         matriculaSIAPE: 0,
-        admin: "",
+        admin: true,
         campus: "",
         role: "",
     };
@@ -204,7 +204,7 @@ class CadastrarContaServidor extends Component {
                           <select
                             name="isAdmin"
                             className="w-20 h-10 md:w-20rem border-green-50"
-                            value={this.state.admin} onChange={(e) => { this.setState({ isAdmin: e.target.value }) }}>
+                            value={this.state.admin} onChange={(e) => { this.setState({ admin: e.target.value }) }}>
                               <option>Selecione uma opção</option>
                             <option value="true" >Sim</option>
                             <option value="false" >Não</option>
@@ -258,4 +258,4 @@ class CadastrarContaServidor extends Component {
     }
 }
 
-export default CadastrarContaServidor;
+export default AtualizarContaServidor;

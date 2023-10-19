@@ -5,7 +5,7 @@ export default class UploadCsvApiService extends ApiService{
         super('/csv');
     }
 
-    processar(object){
+    create(object){
         return this.post('/processar', object);
     }
 

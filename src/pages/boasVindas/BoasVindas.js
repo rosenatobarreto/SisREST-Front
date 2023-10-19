@@ -24,18 +24,14 @@ const BoasVindas = (props) => {
 
   const getSideMenu = () => {
 
-    if (decoded.role === "Estudante" && !estudanteComPedidoAcesso) {
+    if (decoded.role === "Estudante") {
       titleRoleInPage = "Estudante";
       // if(estudanteComPedidoAcesso){
       // setMensagem("Você ainda não tem refeições");
       // }
       return <MenuAluno />
     }
-    else if (decoded.role === "Assistente Social") {
-      titleRoleInPage = "Administrador";
-      return <MenuAdministrador />
-    }
-    else if (decoded.role === "Admin") {
+    else if (decoded.role === "Assistente Social" || decoded.role === "Admin") {
       titleRoleInPage = "Administrador";
       return <MenuAdministrador />
     }
@@ -70,19 +66,15 @@ const BoasVindas = (props) => {
 
   const findBeneficiarioInPedidoAcesso = () => {
 
-    apc = armazenaPedidoAcesso.map((pedidoAcesso) => {
+    // apc = armazenaPedidoAcesso.map((pedidoAcesso) => {
 
-      if (pedidoAcesso.beneficiario.contaEstudante.email === props.currentUser.email) {
+    //   if (pedidoAcesso.beneficiario.contaEstudante.email === props.currentUser.email) {
 
-        // estudanteComPedidoAcesso.push(pedidoAcesso);
-        setMensagem("Você ainda não tem refeições");
-      }
-    })
+    //     // estudanteComPedidoAcesso.push(pedidoAcesso);
+    //     setMensagem("Você ainda não tem refeições");
+    //   }
+    // })
   }
-
-  // const numbers = [1, 2, 3, 4, 5];
-  // const dobro = numbers.map((numbers) => numbers * 2);
-  // console.log(dobro);
 
 
   // const buscarEstudante(id) {

@@ -4,8 +4,6 @@ import RefeicaoApiService from "../../services/RefeicaoApiService";
 import MenuNutricionista from "../../components/MenuNutricionista";
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
-import { Checkbox } from "primereact/checkbox";
-import { Editor } from 'primereact/editor';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 
@@ -65,130 +63,8 @@ const CadastrarRefeicao = (props) => {
     props.history.push("/listarRefeicoes");
   };
 
-  // const onRestricoesChange = (e) => {
-  //   let updateRestricoes = [...restricoes];
-
-  //   if (e.checked)
-  //     updateRestricoes.push(e.value);
-  //   else
-  //     updateRestricoes.splice(updateRestricoes.indexOf(e.value), 1);
-
-  //   setRestricoes(updateRestricoes);
-  // }
-  console.log('tipoDeRefeicao', tipoDeRefeicao)
-  console.log('restricoes', restricoes)
-  console.log(descricao)
-
-  // const findAllEditais = () => {
-  //   serviceEdital
-  //     .get("/buscarTodos")
-  //     .then((response) => {
-  //       const editais = response.data;
-  //       setListEditais(editais);
-
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //     });
-  // };
-
-  // const findAllContasEstudantes = () => {
-  //   serviceContaEstudante
-  //     .get("/buscarTodos")
-  //     .then((response) => {
-  //       const contasEstudante = response.data;
-  //       setContasEstudante(contasEstudante);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //     });
-  // };
-
-
-
-  // const searchEdital = (event) => {
-  //   setTimeout(() => {
-  //     let _filteredEditais;
-
-  //     if (!event.query.trim().length) {
-  //       _filteredEditais = [...editais];
-  //     } else {
-  //       _filteredEditais = editais.filter((edital) => {
-  //         return edital.nome.toLowerCase().startsWith(event.query.toLowerCase())
-  //       });
-  //     }
-  //     setFilteredEditais(_filteredEditais);
-  //   }, 250);
-  // }
-
-  // const selectOneEdital = (props) => {
-  //   props.map(edital => {
-  //     setEditalId(edital.id);
-  //     setTituloEdital(edital.nome);
-  //     setNumero(edital.numero);
-  //     setAno(edital.ano);
-  //     console.log('edital:', edital);
-  //   })
-  // }
-
-  // const searchEstudante = (event) => {
-  //   setTimeout(() => {
-  //     let _filteredEstudantes;
-
-  //     if (!event.query.trim().length) {
-  //       _filteredEstudantes = [...contasEstudante];
-  //     } else {
-  //       _filteredEstudantes = contasEstudante.filter((estudante) => {
-  //         return estudante.nome.toLowerCase().startsWith(event.query.toLowerCase())
-  //       });
-  //     }
-  //     setFilteredEstudantes(_filteredEstudantes);
-
-  //   }, 250);
-  // }
-
-  // const selectOneContaEstudante = (props) => {
-  //   props.map(estudante => {
-  //     setContaEstudante(estudante.id);
-  //     setNomeEstudante(estudante.nome);
-  //     setMatriculaEstudante(estudante.matricula);
-  //     setEmailEstudante(estudante.email);
-  //     console.log('estudante:', estudante);
-  //   })
-  // }
-
   useEffect(() => {
 
-    // let dataVigente;
-    // let dataAtual = new Date();
-    // const editaisSelecionados = [];
-    // const estudantesSelecionados = [];
-
-    // const loadEditais = async () => {
-
-    //   const response = await serviceEdital.get('/buscarTodos');
-    //   const editaisSelected = response.data.map(edital => {
-
-    //     dataVigente = new Date(edital.vigenteFinal)
-
-    //     if (dataVigente.getFullYear() === dataAtual.getFullYear()) {
-    //       editaisSelecionados.push(edital);
-    //     }
-    //   })
-    //   setEditais(editaisSelecionados);
-    // };
-    // loadEditais();
-
-    // const loadEstudantes = async () => {
-
-    //   const response = await serviceContaEstudante.get('/buscarTodos');//.then((data) => setEditais(data));
-    //   const estudanteSelected = response.data.map(estudante => {
-
-    //     estudantesSelecionados.push(estudante);
-    //   })
-    //   setContasEstudante(estudantesSelecionados);
-    // };
-    // loadEstudantes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []
   );
@@ -220,110 +96,26 @@ const CadastrarRefeicao = (props) => {
         <div className="pt-4 pl-8 pr-8 mb-4">
           <div className="mt-0 sm:mt-0">
             <div className="md:grid md:grid-cols-1 md:gap-6">
-              {/* <div className="md:col-span-1">
-                <div className="px-4 sm:px-0">
 
-                </div>
-              </div> */}
               <div className="mt-5 md:col-span-2 md:mt-0">
                 <form action="">
                   <div className="bg-white px-4 py-5 sm:p-6">
-                    {/* <div className="grid grid-cols-6 gap-6">
-                    </div> */}
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      {/* <label className="block text-sm font-medium text-gray-700">
-                        Edital selecionado:
-                      </label>
-                      <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p> */}
 
                     </div>
-
-                    {/* <div className="col-span-6 sm:col-span-10 lg:col-span-12">
-                      <label className="block text-sm font-medium text-gray-700 mt-6">
-                        Estudante selecionado:
-                      </label>
-                      <p className="block text-sm font-medium ml-4" id="labelEstudante">
-                        Nome: {nomeEstudante}<br />
-                        CPF: {cpf}<br />
-                        Matrícula: {matriculaEstudante}<br />
-                        Email: {emailEstudante}<br />
-                        Programa: {descricaoRefeicao}<br /></p>
-                    </div> */}
-
 
                     <div className="col-span-6 sm:col-span-10 lg:col-span-12">
                       <div className="row flex justify-content gap-10 mt-6 ">
                         <div className="">
-                          {/* <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o edital</p>
-                          <div className="card flex justify-content-center">
-                            <AutoComplete
-                              className="w-full"
-                              field="nome"
-                              multiple value={selectedEditais}
-                              suggestions={filteredEditais}
-                              completeMethod={searchEdital}
-                              onChange={(e) => selectOneEdital(e.target.value)}
-                            />
-                          </div> */}
+
 
                         </div>
                         <div className="row">
-                          {/* <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o estudante</p> */}
-                          {/* <div className="card flex justify-content-center">
-                            <AutoComplete
-                              className="w-full"
-                              field="nome"
-                              multiple value={selectedEstudantes}
-                              suggestions={filteredEstudantes}
-                              completeMethod={searchEstudante}
-                              onChange={(e) => selectOneContaEstudante(e.target.value)}
-                            />
-                          </div> */}
+
                         </div>
                       </div>
                     </div>
-
-
-                    {/* <div className="col-span-3 lg:col-span-2">
-                      <div className="row flex justify-content-center gap-6 mt-6">
-                        <label className="mb-1 text-sm font-semibold text-gray-700">
-                          Ativo no Sistema?
-                        </label>
-                        <div className="card flex justify-content-center">
-                          <RadioButton checked disabled>
-                          </RadioButton>
-                          <label htmlFor="sim" className="ml-2">Sim</label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-3 lg:col-span-2">
-                      <div className="row flex justify-content-center gap-6 mt-6">
-                        <label className="mb-1 text-sm font-semibold text-gray-700">
-                          Situação?
-                        </label>
-                        <div className="card flex justify-content-center">
-                          <RadioButton checked disabled>
-                          </RadioButton>
-                          <label htmlFor="deferido" className="ml-2">Deferido</label>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div className="col-span-6 sm:col-span-3 lg:col-span-6 gap-6 mt-6">
-                      <label
-                        htmlFor="cpf"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        CPF
-                      </label>
-
-                      <InputMask
-                        value={cpf}
-                        onChange={handleChange(setCpf)} mask="99999999999" placeholder="99999999999" />
-                    </div> */}
 
                     <div className="col-span-10 sm:col-span-8 lg:col-span-8 gap-6 mt-6">
                       <label
@@ -357,16 +149,6 @@ const CadastrarRefeicao = (props) => {
                             <RadioButton inputId="tipoRefeicao6" name="tipoRefeicao" value="CEIA" onChange={handleChange(setTipoDeRefeicao)} checked={tipoDeRefeicao === 'Ceia'} />
                             <label htmlFor="tipoRefeicao6" className="ml-2">Ceia</label>
                           </div>
-                          {/* <label htmlFor="selectRefeicao" class="mt-4">Tipo de Refeição</label>
-                          <select className="" id="selectRefeicao" 
-                            value={tipoDeRefeicao} onChange={e => setTipoDeRefeicao(e.target.value)}>
-                            <option value="CAFE_MANHA">1</option>
-                            <option value="LANCHE_MANHA">2</option>
-                            <option value="ALMOCO">3</option>
-                            <option value="LANCHE_TARDE">4</option>
-                            <option value="JANTAR">5</option>
-                            <option value="CEIA">6</option>
-                          </select> */}
 
                         </div>
                       </div>
@@ -378,32 +160,7 @@ const CadastrarRefeicao = (props) => {
                         className="block text-md font-medium text-gray-700 mt-2 mb-3">
                         Restrições Alimentares da Refeição
                       </label>
-                      {/* <div className="card flex flex-wrap justify-content-center gap-3">
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes1" name="restricao" value="DIABETES" onChange={onRestricoesChange} checked={restricoes.includes('Diabetes')} />
-                          <label htmlFor="restricoes1" className="ml-2">Diabetes</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes2" name="restricao" value="INTOLERANCIA_LACTOSE" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Lactose')} />
-                          <label htmlFor="restricoes2" className="ml-2">Intolerância à Lactose</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes3" name="restricao" value="INTOLERANCIA_GLUTEN" onChange={onRestricoesChange} checked={restricoes.includes('Intolerância à Glúten')} />
-                          <label htmlFor="restricoes3" className="ml-2">Intolerância à Glúten</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes4" name="restricao" value="ALERGIAS" onChange={onRestricoesChange} checked={restricoes.includes('Alergias')} />
-                          <label htmlFor="restricoes4" className="ml-2">Alergias</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes5" name="restricao" value="HIPERTENSO" onChange={onRestricoesChange} checked={restricoes.includes('Hipertensão')} />
-                          <label htmlFor="restricoes5" className="ml-2">Hipertensão</label>
-                        </div>
-                        <div className="flex align-items-center">
-                          <Checkbox inputId="restricoes6" name="restricao" value="VEGANO" onChange={onRestricoesChange} checked={restricoes.includes('Vegano(a)')} />
-                          <label htmlFor="restricoes6" className="ml-2">Vegano(a)</label>
-                        </div>
-                      </div> */}
+
 
                       <SelectButton id="selectRefeicoesBtn" className="text-xs"
                         value={restricoes} onChange={(e) => setRestricoes(e.value)}
@@ -418,9 +175,7 @@ const CadastrarRefeicao = (props) => {
                         className="block text-md font-medium text-gray-700 mt-2 mb-3">
                         Descrição da Refeição
                       </label>
-                      {/* <div className="card flex justify-content-center">
-                        <Editor value={descricaoRefeicao} onTextChange={(e) => setDescricaoRefeicao(e.htmlValue)} style={{ width: '100%', height: '320px' }} />
-                      </div> */}
+
                       <div className="card flex justify-content-center">
                         <InputTextarea id="descricao" severity="sucess" value={descricao} onChange={(e) => setDescricao(e.target.value)} rows={5} cols={50} />
                       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, memo } from "react";
+import React, { useEffect, useState, useRef, ChangeEvent, memo } from "react";
 import { withRouter } from "react-router-dom";
 import { showSuccessMessage, showErrorMessage } from "../../components/Toastr";
 import UploadCsvApiService from "../../services/UploadCsvApiService";
@@ -7,64 +7,90 @@ import SelectEdital from "../../components/SelectEdital";
 import MenuAdministrador from "../../components/MenuAdministrador";
 import { AutoComplete } from 'primereact/autocomplete';
 import { FileUpload } from 'primereact/fileupload';
+import { Toast } from 'primereact/toast';
+import { Messages } from 'primereact/messages';
 
 const ImportarBeneficiarios = (props) => {
 
-  const [arquivoBeneficiariosSuap, setArquivoBeneficiariosSuap] = useState('');
-  const [arquivoEstudantesSuap, setArquivoEstudantesSuap] = useState('');
   const [listEditais, setListEditais] = useState([]);
   const [editais, setEditais] = useState([]);
-  const [idEdital, setIdEdital] = useState(0);
   const [numero, setNumero] = useState(0);
   const [ano, setAno] = useState(0);
   const [tituloEdital, setTituloEdital] = useState('');
   const [selectedEditais, setSelectedEditais] = useState(null);
   const [filteredEditais, setFilteredEditais] = useState(null);
   const [file, setFile] = useState([]);
-
-  const initialFormData = Object.freeze({
-    arquivoEstudantesSuap: "",
-    arquivoBeneficiariosSuap: ""
-  });
-  const [formData, updateFormData] = React.useState(initialFormData);
-
-  const handleChange = (e) => {
-    updateFormData({
-      ...formData,
-
-      // Trimming any whitespace
-      [e.target.name]: e.target.value.trim()
-    });
+  const [arquivoEstudantesSuap, setArquivoEstudantesSuap] = useState('');
+  const [arquivoBeneficiariosSuap, setArquivoBeneficiariosSuap] = useState('');
+  const [idEdital, setIdEdital] = useState(0);
+  
+  const handleChangeFileEstudante = (e) => {
+    setArquivoEstudantesSuap(e.target.files[0]);
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log(formData);
-    // ... submit to API or something
+  const handleChangeFileBeneficiario = (e) => {
+    setArquivoBeneficiariosSuap(e.target.files[0]);
   };
+  
+  console.log('idEdital = ', idEdital)
+  console.log('arquivoEstudantesSuap = ', arquivoEstudantesSuap)
+  console.log('idEdital = ', arquivoBeneficiariosSuap)
 
 
   const service = new UploadCsvApiService();
   const serviceEdital = new EditalApiService();
 
+  const toast = useRef(null);
+  const msgs = useRef(null);
 
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data'
+  const addMessages = () => {
+    msgs.current.show([
+      { severity: 'info', summary: 'Success', detail: 'Enviando...', sticky: true, closable: false },
+      { severity: 'success', summary: 'Success', detail: 'Sequência Semanal e Dia da refeição adicionados ao Cardápio!', sticky: true, closable: false },
+      // { severity: 'info', summary: 'Info', detail: 'Message Content', sticky: true, closable: false },
+      // { severity: 'warn', summary: 'Warning', detail: 'Message Content', sticky: true, closable: false },
+      { severity: 'error', summary: 'Error', detail: 'Itens não adicionados ao Cardápio!', sticky: true, closable: false }
+    ]);
+  };
+
+  const upload = async (e) => {
+    e.preventDefault();
+    showSuccessMessage("Enviando...");
+
+    const dados = new FormData();
+
+    dados.append('arquivoEstudantesSuap', arquivoEstudantesSuap);
+    dados.append('arquivoBeneficiariosSuap', arquivoBeneficiariosSuap);
+    dados.append('idEdital', idEdital);
+
+    
+    try {
+      await service.post('/processar', dados, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      )
+      .then(response => {
+        if (response.status === 200){
+            showSuccessMessage("Dados enviados!!");
+        }
+      }
+      ).catch(error => {
+        if (error.status !== 200){
+          showErrorMessage("Os dados não foram salvos!");
+      }
+      }
+      );
+      setArquivoEstudantesSuap(null);
+      
+    } catch (error) {
+      setTimeout(() => {
+        setArquivoEstudantesSuap(null);
+      }, 3000)
+      
     }
   }
 
-  const upload = (e) => {
-    e.preventDefault()
-    // const url = 'http://localhost:8080/api';
-    // const formData = new FormData();
-    // formData.append('file', file);
-    service.processar('/processar', formData, config)
-    .then((response) => {
-      console.log(response.data);
-    })
-  }
-  
 
   const searchEdital = (event) => {
     setTimeout(() => {
@@ -90,97 +116,9 @@ const ImportarBeneficiarios = (props) => {
     })
   }
 
-  // Crie um objeto FormData
-  // const formData = new FormData();
-  // formData.append(arquivoBeneficiariosSuap);
-  // formData.append(idEdital);
-
-  // const prencherFormData = () => {
-
-  //   formData.append(arquivoEstudantesSuap);
-  //   formData.append(arquivoBeneficiariosSuap);
-  // }
-
-  // Configuração para a requisição
-  // const config = {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data'
-  //   }
-  // };
-
-  // const upload = (e) => {
-  //   e.preventDefault();
-  //   // prencherFormData();
-  //   service
-  //     .post('/processar', {
-  //       method: 'POST',
-  //       body: formData, idEdital
-  //     }
-  //     )
-  //     // service.post('/processar', formData, idEdital)
-  //     .then((response) => {
-  //       showSuccessMessage("Dados inseridos com sucesso!");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //       showErrorMessage("Os dados não pode ser salvos!");
-  //     });
-  //   console.log("request finished");
-  // };
-
-  //   const processar = () => {
-  //   const errors = validate();
-
-  //   if (errors.length > 0) {
-  //     errors.forEach((message, index) => {
-  //       showErrorMessage(message);
-  //     });
-  //     return false;
-  //   }
-
-  //   service
-  //     .processar({
-  //       arquivoBeneficiariosSuap,
-  //       arquivoEstudantesSuap,
-  //       idEdital
-  //     })
-  //     .then((response) => {
-  //       showSuccessMessage("Dados inseridos com sucesso!");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error.response);
-  //       showErrorMessage("Os dados não pode ser salvos!");
-  //     });
-  //   console.log("request finished");
-  // };
-
-  // setTimeout(() => {
-  //   create();
-  //   processar();
-  // }, 6000)
-
-  const cancel = () => {
+  function cancel() {
     props.history.push("/boasVindas");
-  };
-
-  const findAllEditais = () => {
-    serviceEdital
-      .get("/buscarTodos")
-      .then((response) => {
-        const editais = response.data;
-        setListEditais(editais);
-
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
-
-  //INÍCIO da lógica do envio de arquivos
-
-
-
-  //FIM da lógica do envio de arquivos
+  }
 
   useEffect(() => {
 
@@ -237,87 +175,25 @@ const ImportarBeneficiarios = (props) => {
           <div className="mt-0 sm:mt-0">
             <div className="md:grid md:grid-cols-1 md:gap-6">
               <div className="md:col-span-1">
-                {/* <div className="px-4 sm:px-0">
-                </div> */}
+
               </div>
               <div className="mt-5 md:col-span-8 md:mt-0">
-                <form >
+                <form action="">
                   {/* Begin Card */}
-                  {/* <div className="overflow-hidden shadow sm:rounded-md"> */}
                   <div className="bg-white px-4 py-5 sm:p-6">
                     <div className="grid grid-cols-6 gap-6">
-                      {/* <div className="col-span-6 sm:col-span-6">
-                        <label
-                          for="formFileMultiple"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          <p className="mb-1 text-lg">Importar dados do Edital</p>
-                          <p className="text-sm mt-6">CSV Beneficiários</p>
-                        </label>
-                        <input
-                          type="file"
-                          name="edital"
-                          id="formFile1"
-                          className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm
-                             focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                          value={arquivoBeneficiariosSuap}
-                          onChange={handleChange(setArquivoBeneficiariosSuap)}
-
-                        />
-                      </div> */}
 
                       <div className="col-span-6 sm:col-span-6">
-                        <label
-                          htmlFor=""
-                          className="block text-sm font-medium text-gray-700"
-                        >
-
+                        <label htmlFor="" className="block text-sm font-medium text-gray-700">
                           <p className="text-sm mt-3">CSV de estudantes</p>
                         </label>
-                        {/* <input
-                          type="file"
-                          name="arquivoEstudantesSuap"
-                          id="formFile2"
-                          className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm
-                             focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                          value={arquivoEstudantesSuap}
-                          // onChange={(e) => setArquivoEstudantesSuap(e.target.value)}
-                          // onChange={(e) => handleChange(e.target.value)}
-                          onChange={handleChange}
 
-
-                        /> */}
-                        <input type="file" name="arquivoEstudantesSuap" onChange={handleChange} />
-                        <label
-                          htmlFor=""
-                          className="block text-sm font-medium text-gray-700"
-                        >
-
+                        <input type="file" name="arquivoEstudantesSuap" onChange={handleChangeFileEstudante} />
+                        <label htmlFor="" className="block text-sm font-medium text-gray-700">
                           <p className="text-sm mt-3">CSV de beneficiários</p>
                         </label>
-                        {/* <input
-                          type="file"
-                          name="arquivoBeneficiariosSuap"
-                          id="formFile2"
-                          className="mt-1 block w-full rounded-md border border-green-300 bg-green-50 py-2 px-3 shadow-sm
-                             focus:border-green-500 focus:ring-green-500 sm:text-sm"
-                          value={arquivoBeneficiariosSuap}
-                          // onChange={(e) => setArquivoBeneficiariosSuap(e.target.value)}
-                          // onChange={(e) => handleChange(e.target.value)}
-                          onChange={handleChange}
-                        /> */}
-                        <input type="file" name="arquivoBeneficiariosSuap" onChange={handleChange} />
-
-
-                        {/* <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" 
-                        for="multiple_files">Upload multiple files</label>
-                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer
-                         bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 
-                         dark:placeholder-gray-400" 
-                    id="multiple_files" type="file" multiple/>*/}
-
-
-
+                        
+                        <input type="file" name="arquivoBeneficiariosSuap" onChange={handleChangeFileBeneficiario} />
                       </div>
 
                       <div className="col-span-6 sm:col-span-10 lg:col-span-12">
@@ -325,8 +201,6 @@ const ImportarBeneficiarios = (props) => {
                           Edital selecionado:
                         </label>
                         <p className="block text-sm font-medium ml-4 mb-4" id="labelEdital">{numero}-{ano} - {tituloEdital}</p>
-                        {/* <p>{arquivoEstudantesSuap}</p>
-                        <p>{arquivoBeneficiariosSuap}</p> */}
 
                       </div>
 
@@ -335,14 +209,14 @@ const ImportarBeneficiarios = (props) => {
                           <div className="">
                             <p className="mb-1 text-sm font-semibold text-gray-700">Selecione o edital</p>
                             <div className="card flex justify-content-center">
-                              <AutoComplete
-                                className="w-full"
-                                field="nome"
-                                multiple value={selectedEditais}
-                                suggestions={filteredEditais}
-                                completeMethod={searchEdital}
-                                onChange={(e) => selectOneEdital(e.target.value)}
-                              />
+                            <AutoComplete
+                              className="w-full"
+                              field="nome"
+                              multiple value={selectedEditais}
+                              suggestions={filteredEditais}
+                              completeMethod={searchEdital}
+                              onChange={(e) => selectOneEdital(e.target.value)}
+                            />
                             </div>
 
                           </div>

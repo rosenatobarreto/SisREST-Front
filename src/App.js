@@ -55,22 +55,6 @@ import ListaDiaria from "./pages/listaDiaria/ListaDiaria";
 import BoasVindas from "./pages/boasVindas/BoasVindas";
 import Header from "./components/Header";
 
-//Dados do token: data.role
-/*
-{
-  "sub": "2",
-  "role": "Estudante",
-  "iat": 1697162081,
-  "exp": 1698026081
-}
-
-
-const token = "eyJ0eXAiO.../// jwt token";
-const decoded = jwt_decode(token);
-console.log(decoded);
-
-
-*/
 class App extends Component {
   constructor(props) {
     super(props);
@@ -113,10 +97,7 @@ class App extends Component {
 
   componentDidMount() {
     this.loadCurrentlyLoggedInUser();
- 
-
   }
-
 
   render() {
     if (this.state.loading) {
@@ -131,7 +112,6 @@ class App extends Component {
         <div className="">
           <Switch>
 
-
             <Route exact path="/" component={Login}></Route>
 
             <PrivateRoute
@@ -139,7 +119,6 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={Header} />
-
 
             <PrivateRoute
               path="/profile"
@@ -190,6 +169,7 @@ class App extends Component {
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               component={ImportarBeneficiarios} />
+            
             <PrivateRoute
               path="/importarBeneficiarios2"
               authenticated={this.state.authenticated}
@@ -209,7 +189,7 @@ class App extends Component {
               // render={(props) => <DetalharBeneficiario {...props} />}
               component={DetalharBeneficiario} />
             <PrivateRoute
-              path="/dadosBeneficiario/:id"
+              path="/dadosBeneficiario"
               authenticated={this.state.authenticated}
               currentUser={this.state.currentUser}
               // render={(props) => <DetalharBeneficiario {...props} />}
